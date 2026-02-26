@@ -6,22 +6,24 @@ Del::Del(volatile uint8_t &port, uint8_t pin1, uint8_t pin2)
     pin1_(pin1 & 0b111), 
     pin2_(pin2 & 0b111)
 {
-    *(&port-1) |= ((1 << pin1) | (1 << pin2)); // dans la docuemenatation une adresse de différence entre Port et pin. 
+    *(&port-1) |= ((1 << pin1) | (1 << pin2));
+    // Dans la documentation une adresse de différence entre port et pin. 
 }
 
 void Del::ajusterCouleur(Couleur couleur)
 {
-    if (couleur == Couleur::VERT) 
-    {
-        port_ |= (1 << pin1_);
-        port_ &= ~(1 << pin2_);
-    }
-    
-    else if (couleur == Couleur::ETEINT) 
+    if (couleur == Couleur::ETEINT) 
     {   
         port_ &= ~(1 << pin1_);
         port_ &= ~(1 << pin2_);
     }
+
+    else if (couleur == Couleur::VERT) 
+    {
+        port_ |= (1 << pin1_);
+        port_ &= ~(1 << pin2_);
+    }
+
     else if (couleur == Couleur::ROUGE) 
     {
         port_ &= ~(1 << pin1_);
@@ -31,7 +33,7 @@ void Del::ajusterCouleur(Couleur couleur)
 
 void Del::ajusterAmbre()
 {
-    uint8_t const DELAI_AMBRE = 5;
+    const uint8_t DELAI_AMBRE = 5;
     ajusterCouleur(Couleur::ROUGE);
     _delay_ms(DELAI_AMBRE);
     ajusterCouleur(Couleur::VERT);
