@@ -4,3 +4,11 @@
 #include <avr/interrupt.h>
 
 
+class InterruptionExterne
+{
+    public:
+    void initialisation(int indiceInt);
+
+};
+
+
