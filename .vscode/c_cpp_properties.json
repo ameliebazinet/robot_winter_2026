@@ -6,7 +6,8 @@
             "includePath": [
                 "/**",
                 "/usr/avr/include/**",
-                "./Libraries/Headers/**"
+                "./Libraries/Headers/**",
+                "./Libraries/Bibli/**"
             ],
             "defines": [
                 "__AVR_ATmega324PA__"

@@ -1,38 +1,46 @@
 #include <avr/io.h>
-#include <stdexcept>
 #include "Minuterie.hpp"
 
-Minuterie(uint8_t numeroMinuterie, WGM mode, int8_t prescaler, ModeSortiePin modeSortiePin)
-{
-    // Verif param
-    if (false){
-        throw exception_type("Paramètres de minuterie mals initialisés");
-    }
+using namespace Minuterie;
 
-    numeroMinuterie_ = numeroMinuterie;
-    mode_ = mode;
-    prescaler_ = prescaler
-    modeSortiePin_ = modeSortiePin;
+void Minuterie0::reinitialiserRegistre()
+{
+    TCCR0B = 0;
+    TCCR0A = 0;
+
+    //
 }
 
-void Minuterie::resetMinuterie()
+Minuterie0::Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputMode com)
 {
-    switch (numeroMinuterie_)
-    {
-    case 0:
-        TCNT0 = 0;
-        break;
-
-    case 1:
-        TCNT1 = 0;
-        break;
-
-    case 2:
-        TCNT2 = 0;
-        break;
-    }
+    const uint8_t DECALAGE_WGM02 = 1;
+    //TCCR0B |= ((1 << WGM02) << DECALAGE_WGM02)
+    // TCCR0A |= 
 }
 
-void Minuterie::partirMinuterie(float tempsMs)
+void Minuterie0::commencer()
+{
+}
+void Minuterie0::arreter()
+{
+}
+
+void Minuterie0::activerComparateurA(int tempsMs)
+{
+}
+void Minuterie0::activerComparateurB(int tempsMs)
+{
+}
+
+void Minuterie0::activerInteruptionComparateurA()
+{
+}
+void Minuterie0::desactiverInteruptionComparateurA()
+{
+}
+void Minuterie0::activerInteruptionComparateurB()
+{
+}
+void Minuterie0::desactiverInteruptionComparateurB()
 {
 }
