@@ -5,7 +5,8 @@
             "name": "Linux",
             "includePath": [
                 "/**",
-                "/usr/avr/include/**"
+                "/usr/avr/include/**",
+                "./Libraries/Headers/**"
             ],
             "defines": [
                 "__AVR_ATmega324PA__"
@@ -20,7 +21,8 @@
             "name": "Mac",
             "includePath": [
                 "/**",
-                "/opt/homebrew/opt/avr-gcc@14/avr/include/**"
+                "/opt/homebrew/opt/avr-gcc@14/avr/include/**",
+                "./Libraries/Headers/**"
             ],
             "defines": [
                 "__AVR_ATmega324PA__"
