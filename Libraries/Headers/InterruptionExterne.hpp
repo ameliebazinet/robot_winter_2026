@@ -7,7 +7,7 @@
 class InterruptionExterne
 {
     public:
-    void initialisation(int indiceInt);
+    void initialisation(uint8_t indiceInt);
 
 };
 

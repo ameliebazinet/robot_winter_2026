@@ -2,35 +2,86 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include "Headers/InterruptionExterne.hpp"
+#include "InterruptionExterne.hpp"
 
-
-void initialisation(int indiceInt)
+void initialisation(uint8_t indiceInt, uint8_t interruptSenseControl)
 {
-	// cli est une routine qui bloque toutes les interruptions.
-	// Il serait bien mauvais d'être interrompu alors que
-	// le microcontrôleur n'est pas prêt...
-
 	cli();
+	EIMSK |= (1 << indiceInt);
 
-	// configurer et choisir les ports pour les entrées
-	// et les sorties. DDRx... Initialisez bien vos variables
+	// initialisation de l'interruption de Int0
+	if (indiceInt == 0)
+	{
+		DDRD &= ~(1 << PD2);
+		if (interruptSenseControl == 0)
+		{
+			EICRA &= ~(1 << ISC00) & ~(1 << ISC01);
+		}
+		if (interruptSenseControl == 1)
+		{
+			EICRA &= ~(1 << ISC01);
+			EICRA |= (1 << ISC00);
+		}
+		if (interruptSenseControl == 2)
+		{
+			EICRA &= ~(1 << ISC00);
+			EICRA |= (1 << ISC01);
+		}
+		if (interruptSenseControl == 3)
+		{
+			EICRA |= (1 << ISC00) | (1 << ISC01);
+		}
+	}
 
-	DDRA |= (1 << PA0) | (1 << PA1);
-	DDRD &= ~(1 << PD2);
+	// initialisation de l'interruption de Int1
+	if (indiceInt == 1)
+	{
+		DDRD &= ~(1 << PD3);
 
-	// cette procédure ajuste le registre EIMSK
-	// de l’ATmega324PA pour permettre les interruptions externes
+		if (interruptSenseControl == 0)
+		{
+			EICRA &= ~(1 << ISC10) & ~(1 << ISC11);
+		}
+		if (interruptSenseControl == 1)
+		{
+			EICRA &= ~(1 << ISC11);
+			EICRA |= (1 << ISC10);
+		}
+		if (interruptSenseControl == 2)
+		{
+			EICRA &= ~(1 << ISC10);
+			EICRA |= (1 << ISC11);
+		}
+		if (interruptSenseControl == 3)
+		{
+			EICRA |= (1 << ISC10) | (1 << ISC11);
+		}
+	}
 
-	EIMSK |= (1 << INT0);
+	// initialisation de l'interruption de Int2
+	if (indiceInt == 2)
+	{
+		DDRB &= ~(1 << PB2);
 
-	// il faut sensibiliser les interruptions externes aux
-	// changements de niveau du bouton-poussoir
-	// en ajustant le registre EICRA
+		if (interruptSenseControl == 0)
+		{
+			EICRA &= ~(1 << ISC20) & ~(1 << ISC21);
+		}
+		if (interruptSenseControl == 1)
+		{
+			EICRA &= ~(1 << ISC21);
+			EICRA |= (1 << ISC20);
+		}
+		if (interruptSenseControl == 2)
+		{
+			EICRA &= ~(1 << ISC20);
+			EICRA |= (1 << ISC21);
+		}
+		if (interruptSenseControl == 3)
+		{
+			EICRA |= (1 << ISC20) | (1 << ISC21);
+		}
 
-	EICRA |= (1 << ISC00);
-
-	// sei permet de recevoir à nouveau des interruptions.
-
-	sei();
+		sei();
+	}
 }
