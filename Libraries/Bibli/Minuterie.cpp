@@ -3,44 +3,78 @@
 
 using namespace Minuterie;
 
-void Minuterie0::reinitialiserRegistre()
+Minuterie0::Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
 {
+    uint16_t prescaler;
+    switch (cs)
+    {
+    case Minuterie::OFF:
+        prescaler = 0;
+        break;
+    case Minuterie::PRESCALER1:
+        prescaler = 1;
+        break;
+    case Minuterie::PRESCALER8:
+        prescaler = 8;
+        break;
+    case Minuterie::PRESCALER64:
+        prescaler = 64;
+        break;
+    case Minuterie::PRESCALER256:
+        prescaler = 256;
+        break;
+    case Minuterie::PRESCALER1024:
+        prescaler = 1024;
+        break;
+    }
+
     TCCR0B = 0;
     TCCR0A = 0;
 
-    //
-}
-
-Minuterie0::Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputMode com)
-{
-    const uint8_t DECALAGE_WGM02 = 1;
-    //TCCR0B |= ((1 << WGM02) << DECALAGE_WGM02)
-    // TCCR0A |= 
-}
-
-void Minuterie0::commencer()
-{
-}
-void Minuterie0::arreter()
-{
+    TCCR0A |= uint8_t(wgm);
+    TCCR0B |= uint8_t(cs);
+    TCCR0A |= uint8_t(comB);
+    TCCR0A |= uint8_t(comA);
+    //     TCCR0B |= ((wgm & 0b100) << DECALAGE_WGM02) | (cs & 0b100) | (cs & 0b010) | (cs & 0b001);
+    //     TCCR0A |= (comA & 0b10) | (comA & 0b01) | (comB & 0b10) | (comB & 0b01) | (wgm & 0b010) | (wgm & 0b001);
 }
 
 void Minuterie0::activerComparateurA(int tempsMs)
 {
+    if (prescaler == 0)
+        OCR0A = 0;
+    else
+        OCR0A = F_CPU / prescaler * tempsMs / 1000;
 }
 void Minuterie0::activerComparateurB(int tempsMs)
 {
+    if (prescaler == 0)
+        OCR0B = 0;
+    else
+        OCR0B = F_CPU / prescaler * tempsMs / 1000;
 }
 
-void Minuterie0::activerInteruptionComparateurA()
+void Minuterie0::activerInteruptionComparateurA() // TIMSK0: OCIE0A pour ISR(vect.TIMER0_COMPA)
 {
+    TIMSK0 = (1 << OCIE0A);
 }
 void Minuterie0::desactiverInteruptionComparateurA()
 {
+    TIMSK0 = (0 << OCIE0A);
 }
-void Minuterie0::activerInteruptionComparateurB()
+
+void Minuterie0::activerInteruptionComparateurB() // TIMSK0: OCIE0B pour ISR(vect.TIMER0_COMPB)
 {
+    TIMSK0 = (1 << OCIE0B);
 }
 void Minuterie0::desactiverInteruptionComparateurB()
+{
+    TIMSK0 = (0 << OCIE0B);
+}
+
+void PartirMinuterie()
+{
+}
+void PartirPWM(uint8_t ratio)
 {
 }
