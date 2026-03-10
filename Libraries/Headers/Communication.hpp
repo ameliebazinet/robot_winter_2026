@@ -6,8 +6,6 @@ class Communication {
     void initialisationUART(); 
     void transmissionUART(uint8_t donnee); 
 
-
-
     private:
     Memoire24CXXX memoire_;
     uint16_t adresse_;
