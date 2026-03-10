@@ -2,12 +2,6 @@
 MCU=atmega324pa
 
 # Nom de votre projet
-<<<<<<< HEAD:Makefile
-PROJECTNAME=tp7
-
-# Fichiers sources. Utilisez le suffixe .cpp pour les fichiers C++
-PRJSRC= $(wildcard *.cpp)
-=======
 # (utilisez un seul mot, exemple: 'monprojet')
 PROJECTNAME=Communicaton
 
@@ -17,7 +11,6 @@ PROJECTNAME=Communicaton
 # un espace. exemple: 'tp1.c tp2.cpp':
 PRJSRC= Communication.cpp
 # wildcard!!!!!
->>>>>>> 4c47ce1 (USART pas finigit add .):Libraries/Bibli/Makefile
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC=
