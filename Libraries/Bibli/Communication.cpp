@@ -13,7 +13,7 @@ void Communication::initialisationUART ( void ) {
     UCSR0C &= ~(1 << UCSZ02);
     UCSR0C |= (1 << UCSZ01);
     UCSR0C |= (1 << UCSZ00);
-    
+
 }
     
 void Communication::transmissionUART ( uint8_t donnee ) {
