@@ -45,19 +45,19 @@ Minuterie0::Minuterie0(WaveFormGenerator0 wgm, CounterSelect0 cs, CompareOutputM
     //     TCCR0A |= (comA & 0b10) | (comA & 0b01) | (comB & 0b10) | (comB & 0b01) | (wgm & 0b010) | (wgm & 0b001);
 }
 
-void Minuterie0::activerComparateurA(int tempsMs)
+void Minuterie0::activerComparateurA(uint8_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR0A = 0;
     else
-        OCR0A = F_CPU / prescaler * tempsMs / 1000;
+        OCR0A = F_CPU / prescaler_ * tempsMs / 1000;
 }
-void Minuterie0::activerComparateurB(int tempsMs)
+void Minuterie0::activerComparateurB(uint8_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR0B = 0;
     else
-        OCR0B = F_CPU / prescaler * tempsMs / 1000;
+        OCR0B = F_CPU / prescaler_ * tempsMs / 1000;
 }
 
 void Minuterie0::activerInteruptionComparateurA() // TIMSK0: OCIE0A pour ISR(vect.TIMER0_COMPA)
