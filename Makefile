@@ -1,34 +1,10 @@
-########       AVR Project Makefile       ########
-#####                                        #####
-#####      Makefile produit et ecrit par     #####
-#####   Simon Barrette & Jerome Collin pour  #####
-#####           INF1900 - 2016               #####
-#####                                        #####
-#####         Inspire de Pat Deegan -        #####
-#####  Psychogenic Inc (www.psychogenic.com) #####
-##################################################
-
-# Ce Makefile vous permet de compiler des projets
-# pour les microcontroleurs Atmel AVR sur 
-# Linux ou Unix, en utilisant l'outil AVR-GCC. 
-# Ce Makefile supporte C & C++
-
-
-#####      Details specifique a la cible       #####
-#####  Vous devez les adapter a votre projet   #####
-
 # Nom du microcontroleur cible
-# (exemple: 'at90s8515')
 MCU=atmega324pa
 
 # Nom de votre projet
-# (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=tp6pb1
+PROJECTNAME=tp7
 
-# Fichiers sources
-# Utilisez le suffixe .cpp pour les fichiers C++
-# Listez tous les fichiers a compiler, separes par
-# un espace. exemple: 'tp1.c tp2.cpp':
+# Fichiers sources. Utilisez le suffixe .cpp pour les fichiers C++
 PRJSRC= $(wildcard *.cpp)
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
@@ -42,21 +18,7 @@ LIBS=
 OPTLEVEL=s
 
 # Programmer ID - Ne pas changer 
-# Liste complete des IDs disponible avec avrdude
 AVRDUDE_PROGRAMMERID=usbasp
-
-
-
-####################################################
-#####         Configuration terminee           #####
-#####                                          #####
-#####  Le reste de cette section contient les  #####
-##### details d'implementation vous permettant #####
-##### de mieux comprendre le fonctionnement de #####
-#####   ce Makefile en vue de sa modification  #####
-####################################################
-
-
 
 ####### variables #######
 
@@ -70,7 +32,6 @@ AVRDUDE=avrdude
 REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
-
 
 
 ####### Options de compilation #######
@@ -92,16 +53,12 @@ CXXFLAGS=-fno-exceptions
 # Linker pour lier les librairies utilisees
 LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
 
-
-
 ####### Cible (Target) #######
 
 #Nom des cibles par defaut
 TRG=$(PROJECTNAME).elf
 HEXROMTRG=$(PROJECTNAME).hex
 HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex
-
-
 
 ####### Definition de tout les fichiers objets #######
 
@@ -116,20 +73,13 @@ CPPFILES=$(filter %.cpp, $(PRJSRC))
 OBJDEPS=$(CFILES:.c=.o) \
 	$(CPPFILES:.cpp=.o)
 	
-# Pour plus d'information sur cette section, consulter :
-# http://bit.ly/257R53E	
-# Les fonctions $(filter pattern…,text) &
-# $(patsubst pattern,replacement,text) sont pertinentes
-	
-
-
 ####### Creation des commandes du Makefile ####### 
 
 # Creation des cibles Phony (Phony Target)
 # En plus de la commande make qui permet de compiler
 # votre projet, vous pouvez utilisez les commandes
 # make all, make install et make clean
-.PHONY: all install clean debug
+.PHONY: all install clean
 
 # Make all permet simplement de compiler le projet
 #
