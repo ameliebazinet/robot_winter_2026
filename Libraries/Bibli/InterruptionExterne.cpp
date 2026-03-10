@@ -8,26 +8,27 @@ void initialisation(uint8_t indiceInt, uint8_t interruptSenseControl)
 {
 	cli();
 	EIMSK |= (1 << indiceInt);
-
+	
 	// initialisation de l'interruption de Int0
 	if (indiceInt == 0)
 	{
+		EICRA &= ~((1 << ISC00) | (1 << ISC01)); 
 		DDRD &= ~(1 << PD2);
 		if (interruptSenseControl == 0)
 		{
 			EICRA &= ~(1 << ISC00) & ~(1 << ISC01);
 		}
-		if (interruptSenseControl == 1)
+		else if (interruptSenseControl == 1)
 		{
 			EICRA &= ~(1 << ISC01);
 			EICRA |= (1 << ISC00);
 		}
-		if (interruptSenseControl == 2)
+		else if (interruptSenseControl == 2)
 		{
 			EICRA &= ~(1 << ISC00);
 			EICRA |= (1 << ISC01);
 		}
-		if (interruptSenseControl == 3)
+		else if (interruptSenseControl == 3)
 		{
 			EICRA |= (1 << ISC00) | (1 << ISC01);
 		}
@@ -37,22 +38,22 @@ void initialisation(uint8_t indiceInt, uint8_t interruptSenseControl)
 	if (indiceInt == 1)
 	{
 		DDRD &= ~(1 << PD3);
-
+		EICRA &= ~((1 << ISC10) | (1 << ISC11)); 
 		if (interruptSenseControl == 0)
 		{
 			EICRA &= ~(1 << ISC10) & ~(1 << ISC11);
 		}
-		if (interruptSenseControl == 1)
+		else if (interruptSenseControl == 1)
 		{
 			EICRA &= ~(1 << ISC11);
 			EICRA |= (1 << ISC10);
 		}
-		if (interruptSenseControl == 2)
+		else if (interruptSenseControl == 2)
 		{
 			EICRA &= ~(1 << ISC10);
 			EICRA |= (1 << ISC11);
 		}
-		if (interruptSenseControl == 3)
+		else if (interruptSenseControl == 3)
 		{
 			EICRA |= (1 << ISC10) | (1 << ISC11);
 		}
@@ -62,26 +63,68 @@ void initialisation(uint8_t indiceInt, uint8_t interruptSenseControl)
 	if (indiceInt == 2)
 	{
 		DDRB &= ~(1 << PB2);
-
+		EICRA &= ~((1 << ISC20) | (1 << ISC21)); 
 		if (interruptSenseControl == 0)
 		{
 			EICRA &= ~(1 << ISC20) & ~(1 << ISC21);
 		}
-		if (interruptSenseControl == 1)
+		else if (interruptSenseControl == 1)
 		{
 			EICRA &= ~(1 << ISC21);
 			EICRA |= (1 << ISC20);
 		}
-		if (interruptSenseControl == 2)
+		else if (interruptSenseControl == 2)
 		{
 			EICRA &= ~(1 << ISC20);
 			EICRA |= (1 << ISC21);
 		}
-		if (interruptSenseControl == 3)
+		else if (interruptSenseControl == 3)
 		{
 			EICRA |= (1 << ISC20) | (1 << ISC21);
 		}
 
-		sei();
 	}
+}
+
+void desactiverInterruptionsGlobales()
+{
+	cli();
+}
+
+void activerInterruptionsGlobales()
+{
+    sei();
+}
+
+void desactiverInterruption(uint8_t indiceInt)
+{
+    EIMSK &= ~(1 << indiceInt);
+}
+
+void activerInterruption(uint8_t indiceInt)
+{
+    EIMSK |= (1 << indiceInt);
+}
+
+// Lire le flag d'interruption (EIFR) pour savoir si une INT est en attente
+bool interruptionEnAttente(uint8_t indiceInt)
+{
+    return (EIFR & (1 << indiceInt)) != 0;
+}
+
+void changerSenseControl(uint8_t indiceInt, uint8_t interruptSenseControl)
+{
+    desactiverInterruption(indiceInt);
+    initialisation(indiceInt, interruptSenseControl);
+    activerInterruption(indiceInt);
+}
+
+bool lireEtatBroche(uint8_t indiceInt)
+{
+    return (EIFR & (1 << indiceInt)) != 0;
+}
+
+void effacerFlag(uint8_t indiceInt)
+{
+    EIFR |= (1 << indiceInt); 
 }
