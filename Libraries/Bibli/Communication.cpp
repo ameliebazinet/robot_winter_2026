@@ -1,10 +1,6 @@
 #include <avr/io.h>
 #include "Communication.hpp"
 
-Communication::Communication(Memoire24CXXX memoire, uint16_t adresse, uint8_t donnee)
-    : memoire_(memoire), adresse_(adresse), donnee_(donnee)
-{}
-
 void Communication::initialisationUART ( void ) {
     UBRR0H = 0;
    
