@@ -1,5 +1,5 @@
 #include <avr/io.h>
-#include "../Headers/Communication.hpp"
+#include "Communication.hpp"
 
 
 void Communication::initialisationUART(void) {
