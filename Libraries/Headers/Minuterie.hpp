@@ -1,49 +1,48 @@
 #include <avr/io.h>
 #define F_CPU 8000000UL
 
-// void partirMinuterie(float tempsMs);
-// void ajustementPwm();
+// / 1: A:PD5 B:PD4 / 2: A:PB7 B:PB6
 
 namespace Minuterie
 {
-
-    enum WaveFormGenerator
-    {
-        NORMAL = 0,
-        CTC = (1 << WGM01),
-        PWM = (1 << WGM00)
-    };
-
-    enum CounterSelect
-    {
-        OFF = 0,
-        PRESCALER1 = (1 << CS00),
-        PRESCALER8 = (1 << CS01),
-        PRESCALER64 = (1 << CS01) | (1 << CS00),
-        PRESCALER256 = (1 << CS02),
-        PRESCALER1024 = (1 << CS02) | (1 << CS00)
-    };
-
-    enum CompareOutputModeA // 0: A:PB3 B:PB4 / 1: A:PD5 B:PD4 / 2: A:PB7 B:PB6
-    {
-        DECONNECTE = 0,
-        TOGGLE = (1 << COM0A0),
-        CLEAR = (1 << COM0A1),
-        SET = (1 << COM0A1) | (1 << COM0A0)
-    };
-
-    enum CompareOutputModeB // 0: A:PB3 B:PB4 / 1: A:PD5 B:PD4 / 2: A:PB7 B:PB6
-    {
-        DECONNECTE = 0,
-        TOGGLE = (1 << COM0B0),
-        CLEAR = (1 << COM0B1),
-        SET = (1 << COM0B1) | (1 << COM0B0)
-    };
-
     class Minuterie0
     {
     public:
-        Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comb);
+        enum WaveFormGenerator0
+        {
+            NORMAL = 0,
+            CTC = (1 << WGM01),
+            PWM = (1 << WGM00)
+        };
+
+        enum CounterSelect0
+        {
+            OFF = 0,
+            PRESCALER1 = (1 << CS00),
+            PRESCALER8 = (1 << CS01),
+            PRESCALER64 = (1 << CS01) | (1 << CS00),
+            PRESCALER256 = (1 << CS02),
+            PRESCALER1024 = (1 << CS02) | (1 << CS00)
+        };
+
+        // 0: A:PB3 B:PB4
+        enum CompareOutputMode0A  
+        {
+            DECONNECTE_A = 0,
+            TOGGLE_A = (1 << COM0A0),
+            CLEAR_A = (1 << COM0A1),
+            SET_A = (1 << COM0A1) | (1 << COM0A0)
+        };
+
+        enum CompareOutputMode0B 
+        {
+            DECONNECTE_B = 0,
+            TOGGLE_B = (1 << COM0B0),
+            CLEAR_B = (1 << COM0B1),
+            SET_B = (1 << COM0B1) | (1 << COM0B0)
+        };
+
+        Minuterie0(WaveFormGenerator0 wgm, CounterSelect0 cs, CompareOutputMode0A comA, CompareOutputMode0B comb);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR0A
@@ -59,19 +58,11 @@ namespace Minuterie
         void activerInteruptionComparateurB();
         void desactiverInteruptionComparateurB();
 
-        // Combine le constructeur Minuterie0(),
-        //         activerComparateur(A/B)(),
-        //         activerInteruptionComparateur(A/B)() et
-        //         commencer()
-        //
-        // Initialise tousles registres necessaire pour partir une minuterie
-        void PartirMinuterie();
-
         // Initialise tous les registres necessaire pour partir un signal PWM
         void PartirPWM(uint8_t ratio);
 
     private:
-        CounterSelect prescaler;
+        CounterSelect0 prescaler;
     };
 
     class Minuterie1
@@ -80,4 +71,12 @@ namespace Minuterie
     class Minuterie2
     {
     };
+
+    // Combine le constructeur Minuterie0(),
+    //         activerComparateur(A/B)(),
+    //         activerInteruptionComparateur(A/B)() et
+    //         commencer()
+    //
+    // Initialise tousles registres necessaire pour partir une minuterie
+    // void PartirMinuterie();
 }

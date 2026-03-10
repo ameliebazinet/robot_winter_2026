@@ -3,27 +3,33 @@
 
 using namespace Minuterie;
 
-Minuterie0::Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
+enum Chemin
+{
+    A,
+    B
+};
+
+Minuterie0::Minuterie0(WaveFormGenerator0 wgm, CounterSelect0 cs, CompareOutputMode0A comA, CompareOutputMode0B comB)
 {
     uint16_t prescaler;
     switch (cs)
     {
-    case Minuterie::OFF:
+    case OFF:
         prescaler = 0;
         break;
-    case Minuterie::PRESCALER1:
+    case PRESCALER1:
         prescaler = 1;
         break;
-    case Minuterie::PRESCALER8:
+    case PRESCALER8:
         prescaler = 8;
         break;
-    case Minuterie::PRESCALER64:
+    case PRESCALER64:
         prescaler = 64;
         break;
-    case Minuterie::PRESCALER256:
+    case PRESCALER256:
         prescaler = 256;
         break;
-    case Minuterie::PRESCALER1024:
+    case PRESCALER1024:
         prescaler = 1024;
         break;
     }
@@ -72,9 +78,28 @@ void Minuterie0::desactiverInteruptionComparateurB()
     TIMSK0 = (0 << OCIE0B);
 }
 
-void PartirMinuterie()
+void Minuterie0::PartirPWM(uint8_t ratio)
 {
+    Minuterie0 m0 = Minuterie0(PWM, PRESCALER8, CLEAR_A, CLEAR_B);
+
+    activerComparateurA(255 * ratio / 100);
+    activerComparateurB(255 * ratio / 100);
 }
-void PartirPWM(uint8_t ratio)
-{
-}
+
+// static void PartirMinuterie(int tempsMs, Type type)
+//  {
+//      switch (type)
+//      {  
+//      case A:
+//          Minuterie0 m0 = Minuterie0(CTC, PRESCALER1024, OFF, OFF);
+//          activerComparateurA(tempsMs);
+//          activerInteruptionComparateurA();
+//          break;
+
+//     case B:
+//         Minuterie0 m0 = Minuterie0(CTC, PRESCALER1024, OFF, OFF);
+//         activerComparateurB(tempsMs);
+//         activerInteruptionComparateurB();
+//         break;
+//     }
+// }
