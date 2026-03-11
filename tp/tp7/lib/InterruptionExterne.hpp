@@ -2,6 +2,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <stdint.h>
 
 class InterruptionExterne
 {
@@ -10,6 +11,7 @@ public:
     void changerSenseControl(uint8_t indiceInt, uint8_t interruptSenseControl);
     bool interruptionEnAttente(uint8_t indiceInt);
     void activerInterruption(uint8_t indiceInt);
+    void desactiverInterruption(uint8_t indiceInt);
     void reprendreInterruptionExterne();
     void effacerFlag(uint8_t indiceInt);
     bool lireEtatBroche(uint8_t indiceInt);
