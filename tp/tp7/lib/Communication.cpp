@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include "../Headers/Communication.hpp"
+#include "Communication.hpp"
 
 void Communication::initialisationUART(void) {
     UBRR0H = 0;
