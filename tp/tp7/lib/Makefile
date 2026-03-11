@@ -79,6 +79,8 @@ all: $(PROJECTNAME).a
 -include *.d
 
 # De .o à .a
+$(PROJECTNAME).a: $(OBJDEPS)
+	$(AR) -c -r -s $@ $(OBJDEPS)
 
 # Make clean permet d'effacer tout les fichiers generes
 # lors de la compilation
