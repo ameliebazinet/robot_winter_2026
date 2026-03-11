@@ -1,6 +1,7 @@
-#include "memoire_24.h"
+#include <stdint.h>
+
 class Communication {
-    public:
+public:
 
     void initialisationUART(); 
     void transmissionUART(uint8_t donnee); 

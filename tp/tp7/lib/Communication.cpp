@@ -2,7 +2,8 @@
 #include "Communication.hpp"
 
 
-void Communication::initialisationUART(void) {
+void Communication::initialisationUART(void) 
+{
     UBRR0H = 0;
     UBRR0L = 0xCF;
     UCSR0B |= (1 << RXEN0) | (1 << TXEN0);
@@ -16,12 +17,14 @@ void Communication::initialisationUART(void) {
 
 }
 
-void Communication::transmissionUART(uint8_t donnee) {
+void Communication::transmissionUART(uint8_t donnee) 
+{
     while (!(UCSR0A & (1 << UDRE0)));
     UDR0 = donnee;
 }
 
-void Communication::transmissionChaine(const char* message) {
+void Communication::transmissionChaine(const char* message) 
+{
     while (*message) {
         Communication::transmissionUART((uint8_t)*message);
         message++;
