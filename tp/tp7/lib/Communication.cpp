@@ -18,17 +18,24 @@ void Communication::transmissionUART(uint8_t donnee)
 
 void Communication::transmissionChaine(const char* message) 
 {
+    if (!message) {
+        return;
+    }
+    
     while (*message) {
         transmissionUART((uint8_t)*message);
         message++;
     }
 }
 
-void Communication::transmissionFormatee(const char* format, ...) {
+void Communication::transmissionFormatee(const char* format, ...) 
+{
     char buffer[64];
+
     va_list args;
     va_start(args, format);
     vsnprintf(buffer, sizeof(buffer), format, args);
     va_end(args);
+    
     transmissionChaine(buffer);
 }

@@ -3,9 +3,10 @@
 #include <stdint.h>
 #include <stdarg.h>
 
-class Communication {
+class Communication 
+{
 public:
-    void initialisationUART();
+    void initialisationUART(void);
     void transmissionUART(uint8_t donnee);
     void transmissionChaine(const char* message);
     void transmissionFormatee(const char* format, ...);
