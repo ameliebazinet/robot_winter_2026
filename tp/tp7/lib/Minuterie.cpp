@@ -76,7 +76,7 @@ void Minuterie0::activerInteruptionComparateurB() // TIMSK0: OCIE0B pour ISR(vec
 void Minuterie0::desactiverInteruptionComparateurB()
 {
     TIMSK0 = (0 << OCIE0B);
-}
+} 
 
 void Minuterie0::PartirPWM(uint8_t ratio)
 {
