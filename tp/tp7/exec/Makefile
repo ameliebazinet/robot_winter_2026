@@ -10,9 +10,6 @@ PRJSRC=main.cpp
 LIBDIR=../lib
 LIBS=$(LIBDIR)/libstatique.a
 
-# Fichiers sources dans lib/
-LIBCSRC=$(wildcard $(LIBDIR)/*.c)
-LIBCPPSRC=$(wildcard $(LIBDIR)/*.cpp)
 
 # Inclusions : headers de la lib
 INC= -I. -I$(LIBDIR)
@@ -36,7 +33,6 @@ HEXFORMAT=ihex
 
 CFLAGS= $(INC) -MMD -g -mmcu=$(MCU) -O$(OPTLEVEL) \
 	-std=c++14 -fshort-enums -funsigned-bitfields -funsigned-char -Wall
-
 CXXFLAGS=-fno-exceptions
 LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
 
@@ -45,16 +41,16 @@ LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
 TRG=$(PROJECTNAME).elf
 HEXROMTRG=$(PROJECTNAME).hex
 
-####### Fichiers objets #######
+####### Objets et Librairies objets #######
 
 MAINOBJ=$(PRJSRC:.cpp=.o)
-LIBCOBJ=$(LIBCSRC:.c=.o)
+
+LIBCPPSRC=$(wildcard $(LIBDIR)/*.cpp)
 LIBCPPOBJ=$(LIBCPPSRC:.cpp=.o)
-LIBOBJ=$(LIBCOBJ) $(LIBCPPOBJ)
 
 ####### Commandes #######
 
-.PHONY: all debug install clean
+.PHONY: all debug install clean lib
 
 all: $(LIBS) $(TRG) $(HEXROMTRG)
 
@@ -62,9 +58,11 @@ debug: CFLAGS += -DDEBUG
 
 debug: all
 
+lib: $(LIBS)
+
 # Cree la librairie statique directement depuis exec/
-$(LIBS): $(LIBOBJ)
-	$(AR) rcs $(LIBS) $(LIBOBJ)
+$(LIBS): $(LIBCPPOBJ)
+	$(AR) rcs $@ $^
 
 # Lie main.o avec la librairie statique
 $(TRG): $(MAINOBJ) $(LIBS)
@@ -84,6 +82,7 @@ $(LIBDIR)/%.o: $(LIBDIR)/%.cpp
 install: $(HEXROMTRG)
 	$(AVRDUDE) -c $(AVRDUDE_PROGRAMMERID) \
 	-p $(MCU) -P usb -B 10 -e -U flash:w:$(HEXROMTRG)
+
 clean:
 	$(REMOVE) *.o *.d $(TRG) $(HEXROMTRG) *.map
 	$(REMOVE) $(LIBS) $(LIBDIR)/*.o $(LIBDIR)/*.d
