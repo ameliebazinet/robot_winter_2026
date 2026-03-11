@@ -1,5 +1,7 @@
 MCU=atmega324pa
 
+PROJECTNAME=libstatique
+
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 PRJSRC= $(wildcard *.cpp)
@@ -41,16 +43,6 @@ endif
 # Flags pour le compilateur en C++
 CXXFLAGS=-fno-exceptions
 
-# Linker pour lier les librairies utilisees
-LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
-
-####### Cible (Target) #######
-
-#Nom des cibles par defaut
-TRG=$(PROJECTNAME).elf
-HEXROMTRG=$(PROJECTNAME).hex
-HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex
-
 ####### Definition de tout les fichiers objets #######
 
 # Cette fonction permet de differencier les fichiers .c
@@ -61,8 +53,7 @@ CFILES=$(filter %.c, $(PRJSRC))
 CPPFILES=$(filter %.cpp, $(PRJSRC))
 
 # Liste de tout les fichiers objet que nous devons creer
-OBJDEPS=$(CFILES:.c=.o) \
-	$(CPPFILES:.cpp=.o)
+OBJDEPS=$(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
 	
 ####### Creation des commandes du Makefile ####### 
 
@@ -74,11 +65,7 @@ OBJDEPS=$(CFILES:.c=.o) \
 
 # Make all permet simplement de compiler le projet
 #
-all: $(TRG) $(HEXROMTRG)
-
-# Implementation de la cible
-$(TRG): $(OBJDEPS)
-	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) -lm $(LIBS)
+all: $(PROJECTNAME).a
 
 # Production des fichiers object
 # De C a objet
@@ -91,10 +78,7 @@ $(TRG): $(OBJDEPS)
 # Verification des dependances (header dependencies)
 -include *.d
 
-# Production des fichiers hex a partir des fichiers elf
-%.hex: %.elf
-	$(OBJCOPY) -j .text -j .data -O $(HEXFORMAT) $< $@
-
+# De .o à .a
 
 # Make clean permet d'effacer tout les fichiers generes
 # lors de la compilation
