@@ -1,8 +1,42 @@
 #define F_CPU 8000000UL
 #include <util/delay.h>
 #include <avr/io.h>
-#include "InterruptionExterne.hpp"
 #include "Del.hpp"
+#include "memoire_24.h"
+
+
+
+
+/* int main()
+{
+    Del del(PORTA, PA0, PA1);
+
+    const uint8_t chaine[] = "*P*O*L*Y*T*E*C*H*N*I*Q*U*E* *M*O*N*T*R*E*A*L*";
+
+    Memoire24CXXX mem;
+
+    for (uint8_t i = 0; i < strlen((char*)chaine); i++) {
+        mem.ecriture(0x0000 + i, chaine[i]);
+        _delay_ms(5);
+    }
+
+    uint8_t donnees_lues[strlen((char*)chaine) + 1];
+
+    for (uint8_t j = 0; j < strlen((char*)chaine); j++) {
+        mem.lecture(0x0000 + j, &donnees_lues[j]);
+    }
+    donnees_lues[strlen((char*)chaine)] = 0;
+    
+    if (strcmp((char*)chaine,(char*)donnees_lues) == 0) {
+        del.allumerCouleur(Del::Couleur::VERT);
+    }
+
+    else {
+        del.allumerCouleur(Del::Couleur::ROUGE);
+    }
+}
+ */
+
 
 /* enum class State
 {
