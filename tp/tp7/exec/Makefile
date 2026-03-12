@@ -23,7 +23,6 @@ AVRDUDE_PROGRAMMERID=usbasp
 ####### Variables #######
 
 CC=avr-gcc
-AR=avr-ar
 OBJCOPY=avr-objcopy
 AVRDUDE=avrdude
 REMOVE=rm -f
@@ -41,28 +40,18 @@ LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
 TRG=$(PROJECTNAME).elf
 HEXROMTRG=$(PROJECTNAME).hex
 
-####### Objets et Librairies objets #######
+####### Objet de l'executable #######
 
 MAINOBJ=$(PRJSRC:.cpp=.o)
 
-LIBCPPSRC=$(wildcard $(LIBDIR)/*.cpp)
-LIBCPPOBJ=$(LIBCPPSRC:.cpp=.o)
-
 ####### Commandes #######
 
-.PHONY: all debug install clean lib
+.PHONY: all debug install clean
 
 all: $(LIBS) $(TRG) $(HEXROMTRG)
 
 debug: CFLAGS += -DDEBUG
-
 debug: all
-
-lib: $(LIBS)
-
-# Cree la librairie statique directement depuis exec/
-$(LIBS): $(LIBCPPOBJ)
-	$(AR) rcs $@ $^
 
 # Lie main.o avec la librairie statique
 $(TRG): $(MAINOBJ) $(LIBS)
@@ -72,22 +61,19 @@ $(TRG): $(MAINOBJ) $(LIBS)
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
 
-# Compilation des fichiers .cpp dans lib/
-$(LIBDIR)/%.o: $(LIBDIR)/%.cpp
-	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
-
+# Conversion de l'executable en format hex
 %.hex: %.elf 
 	$(OBJCOPY) -j .text -j .data -O $(HEXFORMAT) $< $@
 
+# Installation du programme sur la carte
 install: $(HEXROMTRG)
 	$(AVRDUDE) -c $(AVRDUDE_PROGRAMMERID) \
 	-p $(MCU) -P usb -B 10 -e -U flash:w:$(HEXROMTRG)
 
+# Nettoyage des .o, des dépendances et des executables
 clean:
 	$(REMOVE) *.o *.d $(TRG) $(HEXROMTRG) *.map
-	$(REMOVE) $(LIBS) $(LIBDIR)/*.o $(LIBDIR)/*.d
 
 -include *.d
--include $(LIBDIR)/*.d
 
 #####                    EOF                   #####
