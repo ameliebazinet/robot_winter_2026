@@ -7,11 +7,12 @@ Del::Del(volatile uint8_t &port, uint8_t pin1, uint8_t pin2)
     pin1_(pin1 & 0b111), 
     pin2_(pin2 & 0b111)
 {
-    *(&port-1) |= ((1 << pin1) | (1 << pin2));
-    // Dans la documentation il y a une adresse de différence entre port et pin. 
+    // Dans la documentation, il y a une adresse de différence entre port et pin. 
+    volatile uint8_t* ddr = &port-1;
+    *ddr |= ((1 << pin1) | (1 << pin2));
 }
 
-void Del::ajusterCouleur(Couleur couleur)
+void Del::allumerCouleur(Couleur couleur)
 {
     if (couleur == Couleur::ETEINT) 
     {   
@@ -32,11 +33,11 @@ void Del::ajusterCouleur(Couleur couleur)
     }
 };
 
-void Del::ajusterAmbre()
+void Del::allumerCouleurAmbre()
 {
     const uint8_t DELAI_AMBRE = 5;
-    ajusterCouleur(Couleur::ROUGE);
+    allumerCouleur(Couleur::ROUGE);
     _delay_ms(DELAI_AMBRE);
-    ajusterCouleur(Couleur::VERT);
+    allumerCouleur(Couleur::VERT);
     _delay_ms(DELAI_AMBRE);
 }
