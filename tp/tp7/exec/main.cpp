@@ -1,8 +1,8 @@
 #define F_CPU 8000000UL
 #include <util/delay.h>
 #include <avr/io.h>
-#include "../lib/can.h"
-#include "../lib/Del.hpp"
+#include "can.h"
+#include "Del.hpp"
 
 
 int main()
@@ -12,6 +12,7 @@ int main()
     const uint16_t LUMIERE_FORTE = 0xF0;  
     
     can convertisseur;
+    Del ;
     
     DDRB |= (1 << PB0 | 1 << PB1);
 
@@ -19,12 +20,12 @@ int main()
         uint16_t valeurLumiere = convertisseur.lecture(0) >> 2;
 
         if (valeurLumiere < LUMIERE_FAIBLE) {
-            ajusterCouleur(Couleur::VERT);
+            ajusterCouleur(Del::Couleur::VERT);
             _delay_ms(DELAI_LED);
         }
 
         else if (valeurLumiere > LUMIERE_FORTE) {
-            ajusterCouleur(Couleur::ROUGE);
+            ajusterCouleur(Del::Couleur::ROUGE);
             _delay_ms(DELAI_LED);
         }
 
