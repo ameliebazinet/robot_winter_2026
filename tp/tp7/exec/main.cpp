@@ -27,6 +27,7 @@ int main()
         // DEBUG_PRINT(comm, "Etat: %d\n", etat);      // affiche si make debug
 
         // _delay_ms(1000); // attend 1 seconde entre chaque envoi
+        
         }
     }
     return 0;
