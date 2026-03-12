@@ -7,14 +7,13 @@
 class InterruptionExterne
 {
 public:
-    void initialisation(uint8_t indiceInt, uint8_t interruptSenseControl);
-    void changerSenseControl(uint8_t indiceInt, uint8_t interruptSenseControl);
-    bool interruptionEnAttente(uint8_t indiceInt);
+    void activerInterruptionsGlobales();
+    void desactiverInterruptionsGlobales();
     void activerInterruption(uint8_t indiceInt);
     void desactiverInterruption(uint8_t indiceInt);
-    void reprendreInterruptionExterne();
+    bool estEnAttente(uint8_t indiceInt);
+    void changerDetectionInterruption(uint8_t indiceInt, uint8_t detectionInterruption);
+    bool estActiveeBroche(uint8_t indiceInt);
     void effacerFlag(uint8_t indiceInt);
-    bool lireEtatBroche(uint8_t indiceInt);
-    void desactiverInterruptionsGlobales();
-    void activerInterruptionsGlobales();
+    void initialisation(uint8_t indiceInt, uint8_t detectionInterruption);
 };

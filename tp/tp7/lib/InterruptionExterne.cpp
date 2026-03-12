@@ -1,18 +1,13 @@
 #include "InterruptionExterne.hpp"
 
-void InterruptionExterne::desactiverInterruptionsGlobales()
-{
-	cli();
-}
-
 void InterruptionExterne::activerInterruptionsGlobales()
 {
     sei();
 }
 
-void InterruptionExterne::desactiverInterruption(uint8_t indiceInt)
+void InterruptionExterne::desactiverInterruptionsGlobales()
 {
-    EIMSK &= ~(1 << indiceInt);
+	cli();
 }
 
 void InterruptionExterne::activerInterruption(uint8_t indiceInt)
@@ -20,21 +15,26 @@ void InterruptionExterne::activerInterruption(uint8_t indiceInt)
     EIMSK |= (1 << indiceInt);
 }
 
-// Lire le flag d'interruption (EIFR) pour savoir si une INT est en attente
-bool InterruptionExterne::interruptionEnAttente(uint8_t indiceInt)
+void InterruptionExterne::desactiverInterruption(uint8_t indiceInt)
+{
+    EIMSK &= ~(1 << indiceInt);
+}
+
+// Lit le flag d'interruption (EIFR) pour savoir si une INT est en attente
+bool InterruptionExterne::estEnAttente(uint8_t indiceInt)
 {
     return (EIFR & (1 << indiceInt)) != 0;
 }
 
-void InterruptionExterne::changerSenseControl(uint8_t indiceInt, uint8_t interruptSenseControl)
+void InterruptionExterne::changerDetectionInterruption(uint8_t indiceInt, uint8_t detectionInterruption)
 {
     desactiverInterruptionsGlobales();
     desactiverInterruption(indiceInt);
-    initialisation(indiceInt, interruptSenseControl);
+    initialisation(indiceInt, detectionInterruption);
     activerInterruption(indiceInt);
 }
 
-bool InterruptionExterne::lireEtatBroche(uint8_t indiceInt)
+bool InterruptionExterne::estActiveeBroche(uint8_t indiceInt)
 {
     switch (indiceInt) {
         case 0: return (PIND & (1 << PD2)) != 0;
@@ -49,7 +49,7 @@ void InterruptionExterne::effacerFlag(uint8_t indiceInt)
     EIFR |= (1 << indiceInt); 
 }
 
-void InterruptionExterne::initialisation(uint8_t indiceInt, uint8_t interruptSenseControl)
+void InterruptionExterne::initialisation(uint8_t indiceInt, uint8_t detectionInterruption)
 {
 	desactiverInterruptionsGlobales();
     desactiverInterruption(indiceInt);
@@ -60,7 +60,7 @@ void InterruptionExterne::initialisation(uint8_t indiceInt, uint8_t interruptSen
         case 0: // INT0
             DDRD &= ~(1 << PD2);
             EICRA &= ~((1 << ISC00) | (1 << ISC01));
-            switch(interruptSenseControl) {
+            switch(detectionInterruption) {
                 case 0: 
 					break;
                 case 1: 
@@ -78,7 +78,7 @@ void InterruptionExterne::initialisation(uint8_t indiceInt, uint8_t interruptSen
         case 1: // INT1
             DDRD &= ~(1 << PD3);
             EICRA &= ~((1 << ISC10) | (1 << ISC11));
-            switch(interruptSenseControl) {
+            switch(detectionInterruption) {
                 case 0: 
 					break;
                 case 1: 
@@ -96,7 +96,7 @@ void InterruptionExterne::initialisation(uint8_t indiceInt, uint8_t interruptSen
         case 2: // INT2
             DDRB &= ~(1 << PB2);
             EICRA &= ~((1 << ISC20) | (1 << ISC21));
-            switch(interruptSenseControl) {
+            switch(detectionInterruption) {
                 case 0: 
 					break;
                 case 1: 
