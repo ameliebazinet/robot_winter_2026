@@ -1,82 +1,122 @@
 #include <avr/io.h>
 #define F_CPU 8000000UL
 
-// / 1: A:PD5 B:PD4 / 2: A:PB7 B:PB6
-
-namespace Minuterie {
-
-class Minuterie0
+namespace Minuterie
 {
-public:
-    enum WaveFormGenerator0
+    enum WaveFormGenerator
     {
-        NORMAL = 0,
-        PWM = (1 << WGM00),
-        CTC = (1 << WGM01)
+        NORMAL = (0 << WGM01) | (0 << WGM00),
+        PWM = (0 << WGM01) | (1 << WGM00),
+        CTC = (1 << WGM01) | (0 << WGM00)
     };
 
-    enum CounterSelect0
+    enum CounterSelect
     {
-        OFF = 0,
-        PRESCALER1 = (1 << CS00),
-        PRESCALER8 = (1 << CS01),
-        PRESCALER64 = (1 << CS01) | (1 << CS00),
-        PRESCALER256 = (1 << CS02),
-        PRESCALER1024 = (1 << CS02) | (1 << CS00)
+        OFF = (0 << CS02) | (0 << CS01) | (0 << CS00),
+        PRESCALER1 = (0 << CS02) | (0 << CS01) | (1 << CS00),
+        PRESCALER8 = (0 << CS02) | (1 << CS01) | (0 << CS00),
+        PRESCALER64 = (0 << CS02) | (1 << CS01) | (1 << CS00),
+        PRESCALER256 = (1 << CS02) | (0 << CS01) | (0 << CS00),
+        PRESCALER1024 = (1 << CS02) | (0 << CS01) | (1 << CS00)
     };
 
-    // 0: A:PB3 B:PB4
-    enum CompareOutputMode0A  
+    // 0: PB3 / 1: PD5 / 2: PD7
+    enum CompareOutputModeA
     {
-        DECONNECTE_A = 0,
-        TOGGLE_A = (1 << COM0A0),
-        CLEAR_A = (1 << COM0A1),
+        DECONNECTE_A = (0 << COM0A1) | (0 << COM0A0),
+        TOGGLE_A = (0 << COM0A1) | (1 << COM0A0),
+        CLEAR_A = (1 << COM0A1) | (0 << COM0A0),
         SET_A = (1 << COM0A1) | (1 << COM0A0)
     };
-
-    enum CompareOutputMode0B 
+    // 0: PB4 / 1: PD4 / 2: PD6
+    enum CompareOutputModeB
     {
-        DECONNECTE_B = 0,
-        TOGGLE_B = (1 << COM0B0),
-        CLEAR_B = (1 << COM0B1),
+        DECONNECTE_B = (0 << COM0B1) | (0 << COM0B0),
+        TOGGLE_B = (0 << COM0B1) | (1 << COM0B0),
+        CLEAR_B = (1 << COM0B1) | (0 << COM0B0),
         SET_B = (1 << COM0B1) | (1 << COM0B0)
     };
 
-    Minuterie0(WaveFormGenerator0 wgm, CounterSelect0 cs, CompareOutputMode0A comA, CompareOutputMode0B comB);
+    enum Chemin
+    {
+        A,
+        B
+    };
 
-    // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
-    // et le met directement dans OCR0A
-    void activerComparateurA(uint8_t tempsMs);
-    // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
-    // et le met directement dans OCR0B
-    void activerComparateurB(uint8_t tempsMs);
+    class Minuterie0
+    {
+    public:
+        Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
-    // Active l'interuption TIMER0_COMPA lorsque TCNT == OCR0A
-    void activerInteruptionComparateurA();
-    void desactiverInteruptionComparateurA();
-    // Active l'interuption TIMER0_COMPB lorsque TCNT == OCR0B
-    void activerInteruptionComparateurB();
-    void desactiverInteruptionComparateurB();
+        // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
+        // et le met directement dans OCR0A
+        static void activerComparateurA(int tempsMs);
+        // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
+        // et le met directement dans OCR0B
+        static void activerComparateurB(int tempsMs);
 
-    // Initialise tous les registres necessaire pour partir un signal PWM
-    void PartirPWM(uint8_t ratio);
+        // Active l'interuption TIMER0_COMPA lorsque TCNT0 == OCR0A
+        static void activerInteruptionComparateurA();
+        static void desactiverInteruptionComparateurA();
+        // Active l'interuption TIMER0_COMPB lorsque TCNT0 == OCR0B
+        static void activerInteruptionComparateurB();
+        static void desactiverInteruptionComparateurB();
 
-private:
-    uint16_t prescaler_;
-};
+        // Initialise tous les registres necessaire pour partir un signal PWM
+        static void PartirPWM(uint8_t ratio);
+
+    private:
+        static uint16_t prescaler_;
+    };
 
     class Minuterie1
     {
-    };
-    class Minuterie2
-    {
+    public:
+        Minuterie1(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+
+        // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
+        // et le met directement dans OCR1A
+        static void activerComparateurA(int tempsMs);
+        // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
+        // et le met directement dans OCR1B
+        static void activerComparateurB(int tempsMs);
+
+        // Active l'interuption TIMER1_COMPA lorsque TCNT1 == OCR1A
+        static void activerInteruptionComparateurA();
+        static void desactiverInteruptionComparateurA();
+        // Active l'interuption TIMER1_COMPB lorsque TCNT1 == OCR1B
+        static void activerInteruptionComparateurB();
+        static void desactiverInteruptionComparateurB();
+
+        // Initialise tous les registres necessaire pour partir une minuterie
+        static void partirMinuterie(int tempsMs, Chemin c);
+
+    private:
+        static uint16_t prescaler_;
     };
 
-    // Combine le constructeur Minuterie0(),
-    //         activerComparateur(A/B)(),
-    //         activerInteruptionComparateur(A/B)() et
-    //         commencer()
-    //
-    // Initialise tousles registres necessaire pour partir une minuterie
-    // void PartirMinuterie();
+    class Minuterie2
+    {
+        Minuterie2(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+
+        // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
+        // et le met directement dans OCR2A
+        static void activerComparateurA(int tempsMs);
+        // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
+        // et le met directement dans OCR2B
+        static void activerComparateurB(int tempsMs);
+
+        // Active l'interuption TIMER2_COMPA lorsque TCNT2 == OCR2A
+        static void activerInteruptionComparateurA();
+        static void desactiverInteruptionComparateurA();
+        // Active l'interuption TIMER2_COMPB lorsque TCNT2 == OCR2B
+        static void activerInteruptionComparateurB();
+        static void desactiverInteruptionComparateurB();
+
+        // Initialise tous les registres necessaire pour partir un signal PWM
+        static void PartirPWM(uint8_t ratio);
+
+    private:
+        static uint16_t prescaler_;
+    };
 }
