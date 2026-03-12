@@ -1,5 +1,5 @@
 #include <avr/io.h>
-#define F_CPU 8000000UL
+# define F_CPU 8000000UL
 
 // / 1: A:PD5 B:PD4 / 2: A:PB7 B:PB6
 
@@ -8,6 +8,8 @@ namespace Minuterie {
 class Minuterie0
 {
 public:
+    uint16_t prescaler;
+
     enum WaveFormGenerator0
     {
         NORMAL = 0,
@@ -61,8 +63,6 @@ public:
     // Initialise tous les registres necessaire pour partir un signal PWM
     void PartirPWM(uint8_t ratio);
 
-private:
-    uint16_t prescaler_;
 };
 
     class Minuterie1

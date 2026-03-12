@@ -11,7 +11,6 @@ enum Chemin
 
 Minuterie0::Minuterie0(WaveFormGenerator0 wgm, CounterSelect0 cs, CompareOutputMode0A comA, CompareOutputMode0B comB)
 {
-    uint16_t prescaler;
     switch (cs)
     {
     case OFF:
@@ -47,17 +46,17 @@ Minuterie0::Minuterie0(WaveFormGenerator0 wgm, CounterSelect0 cs, CompareOutputM
 
 void Minuterie0::activerComparateurA(uint8_t tempsMs)
 {
-    if (prescaler_ == 0)
+    if (prescaler == 0)
         OCR0A = 0;
     else
-        OCR0A = F_CPU / prescaler_ * tempsMs / 1000;
+        OCR0A = F_CPU / prescaler * tempsMs / 1000;
 }
 void Minuterie0::activerComparateurB(uint8_t tempsMs)
 {
-    if (prescaler_ == 0)
+    if (prescaler == 0)
         OCR0B = 0;
     else
-        OCR0B = F_CPU / prescaler_ * tempsMs / 1000;
+        OCR0B = F_CPU / prescaler * tempsMs / 1000;
 }
 
 void Minuterie0::activerInteruptionComparateurA() // TIMSK0: OCIE0A pour ISR(vect.TIMER0_COMPA)
