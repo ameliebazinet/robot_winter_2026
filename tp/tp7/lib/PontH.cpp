@@ -15,36 +15,40 @@ PontH::PontH(volatile uint8_t &port,
     pinPwmDroite_(pinPwmDroite & 0b111),
     pinPwmGauche_(pinPwmGauche & 0b111)
 {
-    *(&port-1) |= (1 << pinDirectionDroite) | 
-                  (1 << pinDirectionGauche) | 
-                  (1 << pinPwmDroite) | 
-                  (1 << pinPwmGauche);
+    volatile uint8_t* ddr = &port-1;
+    *ddr |= (1 << pinDirectionDroite) | 
+            (1 << pinDirectionGauche) | 
+            (1 << pinPwmDroite)       | 
+            (1 << pinPwmGauche);
 }
 
-void PontH::avancer(uint8_t ratio, int tempsMs)
+void PontH::avancer(uint8_t ratio)
 {
     // pinDirectionDroite_ <= 0
     // pinDirectionGauche_ <= 0
     Minuterie0::PartirPWM(ratio);
-    Minuterie1::partirMinuterie(tempsMs, A);
 }
-void PontH::reculer(uint8_t ratio, int tempsMs)
+void PontH::reculer(uint8_t ratio)
 {
     // pinDirectionDroite_ <= 1
     // pinDirectionGauche_ <= 1
 
 }
-void PontH::tournerDroite(uint8_t ratio, int tempsMs)
+void PontH::tournerDroite(uint8_t ratio)
 {
-    // droite desactivé
+    // pinDirectionDroite_ <= 1
     // pinDirectionGauche_ <= 0
 
 }
-void PontH::tournerGauche(uint8_t ratio, int tempsMs)
+void PontH::tournerGauche(uint8_t ratio)
 {
     // pinDirectionDroite_ <= 0
-    // gauche desactivé
+    // pinDirectionGauche_ <= 1
 }
 void PontH::arreter()
+{
+}
+
+void PontH::configurer(uint8_t ratioDroite, uint8_t ratioGauche)
 {
 }

@@ -1,5 +1,5 @@
 #include <avr/io.h>
-# define F_CPU 8000000UL
+#define F_CPU 8000000UL
 
 namespace Minuterie
 {
@@ -37,7 +37,7 @@ namespace Minuterie
         SET_B = (1 << COM0B1) | (1 << COM0B0)
     };
 
-    enum Chemin
+    enum Comparateur
     {
         A,
         B
@@ -46,7 +46,7 @@ namespace Minuterie
     class Minuterie0
     {
     public:
-        Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configuration(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR0A
@@ -63,16 +63,16 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir un signal PWM
-        static void PartirPWM(uint8_t ratio);
+        static void PartirPWM(uint8_t ratioA, uint8_t ratioB);
 
     private:
-        static uint16_t prescaler_;
+        static uint16_t prescaler;
     };
 
     class Minuterie1
     {
     public:
-        Minuterie1(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configuration(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR1A
@@ -89,15 +89,15 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir une minuterie
-        static void partirMinuterie(int tempsMs, Chemin c);
+        static void partirMinuterie(int tempsMs, Comparateur c);
 
     private:
-        static uint16_t prescaler_;
+        static uint16_t prescaler;
     };
 
     class Minuterie2
     {
-        Minuterie2(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configuration(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR2A
@@ -114,9 +114,9 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir un signal PWM
-        static void PartirPWM(uint8_t ratio);
+        static void PartirPWM(uint8_t ratioA, uint8_t ratioB);
 
     private:
-        static uint16_t prescaler_;
+        static uint16_t prescaler;
     };
 }
