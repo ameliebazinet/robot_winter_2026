@@ -5,7 +5,6 @@ using namespace Minuterie;
 
 Minuterie0::Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
 {
-    uint16_t prescaler;
     switch (cs)
     {
     case OFF:
@@ -39,17 +38,17 @@ Minuterie0::Minuterie0(WaveFormGenerator wgm, CounterSelect cs, CompareOutputMod
 
 void Minuterie0::activerComparateurA(int tempsMs)
 {
-    if (prescaler_ == 0)
+    if (prescaler == 0)
         OCR0A = 0;
     else
-        OCR0A = F_CPU / prescaler_ * tempsMs / 1000;
+        OCR0A = F_CPU / prescaler * tempsMs / 1000;
 }
 void Minuterie0::activerComparateurB(int tempsMs)
 {
-    if (prescaler_ == 0)
+    if (prescaler == 0)
         OCR0B = 0;
     else
-        OCR0B = F_CPU / prescaler_ * tempsMs / 1000;
+        OCR0B = F_CPU / prescaler * tempsMs / 1000;
 }
 
 void Minuterie0::activerInteruptionComparateurA() // TIMSK0: OCIE0A pour ISR(vect.TIMER0_COMPA)
