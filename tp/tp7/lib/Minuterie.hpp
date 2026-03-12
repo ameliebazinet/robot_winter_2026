@@ -50,10 +50,10 @@ namespace Minuterie
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR0A
-        static void activerComparateurA(int tempsMs);
+        static void activerComparateurA(uint32_t tempsMs);
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR0B
-        static void activerComparateurB(int tempsMs);
+        static void activerComparateurB(uint32_t tempsMs);
 
         // Active l'interuption TIMER0_COMPA lorsque TCNT0 == OCR0A
         static void activerInteruptionComparateurA();
@@ -66,7 +66,7 @@ namespace Minuterie
         static void PartirPWM(uint8_t ratioA, uint8_t ratioB);
 
     private:
-        static uint16_t prescaler;
+        static uint16_t prescaler_;
     };
 
     class Minuterie1
@@ -76,10 +76,10 @@ namespace Minuterie
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR1A
-        static void activerComparateurA(int tempsMs);
+        static void activerComparateurA(uint32_t tempsMs);
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR1B
-        static void activerComparateurB(int tempsMs);
+        static void activerComparateurB(uint32_t tempsMs);
 
         // Active l'interuption TIMER1_COMPA lorsque TCNT1 == OCR1A
         static void activerInteruptionComparateurA();
@@ -89,10 +89,17 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir une minuterie
-        static void partirMinuterie(int tempsMs, Comparateur c);
+        // Dans le fichier main, doit configurerI SR(TIMER1_COMPA_vect) pour appelé timer.miseAJourCompteur() et
+        // Dans le main, la logique doit etre mis tel que: while (!timer.expired){ //logique }
+        static void partirMinuterie(uint32_t tempsMs, Comparateur c);
+
+        static void miseAJourCompteur();
 
     private:
-        static uint16_t prescaler;
+        static uint16_t prescaler_;
+        static bool estMinuterieExpire_;
+        static uint8_t nbIterationRestante_;
+        static int32_t tempsRestantMs_;
     };
 
     class Minuterie2
@@ -101,10 +108,10 @@ namespace Minuterie
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR2A
-        static void activerComparateurA(int tempsMs);
+        static void activerComparateurA(uint32_t tempsMs);
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR2B
-        static void activerComparateurB(int tempsMs);
+        static void activerComparateurB(uint32_t tempsMs);
 
         // Active l'interuption TIMER2_COMPA lorsque TCNT2 == OCR2A
         static void activerInteruptionComparateurA();
@@ -117,6 +124,6 @@ namespace Minuterie
         static void PartirPWM(uint8_t ratioA, uint8_t ratioB);
 
     private:
-        static uint16_t prescaler;
+        static uint16_t prescaler_;
     };
 }

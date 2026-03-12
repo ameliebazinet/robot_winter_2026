@@ -8,22 +8,22 @@ void Minuterie0::configuration(WaveFormGenerator wgm, CounterSelect cs, CompareO
     switch (cs)
     {
     case OFF:
-        prescaler = 0;
+        prescaler_ = 0;
         break;
     case PRESCALER1:
-        prescaler = 1;
+        prescaler_ = 1;
         break;
     case PRESCALER8:
-        prescaler = 8;
+        prescaler_ = 8;
         break;
     case PRESCALER64:
-        prescaler = 64;
+        prescaler_ = 64;
         break;
     case PRESCALER256:
-        prescaler = 256;
+        prescaler_ = 256;
         break;
     case PRESCALER1024:
-        prescaler = 1024;
+        prescaler_ = 1024;
         break;
     }
 
@@ -36,19 +36,19 @@ void Minuterie0::configuration(WaveFormGenerator wgm, CounterSelect cs, CompareO
     TCCR0A |= uint8_t(comA);
 }
 
-void Minuterie0::activerComparateurA(int tempsMs)
+void Minuterie0::activerComparateurA(uint32_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR0A = 0;
     else
-        OCR0A = F_CPU / prescaler * tempsMs / 1000;
+        OCR0A = F_CPU / prescaler_ * tempsMs / 1000;
 }
-void Minuterie0::activerComparateurB(int tempsMs)
+void Minuterie0::activerComparateurB(uint32_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR0B = 0;
     else
-        OCR0B = F_CPU / prescaler * tempsMs / 1000;
+        OCR0B = F_CPU / prescaler_ * tempsMs / 1000;
 }
 
 void Minuterie0::activerInteruptionComparateurA() // TIMSK0: OCIE0A pour ISR(vect.TIMER0_COMPA)
@@ -75,9 +75,7 @@ void Minuterie0::PartirPWM(uint8_t ratioDroite, uint8_t ratioGauche)
 
     activerComparateurA(255 * ratioDroite / 100);
     activerComparateurB(255 * ratioGauche / 100);
-    // timer
 }
-
 
 void Minuterie1::configuration(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
 {
@@ -113,22 +111,22 @@ void Minuterie1::configuration(WaveFormGenerator wgm, CounterSelect cs, CompareO
     TCCR1A |= uint8_t(comA);
 }
 
-void Minuterie1::activerComparateurA(int tempsMs)
+void Minuterie1::activerComparateurA(uint32_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR1A = 0;
     else
-        OCR1A = F_CPU / prescaler * tempsMs / 1000;
+        OCR1A = F_CPU / prescaler_ * tempsMs / 1000;
 }
-void Minuterie1::activerComparateurB(int tempsMs)
+void Minuterie1::activerComparateurB(uint32_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR1B = 0;
     else
-        OCR1B = F_CPU / prescaler * tempsMs / 1000;
+        OCR1B = F_CPU / prescaler_ * tempsMs / 1000;
 }
 
-void Minuterie1::activerInteruptionComparateurA() // TIMSK1: OCIE1A pour ISR(vect.TIMER1_COMPA)
+void Minuterie1::activerInteruptionComparateurA() // TIMSK1: OCIE1A pour ISR(TIMER1_COMPA_vect)
 {
     TIMSK1 |= (1 << OCIE1A);
 }
@@ -137,7 +135,7 @@ void Minuterie1::desactiverInteruptionComparateurA()
     TIMSK1 &= ~(1 << OCIE1A);
 }
 
-void Minuterie1::activerInteruptionComparateurB() // TIMSK1: OCIE1B pour ISR(vect.TIMER1_COMPB)
+void Minuterie1::activerInteruptionComparateurB() // TIMSK1: OCIE1B pour ISR(TIMER1_COMPB_vect)
 {
     TIMSK1 |= (1 << OCIE1B);
 }
@@ -146,17 +144,33 @@ void Minuterie1::desactiverInteruptionComparateurB()
     TIMSK1 &= ~(1 << OCIE1B);
 }
 
-void Minuterie1::partirMinuterie(int tempsMs, Comparateur c)
+void Minuterie1::partirMinuterie(uint32_t tempsMs, Comparateur c)
 {
-    configuration(CTC, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
-    if (c == A){ 
-        
-        activerComparateurA(tempsMs);
-        activerInteruptionComparateurA();
+    const uint16_t tempsMaxMs = 8388;
+
+    nbIterationRestante_ = tempsMs / tempsMaxMs;
+    tempsRestantMs_ = tempsMs - tempsMaxMs * nbIterationRestante_;
+
+    configuration(NORMAL, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
+    activerComparateurA(tempsMaxMs);
+    activerInteruptionComparateurA();
+}
+
+void Minuterie1::miseAJourCompteur()
+{
+    if (nbIterationRestante_ != 0)
+    {
+        --nbIterationRestante_;
     }
-    else {
-        activerComparateurB(tempsMs);
-        activerInteruptionComparateurB();
+    else if (nbIterationRestante_ == 0)
+    {
+        --nbIterationRestante_;
+        configuration(CTC, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
+        activerComparateurA(tempsRestantMs_);
+    }
+    else
+    {
+        estMinuterieExpire_ = true;
     }
 }
 
@@ -194,19 +208,19 @@ void Minuterie2::configuration(WaveFormGenerator wgm, CounterSelect cs, CompareO
     TCCR2A |= uint8_t(comA);
 }
 
-void Minuterie0::activerComparateurA(int tempsMs)
+void Minuterie0::activerComparateurA(uint32_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR2A = 0;
     else
-        OCR2A = F_CPU / prescaler * tempsMs / 1000;
+        OCR2A = F_CPU / prescaler_ * tempsMs / 1000;
 }
-void Minuterie2::activerComparateurB(int tempsMs)
+void Minuterie2::activerComparateurB(uint32_t tempsMs)
 {
-    if (prescaler == 0)
+    if (prescaler_ == 0)
         OCR2B = 0;
     else
-        OCR2B = F_CPU / prescaler * tempsMs / 1000;
+        OCR2B = F_CPU / prescaler_ * tempsMs / 1000;
 }
 
 void Minuterie2::activerInteruptionComparateurA() // TIMSK2: OCIE2A pour ISR(vect.TIMER2_COMPA)
