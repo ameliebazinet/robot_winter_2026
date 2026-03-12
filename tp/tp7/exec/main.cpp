@@ -1,39 +1,162 @@
 #define F_CPU 8000000UL
 #include <util/delay.h>
 #include <avr/io.h>
-#include "can.h"
+#include "InterruptionExterne.hpp"
 #include "Del.hpp"
 
+/* enum class State
+{
+    INIT, 
+    PRESS_ONE,
+    PRESS_TWO,
+    PRESS_FINAL,
+    OFF_ONE,
+    OFF_TWO,
+    OFF_FINAL
+};
+
+volatile bool interruptionBouton = false;
+
+ISR(INT0_vect)
+{
+    interruptionBouton = true;
+}
 
 int main()
 {
 
-    const uint16_t LUMIERE_FAIBLE = 0xA0;
+    Del del(PORTA, PA0, PA1);
+    InterruptionExterne interruption;
+
+    State currentState = State::INIT;
+
+    interruption.initialisation(0, 1);
+
+    while (true)
+    {
+        switch (currentState)
+        {
+            case State::INIT:
+                del.allumerCouleur(Del::Couleur::VERT);
+                if (interruptionBouton)
+                {
+                    _delay_ms(10);
+                    interruptionBouton = false;
+
+                    if (interruption.lireEtatBroche(0))
+                    {
+                        currentState = State::OFF_ONE;
+                    }
+                }
+                break;
+
+            case State::OFF_ONE:
+                del.allumerCouleur(Del::Couleur::ROUGE);
+                if (interruptionBouton)
+                {
+                    _delay_ms(10);
+                    interruptionBouton = false;
+
+                    if (!interruption.lireEtatBroche(0))
+                    {
+                        currentState = State::PRESS_ONE;
+                    }
+                }
+                break;
+
+            case State::PRESS_ONE:
+                del.allumerCouleur(Del::Couleur::ETEINT);
+                if (interruptionBouton)
+                {
+                    _delay_ms(10);
+                    interruptionBouton = false;
+
+                    if (interruption.lireEtatBroche(0))
+                    {
+                        currentState = State::OFF_TWO;
+                    }
+                }
+                break;
+
+            case State::OFF_TWO:
+                del.allumerCouleur(Del::Couleur::VERT);
+                if (interruptionBouton)
+                {
+                    _delay_ms(10);
+                    interruptionBouton = false;
+
+                    if (!interruption.lireEtatBroche(0))
+                    {
+                        currentState = State::PRESS_TWO;
+                    }
+                }
+                break;
+
+            case State::PRESS_TWO:
+                del.allumerCouleur(Del::Couleur::ROUGE);
+                if (interruptionBouton)
+                {
+                    _delay_ms(10);
+                    interruptionBouton = false;
+
+                    if (interruption.lireEtatBroche(0))
+                    {
+                        currentState = State::OFF_FINAL;
+                    }
+                }
+                break;
+
+            case State::OFF_FINAL:
+                del.allumerCouleur(Del::Couleur::ETEINT);
+                if (interruptionBouton)
+                {
+                    _delay_ms(10);
+                    interruptionBouton = false;
+
+                    if (!interruption.lireEtatBroche(0))
+                    {
+                        currentState = State::PRESS_FINAL;
+                    }
+                }
+                break;
+
+            case State::PRESS_FINAL:
+                del.allumerCouleur(Del::Couleur::VERT);
+                _delay_ms(2000);
+                currentState = State::INIT;
+                break;
+        }
+    }ß
+
+    return 0;
+}
+
+ */
+/*     const uint16_t LUMIERE_FAIBLE = 0xA0;
     const uint16_t LUMIERE_FORTE = 0xF0;  
     
     can convertisseur;
-    Del ;
-    
-    DDRB |= (1 << PB0 | 1 << PB1);
+    Del del(PORTB, PB0, PB1);
 
+    uint8_t DELAI_LED = 10;
     while (true) {
         uint16_t valeurLumiere = convertisseur.lecture(0) >> 2;
 
         if (valeurLumiere < LUMIERE_FAIBLE) {
-            ajusterCouleur(Del::Couleur::VERT);
+            del.allumerCouleur(Del::Couleur::VERT);
             _delay_ms(DELAI_LED);
         }
 
         else if (valeurLumiere > LUMIERE_FORTE) {
-            ajusterCouleur(Del::Couleur::ROUGE);
+            del.allumerCouleur(Del::Couleur::ROUGE);
             _delay_ms(DELAI_LED);
         }
 
         else {
-            ajusterAmbre();
+            del.allumerCouleurAmbre();
         }
 
-}
+    } */
     
 /*     Communication comm;
     comm.initialisationUART();
@@ -62,4 +185,4 @@ int main()
  */
 
 
-}
+
