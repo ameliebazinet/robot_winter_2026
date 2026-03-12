@@ -1,5 +1,6 @@
+# define F_CPU 8000000UL
 #include "Del.hpp"
-#include <avr/delay.h>
+#include <util/delay.h>
 
 Del::Del(volatile uint8_t &port, uint8_t pin1, uint8_t pin2)
 :   port_(port), 
