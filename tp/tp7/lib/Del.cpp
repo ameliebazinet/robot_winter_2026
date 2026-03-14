@@ -7,7 +7,10 @@ Del::Del(volatile uint8_t &port, uint8_t pin1, uint8_t pin2)
     pin1_(pin1 & 0b111), 
     pin2_(pin2 & 0b111)
 {
-    // Dans la documentation, il y a une adresse de différence entre port et pin. 
+    
+    // permet d'accéder au registre de direction (DDRx), dans la documentation
+    // les registres associés à un port sont placés à des addresses 
+    // concécutive en mémoire. En effectuant &port - 1, on accède à DDRx. 
     volatile uint8_t* ddr = &port-1;
     *ddr |= ((1 << pin1) | (1 << pin2));
 }
