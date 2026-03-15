@@ -1,6 +1,5 @@
 #include <avr/io.h>
 #include "PontH.hpp"
-#include "Minuterie.hpp"
 
 void PontH::initialiserRegistre()
 {

@@ -1,16 +1,14 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include "Minuterie.hpp"
+#include <avr/interrupt.h>
 
 using namespace Minuterie;
 
 // Variables statiques
 uint16_t Minuterie0::prescaler_ = 0;
 uint16_t Minuterie1::prescaler_ = 0;
-uint16_t Minuterie2::prescaler_ = 0;
-
 uint8_t Minuterie1::nbIterationsCompletesRestantes_ = 0;
 int32_t Minuterie1::tempsRestantMs_ = 0;
+uint16_t Minuterie2::prescaler_ = 0;
 
 // Minuterie0
 void Minuterie0::configurer(WaveformGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
