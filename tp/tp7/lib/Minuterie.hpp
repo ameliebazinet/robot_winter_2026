@@ -63,7 +63,7 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir un signal PWM
-        static void PartirPWM(uint8_t ratioA, uint8_t ratioB);
+        static void partirPWM(uint8_t ratioA, uint8_t ratioB);
 
     private:
         static uint16_t prescaler_;
@@ -98,7 +98,7 @@ namespace Minuterie
     private:
         static uint16_t prescaler_;
         static bool estMinuterieExpire_;
-        static uint8_t nbIterationRestante_;
+        static uint8_t nbIterationCompleteRestante_;
         static int32_t tempsRestantMs_;
     };
 
@@ -121,7 +121,7 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir un signal PWM
-        static void PartirPWM(uint8_t ratioA, uint8_t ratioB);
+        static void partirPWM(uint8_t ratioA, uint8_t ratioB);
 
     private:
         static uint16_t prescaler_;

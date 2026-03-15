@@ -26,7 +26,7 @@ void PontH::avancer(uint8_t ratio)
 {
     port_ &= ~(1 << pinDirectionDroite_);
     port_ &= ~(1 << pinDirectionGauche_);
-    Minuterie0::PartirPWM(ratio, ratio);
+    Minuterie0::partirPWM(ratio, ratio);
 }
 void PontH::reculer(uint8_t ratio)
 {
