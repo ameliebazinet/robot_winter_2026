@@ -4,49 +4,52 @@
 
 using namespace Minuterie;
 
-PontH::PontH(volatile uint8_t &port,
-             uint8_t pinDirectionDroite,
-             uint8_t pinDirectionGauche,
-             uint8_t pinPwmDroite,
-             uint8_t pinPwmGauche)
-    : port_(port),
-      pinDirectionDroite_(pinDirectionDroite & 0b111),
-      pinDirectionGauche_(pinDirectionGauche & 0b111),
-      pinPwmDroite_(pinPwmDroite & 0b111),
-      pinPwmGauche_(pinPwmGauche & 0b111)
+void PontH::initialiserRegistre()
 {
-    volatile uint8_t *ddr = &port - 1;
-    *ddr |= (1 << pinDirectionDroite) |
-            (1 << pinDirectionGauche) |
-            (1 << pinPwmDroite) |
-            (1 << pinPwmGauche);
+    DDRD |= (1 << PD4) | (1 << PD5) | (1 << PD6) | (1 << PD7);
+}
+
+void PontH::configurer(bool directionGauche, uint8_t ratioGauche, bool directionDroite, uint8_t ratioDroite)
+{
+    Minuterie2::partirPWM(ratioDroite, ratioGauche);
+
+    if (directionGauche == 0)
+    {
+        PORTD |= (1 << PD4);
+    }
+    else
+    {
+        PORTD &= ~(1 << PD4);
+    }
+    if (directionDroite == 0)
+    {
+        PORTD |= (1 << PD5);
+    }
+    else
+    {
+        PORTD &= ~(1 << PD5);
+    }
 }
 
 void PontH::avancer(uint8_t ratio)
 {
-    port_ &= ~(1 << pinDirectionDroite_);
-    port_ &= ~(1 << pinDirectionGauche_);
-    Minuterie0::partirPWM(ratio, ratio);
+    configurer(0, ratio, 0, ratio);
 }
 void PontH::reculer(uint8_t ratio)
 {
-    // pinDirectionDroite_ <= 1
-    // pinDirectionGauche_ <= 1
+    configurer(1, ratio, 1, ratio);
 }
+
 void PontH::tournerDroite(uint8_t ratio)
 {
-    // pinDirectionDroite_ <= 1
-    // pinDirectionGauche_ <= 0
+    configurer(0, ratio, 1, ratio);
 }
 void PontH::tournerGauche(uint8_t ratio)
 {
-    // pinDirectionDroite_ <= 0
-    // pinDirectionGauche_ <= 1
-}
-void PontH::arreter()
-{
+    configurer(1, ratio, 0, ratio);
 }
 
-void PontH::configurer(uint8_t ratioDroite, uint8_t ratioGauche)
+void PontH::arreter()
 {
+    configurer(0, 0, 0, 0);
 }
