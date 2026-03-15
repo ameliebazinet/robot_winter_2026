@@ -3,11 +3,17 @@
 
 namespace Minuterie
 {
-    enum WaveFormGenerator
+    enum WaveFormGenerator02
     {
         NORMAL = (0 << WGM01) | (0 << WGM00),
         PWM = (0 << WGM01) | (1 << WGM00),
         CTC = (1 << WGM01) | (0 << WGM00)
+    };
+    enum WaveFormGenerator1
+    {
+        NORMAL1 = (0 << WGM13) | (0 << WGM12) | (0 << WGM11) | (0 << WGM10),
+        PWM1 = (0 << WGM13) | (0 << WGM12) | (0 << WGM11) | (1 << WGM10),
+        CTC1 = (0 << WGM13) | (1 << WGM12) | (0 << WGM11) | (0 << WGM10)
     };
 
     enum CounterSelect
@@ -46,7 +52,7 @@ namespace Minuterie
     class Minuterie0
     {
     public:
-        static void configuration(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configuration(WaveFormGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR0A
@@ -72,7 +78,7 @@ namespace Minuterie
     class Minuterie1
     {
     public:
-        static void configuration(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configuration(WaveFormGenerator1 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR1A
@@ -89,22 +95,22 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir une minuterie
-        // Dans le fichier main, doit configurerI SR(TIMER1_COMPA_vect) pour appelé timer.miseAJourCompteur() et
+        // Dans le fichier main, doit configurer I R(TIMER1_COMPA_vect) pour appelé timer.miseAJourCompteur() et
         // Dans le main, la logique doit etre mis tel que: while (!timer.expired){ //logique }
         static void partirMinuterie(uint32_t tempsMs, Comparateur c);
 
-        static void miseAJourCompteur();
+        static void miseAJourCompteur(volatile bool& estMinuterieExpire);
 
     private:
         static uint16_t prescaler_;
-        static bool estMinuterieExpire_;
         static uint8_t nbIterationCompleteRestante_;
         static int32_t tempsRestantMs_;
     };
 
     class Minuterie2
     {
-        static void configuration(WaveFormGenerator wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+    public:
+        static void configuration(WaveFormGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met directement dans OCR2A
