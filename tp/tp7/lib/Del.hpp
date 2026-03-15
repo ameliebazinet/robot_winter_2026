@@ -13,7 +13,9 @@ class Del {
         ROUGE
     };
     
+    // Allume la DEL selon la couleur spécifié dans l'énumération Couleur. 
     void allumerCouleur(Couleur couleur); 
+    // Simule la couleur ambre sur la DEL.  
     void allumerCouleurAmbre();
 
     private : 
