@@ -2,8 +2,6 @@
 #include "PontH.hpp"
 #include "Minuterie.hpp"
 
-using namespace Minuterie;
-
 void PontH::initialiserRegistre()
 {
     DDRD |= (1 << PD4) | (1 << PD5) | (1 << PD6) | (1 << PD7);
@@ -11,23 +9,25 @@ void PontH::initialiserRegistre()
 
 void PontH::configurer(bool directionGauche, uint8_t ratioGauche, bool directionDroite, uint8_t ratioDroite)
 {
-    Minuterie2::partirPWM(ratioDroite, ratioGauche);
+    //On envoie ratioDroite sur PD7 et ratioGauche sur PD6
+    Minuterie::Minuterie2::partirPWM(ratioDroite, ratioGauche);
 
-    if (directionGauche == 0)
-    {
-        PORTD |= (1 << PD4);
-    }
-    else
-    {
+    if (directionGauche == 0) {
+        // Avance
         PORTD &= ~(1 << PD4);
     }
-    if (directionDroite == 0)
-    {
-        PORTD |= (1 << PD5);
+    else {
+        // Recule
+        PORTD |= (1 << PD4);
     }
-    else
-    {
+
+    if (directionDroite == 0) {
+        // Avance
         PORTD &= ~(1 << PD5);
+    }
+    else {
+        // Recule
+        PORTD |= (1 << PD5);
     }
 }
 

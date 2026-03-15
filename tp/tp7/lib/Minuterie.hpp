@@ -1,15 +1,18 @@
 #include <avr/io.h>
+#include <stdint.h>
 #define F_CPU 8000000UL
 
 namespace Minuterie
 {
-    enum WaveFormGenerator02
+    // Enums
+    enum WaveformGenerator02
     {
         NORMAL = (0 << WGM01) | (0 << WGM00),
         PWM = (0 << WGM01) | (1 << WGM00),
         CTC = (1 << WGM01) | (0 << WGM00)
     };
-    enum WaveFormGenerator1
+
+    enum WaveformGenerator1
     {
         NORMAL1 = (0 << WGM13) | (0 << WGM12) | (0 << WGM11) | (0 << WGM10),
         PWM1 = (0 << WGM13) | (0 << WGM12) | (0 << WGM11) | (1 << WGM10),
@@ -34,6 +37,7 @@ namespace Minuterie
         CLEAR_A = (1 << COM0A1) | (0 << COM0A0),
         SET_A = (1 << COM0A1) | (1 << COM0A0)
     };
+    
     // 0: PB4 / 1: PD4 / 2: PD6
     enum CompareOutputModeB
     {
@@ -49,29 +53,36 @@ namespace Minuterie
         B
     };
 
+    // Minuterie 0 (sur 8 bits)
     class Minuterie0
     {
     public:
         // Configure les registres de la minuterie pour sont utilisation.
-        static void configurer(WaveFormGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configurer(WaveformGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met dans OCR0A
         static void activerComparateurA(uint32_t tempsMs);
+
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met dans OCR0B
         static void activerComparateurB(uint32_t tempsMs);
 
         // Active l'interuption TIMER0_COMPA_vect lorsque le comparateur (OCR0A) s'active.
         static void activerInteruptionComparateurA();
+
+        // Désactive l'interuption TIMER0_COMPA_vect.
         static void desactiverInteruptionComparateurA();
+
         // Active l'interuption TIMER0_COMPB_vect lorsque le comparateur (OCR0B) s'active.
         static void activerInteruptionComparateurB();
+
+        // Désactive l'interuption TIMER0_COMPB_vect.
         static void desactiverInteruptionComparateurB();
 
-        // Initialise tous les registres necessaire pour partir un signal PWM
+        // Initialise tous les registres necessaire pour partir un signal PWM.
         // Les ratios doivent etre compris entre 0 et 100 inclusivement.
-        // OC0A => PB3 / OC0B => PB4
+        // OC0A => PB3; OC0B => PB4
         static void partirPWM(uint8_t ratioA, uint8_t ratioB);
 
     private:
@@ -82,7 +93,7 @@ namespace Minuterie
     {
     public:
         // Configure les registres de la minuterie pour sont utilisation.
-        static void configurer(WaveFormGenerator1 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configurer(WaveformGenerator1 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met dans OCR1A.
@@ -91,7 +102,7 @@ namespace Minuterie
         // et le met dans OCR1B.
         static void activerComparateurB(uint32_t tempsMs);
 
-        // Active l'interuption TIMER1_COMPB_vect lorsque le comparateur (OCR1A) s'active.
+        // Active l'interuption TIMER1_COMPA_vect lorsque le comparateur (OCR1A) s'active.
         static void activerInteruptionComparateurA();
         static void desactiverInteruptionComparateurA();
         // Active l'interuption TIMER1_COMPB_vect lorsque le comparateur (OCR1B) s'active.
@@ -100,13 +111,13 @@ namespace Minuterie
 
         // Initialise tous les registres necessaire pour partir une minuterie.
         // Dans le fichier main, doit configurer ISR(TIMER1_COMPA_vect)
-        // pour appelé timer.miseAJourCompteur(estMinuterieExpire).
+        // pour appelé timer.miseAJourCompteur(estMinuterieExpiree).
         static void partirMinuterie(uint32_t tempsMs, Comparateur c);
-        static void miseAJourCompteur(volatile bool &estMinuterieExpire);
+        static void miseAJourCompteur(volatile bool &estMinuterieExpiree);
 
     private:
         static uint16_t prescaler_;
-        static uint8_t nbIterationCompleteRestante_;
+        static uint8_t nbIterationsCompletesRestantes_;
         static int32_t tempsRestantMs_;
     };
 
@@ -114,7 +125,7 @@ namespace Minuterie
     {
     public:
         // Configure les registres de la minuterie pour sont utilisation.
-        static void configurer(WaveFormGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configurer(WaveformGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met dans OCR2A.

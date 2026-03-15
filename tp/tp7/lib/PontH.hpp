@@ -1,4 +1,3 @@
-#include <avr/io.h>
 #include "Minuterie.hpp"
 
 // Cette class utilise la minuterie 2 pour la generation de signal PWM.

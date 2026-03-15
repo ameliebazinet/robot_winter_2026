@@ -160,7 +160,7 @@ int main()
                 currentState = State::INIT;
                 break;
         }
-    }ß
+    }
 
     return 0;
 }
