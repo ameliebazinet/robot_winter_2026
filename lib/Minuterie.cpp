@@ -1,3 +1,7 @@
+// Fichier : Minuterie.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation des méthodes pour la configuration et l'utilisation des minuteries 0, 1 et 2.
+
 #include "Minuterie.hpp"
 #include <avr/interrupt.h>
 

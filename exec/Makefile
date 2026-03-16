@@ -1,4 +1,7 @@
 ########       AVR Project Makefile (exec)      ########
+# Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+# Description : Makefile pour la compilation de l'exécutable principal du projet de robot suiveur de ligne.
+# Ce Makefile compile le fichier source principal, lie la bibliothèque statique et génère un fichier .hex pour être installé sur la carte.
 
 MCU=atmega324pa
 PROJECTNAME=main

@@ -1,3 +1,8 @@
+// Fichier : InterruptionExterne.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation des méthodes pour la gestion des interruptions externes. 
+// Permet d'activer/désactiver les interruptions globales, de configurer les interruptions externes, de vérifier leur état et d'effacer les flags d'interruption.
+
 #include "InterruptionExterne.hpp"
 
 void InterruptionExterne::activerInterruptionsGlobales()

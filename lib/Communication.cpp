@@ -1,3 +1,10 @@
+// Fichier : Communication.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation des méthodes pour la communication série via UART. 
+// Permet d'initialiser la communication, de transmettre des données, des chaînes de caractères et des messages formatés.
+
+
+
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdarg.h>

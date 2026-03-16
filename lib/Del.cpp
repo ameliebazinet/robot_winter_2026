@@ -1,3 +1,7 @@
+// Fichier : debug.h
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (...), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Cette classe implémente les méthodes pour la manipulation d'une DEL à deux broches.
+
 #define F_CPU 8000000UL
 #include "Del.hpp"
 #include <util/delay.h>

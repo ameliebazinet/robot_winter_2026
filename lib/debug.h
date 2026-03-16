@@ -1,3 +1,7 @@
+// Fichier : debug.h
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (...), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Macro pour l'impression de messages de débogage.
+
 #pragma once
 #include "Communication.hpp"
 

@@ -1,3 +1,9 @@
+// Fichier : PontH.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (...), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation des méthodes pour la génération de signal PWM à l'aide de la minuterie 2.
+// Envoi du signal PWM sur le pont en H pour le controle des roues.
+
+
 #include "PontH.hpp"
 
 void PontH::initialiserRegistre()

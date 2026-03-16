@@ -1,3 +1,8 @@
+// Fichier : Communication.hpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (...), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Cette classe implémente les méthodes pour la communication série via UART. 
+// Elle permet d'initialiser la communication, de transmettre des données, des chaînes de caractères et des messages formatés.
+
 #pragma once
 #include <avr/io.h>
 #include <stdint.h>

@@ -1,3 +1,7 @@
+// Fichier : Minuterie.hpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Déclaration des méthodes pour la configuration et l'utilisation des minuteries 0, 1 et 2.
+
 #define F_CPU 8000000UL
 #include <avr/io.h>
 #include <stdint.h>

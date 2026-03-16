@@ -1,15 +1,16 @@
-#include "Minuterie.hpp"
-
-// Cette class utilise la minuterie 2 pour la generation de signal PWM.
-// Envoie ce signal PWM sur le pont en H pour le controle des roue.
-//
-// Branchement pour fontionner:
+// Fichier : PontH.hpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Cette classe déclare les méthodes pour la generation de signal PWM à l'aide de la minuterie 2.
+// Branchements pour fontionner:
 //
 //   PD4 => Direction roue gauche
 //   PD5 => Direction roue droite
 //   PD6 => Enable roue gauche
 //   PD7 => Enable roue droite
-//
+
+
+#include "Minuterie.hpp"
+
 class PontH
 {
 public:
