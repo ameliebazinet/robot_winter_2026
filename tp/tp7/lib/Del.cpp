@@ -1,4 +1,4 @@
-# define F_CPU 8000000UL
+#define F_CPU 8000000UL
 #include "Del.hpp"
 #include <util/delay.h>
 

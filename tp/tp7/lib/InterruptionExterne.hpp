@@ -7,13 +7,30 @@
 class InterruptionExterne
 {
 public:
+    // Active les interruptions globales en utilisant sei() 
     void activerInterruptionsGlobales();
+
+    // Désactive les interruptions globales en utilisant cli()
     void desactiverInterruptionsGlobales();
+
+    // Active l'interruption externe spécifiée par indiceInt (0, 1 ou 2)
     void activerInterruption(uint8_t indiceInt);
+
+    // Désactive l'interruption externe spécifiée par indiceInt (0, 1 ou 2)
     void desactiverInterruption(uint8_t indiceInt);
+
+    // Vérifie si l'interruption externe spécifiée par indiceInt est en attente
     bool estEnAttente(uint8_t indiceInt);
+
+    // Efface le flag d'interruption de l'interruption externe spécifiée par indiceInt
     void changerDetectionInterruption(uint8_t indiceInt, uint8_t detectionInterruption);
+
+    // Vérifie si la broche associée à l'interruption externe spécifiée par indiceInt est active
     bool estActiveeBroche(uint8_t indiceInt);
+
+    // Efface le flag d'interruption de l'interruption externe spécifiée par indiceInt
     void effacerFlag(uint8_t indiceInt);
+
+    // Initialise l'interruption externe spécifiée par indiceInt avec le mode de détection spécifié par detectionInterruption
     void initialisation(uint8_t indiceInt, uint8_t detectionInterruption);
 };

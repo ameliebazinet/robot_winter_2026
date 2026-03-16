@@ -1,4 +1,3 @@
-#include <avr/io.h>
 #include "PontH.hpp"
 
 void PontH::initialiserRegistre()

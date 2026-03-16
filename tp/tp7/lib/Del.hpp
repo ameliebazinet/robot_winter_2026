@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <stdint.h>
+
 class Del 
 {
 public:
@@ -14,8 +15,9 @@ public:
         ROUGE
     };
     
-    // Allume la DEL selon la couleur spécifié dans l'énumération Couleur. 
+    // Allume la DEL selon la couleur spécifiée de l'énumération Couleur 
     void allumerCouleur(Couleur couleur); 
+
     // Simule la couleur ambre sur la DEL.  
     void allumerCouleurAmbre();
 
