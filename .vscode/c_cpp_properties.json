@@ -6,7 +6,7 @@
             "includePath": [
                 "/**",
                 "/usr/avr/include/**",
-                "../lib/"
+                "${workspaceFolder}/tp/tp7/lib/"
             ],
             "defines": [
                 "__AVR_ATmega324PA__"
