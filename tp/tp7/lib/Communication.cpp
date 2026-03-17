@@ -23,6 +23,12 @@ void Communication::transmissionUART(uint8_t donnee)
     UDR0 = donnee;
 }
 
+uint8_t Communication::receptionUART() 
+{
+    while (!(UCSR0A & (1 << RXC0)));
+    return RXC0;
+}
+
 void Communication::transmissionChaine(const char* message) 
 {
     if (!message) {
