@@ -1,41 +1,29 @@
-#define F_CPU 8000000UL
+// % progmem -o programme.bin instructions.txt
+
+// % serieViaUSB -e -f programme.bin
+
+#include "Communication.hpp"
 #include "memoire_24.h"
-#include <util/delay.h>
-#include <string.h>
 
+int main() {
+    Communication com;
+    Memoire24CXXX memoire;
 
-char chaine[] = "*P*O*L*Y*T*E*C*H*N*I*Q*U*E* *M*O*N*T*R*E*A*L*";
-uint8_t chaineLu[46] = {};
+    com.initialisationUART();
 
-Memoire24CXXX mem;
+    // read the 2 size bytes
+    uint8_t highByte = com.receptionUART();
+    uint8_t lowByte  = com.receptionUART();
+    uint16_t totalSize = (highByte << 8) | lowByte;
 
-int main()
-{
-    DDRA |= (1 << PA0) | (1 << PA1);
-    
+    // write the 2 size bytes to EEPROM
+    memoire.ecriture(0, highByte);
+    memoire.ecriture(1, lowByte);
 
-    for (uint8_t i = 0; i < 46; i++)
-    {
-        mem.ecriture(i, chaine[i]);
-        _delay_ms(5);
+    // receive and write the rest
+    for (uint16_t i = 2; i < totalSize; i++) {
+        memoire.ecriture(i, com.receptionUART());
     }
 
-    for (uint8_t i = 0; i < 46; i++)
-    {
-        mem.lecture(i, &chaineLu[i]);
-    }
-
-    while(true) 
-    {
-        if (strcmp(chaine, (char*)chaineLu) == 0) // vert
-        {
-            PORTA &= ~(1 << PA0);
-		    PORTA |= (1 << PA1);
-        }
-        else // rouge
-        {
-            PORTA |= (1 << PA0);
-            PORTA &= ~(1 << PA1);
-        }
-    }
+    return 0;
 }
