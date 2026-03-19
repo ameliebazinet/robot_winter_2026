@@ -1,0 +1,27 @@
+dbt;
+dal 1;
+att 10;
+det;
+att 40;
+dal 1;
+att 10;
+det;
+mav 255;
+att 10;
+mre 64;
+trd;
+trg;
+trg;
+trg;
+trg;
+mar;
+dbc 3;
+mav 50;
+trd;
+trg;
+mre 64;
+trg;
+trd;
+fbc;
+mar;s
+fin;
