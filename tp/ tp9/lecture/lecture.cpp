@@ -56,71 +56,78 @@ int main()
         PontH::initialiserRegistre();
         PontH moteur;
 
-        switch (instruction) {
-            case DEBUT:
-                break;
-            
-            case ATTENDRE:
-                _delay_ms(25 * operande);
-                break;
-            
-            case ALLUMER_LED:
-                if (operande == 1) {
-                    del.allumerCouleur(Del::Couleur::VERT);
-                }
-                else if (operande == 2) {
-                    del.allumerCouleur(Del::Couleur::ROUGE);
-                }
-                else {
+        uint16_t adresseBoucle = 0;
+        uint8_t compteurBoucle = 0;
+
+        if (instruction == DEBUT) {
+
+            switch (instruction) {
+                case ATTENDRE:
+                    _delay_ms(25 * operande);
+                    break;
+                
+                case ALLUMER_LED:
+                    if (operande == 1) {
+                        del.allumerCouleur(Del::Couleur::VERT);
+                    }
+                    else if (operande == 2) {
+                        del.allumerCouleur(Del::Couleur::ROUGE);
+                    }
+                    else {
+                        del.allumerCouleur(Del::Couleur::ETEINT);
+                    }
+
+                    break;
+
+                case ETEINDRE_LED:
                     del.allumerCouleur(Del::Couleur::ETEINT);
-                }
+                    break;
 
-                break;
+                case JOUER_SON:
+                    break;
 
-            case ETEINDRE_LED:
-                del.allumerCouleur(Del::Couleur::ETEINT);
-                break;
+                case ARRETER_SON:
+                    break;
 
-            case JOUER_SON:
-                break;
+                case ARRETER_MOTEURS:
+                    moteur.arreter();
+                    break;
+                    
+                case AVANCER:
+                    moteur.avancer(operande / 255 * 100);
+                    break;
 
-            case ARRETER_SON:
-                break;
+                case RECULER:
+                    moteur.reculer(operande / 255 * 100);
+                    break;
 
-            case ARRETER_MOTEURS:
-                moteur.arreter();
-                break;
+                case TOURNER_DROITE:
+                    break;
+
+                case TOURNER_GAUCHE:
+                    break;
+
+                case DEBUT_BOUCLE:
+                    adresseBoucle = adresse;
+                    compteurBoucle = operande + 1;
+                    break;
                 
-            case AVANCER:
-                moteur.avancer(operande / 255 * 100);
-                break;
+                case FIN_BOUCLE:
+                    if (compteurBoucle != 0) {
+                        compteurBoucle--;
+                        adresse = adresseBoucle;
+                    }
+                    break;
 
-            case RECULER:
-                moteur.reculer(operande / 255 * 100);
-                break;
-
-            case TOURNER_DROITE:
-                break;
-
-            case TOURNER_GAUCHE:
-                break;
-
-            case DEBUT_BOUCLE:
-                uint16_t adresseBoucle = adresse;
-                uint8_t compteurBoucle = operande + 1;
-                break;
-            
-            case FIN_BOUCLE:
-                adresse = adresseBoucle;
-                compteurBoucle--;
-                break;
-
-            case FIN:
-                
-                break;
-        
+                case FIN:
+                    adresse = adresse + taille;
+                    break;
+            }
         }
         
+        else {
+            continue;
+        }
 
     }
     
