@@ -2,8 +2,7 @@
 
 // % serieViaUSB -e -f programme.bin
 
-#include "Communication.hpp"
-#include "memoire_24.h"
+#include "ecriture.hpp"
 
 int main() {
     Communication com;
