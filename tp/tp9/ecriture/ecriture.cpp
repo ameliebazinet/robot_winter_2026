@@ -1,4 +1,4 @@
-// % progmem -o programme.bin instructions.txt
+// % progmem -o programme.bin programme.txt
 
 // % serieViaUSB -e -f programme.bin
 

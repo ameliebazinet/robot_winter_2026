@@ -1,137 +1,111 @@
-#define F_CPU 8000000UL
-#include <util/delay.h>
-#include "Communication.hpp"
-#include "memoire_24.h"
-#include "Del.hpp"
-#include "PontH.hpp"
+#include "lecture.hpp"
 
-// INCLUDE SON
-
-constexpr uint8_t ADRESSE_TAILLE = 2;
-
-enum Instruction {
-    DEBUT = 0b00000001,
-    ATTENDRE = 0b00000010,
-    ALLUMER_LED = 0b01000100,
-    ETEINDRE_LED = 0b01000101,
-    JOUER_SON = 0b01001000,
-    ARRETER_SON = 0b00001001,
-    ARRETER_MOTEURS = 0b01100000,
-    ARRETER_MOTEURS = 0b01100001,
-    AVANCER = 0b01100010, 
-    RECULER = 0b01100011, 
-    TOURNER_DROITE = 0b01100100,
-    TOURNER_GAUCHE = 0b01100101, 
-    DEBUT_BOUCLE = 0b11000000, 
-    FIN_BOUCLE = 0b11000001, 
-    FIN = 0b11111111
-};
-
-int main()
+Lecture::Lecture() 
+    : adresse_(0x0000), donnee_(0), instruction_(0b00), 
+    operande_(0b00), adresseBoucle_(0), del_(PORTA, PA0, PA1),
+    programmeFini_(false)
 {
-    Communication com;
-    Memoire24CXXX mem;
-    com.initialisationUART();
+    PontH::initialiserRegistre();
+}
 
-    uint8_t instruction = 0b00;
-    uint8_t operande = 0b00;
-    uint16_t adresse = 0x0000;
-    uint8_t donnee = 0;
+void Lecture::initialiserLecture()
+{
+    com_.initialisationUART();
+}
 
-    uint16_t taille = mem.lecture(adresse, (uint8_t*)&donnee);
-    adresse++;
-    taille << 8;
-    taille += mem.lecture(adresse, (uint8_t*)&donnee);
+void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
+{
+    switch (instruction) {
+        case ATTENDRE:
+            _delay_ms(25 * operande);
+            break;
+        
+        case ALLUMER_LED:
+            if (operande == 1) {
+                del_.allumerCouleur(Del::Couleur::VERT);
+            }
+            else if (operande == 2) {
+                del_.allumerCouleur(Del::Couleur::ROUGE);
+            }
+            else {
+                del_.allumerCouleur(Del::Couleur::ETEINT);
+            }
 
+            break;
 
-    for (uint8_t i = 0; i < taille; i++ ) {
-        instruction = mem.lecture(adresse++, &donnee);
-        operande = mem.lecture(adresse++, &donnee);
+        case ETEINDRE_LED:
+        del_.allumerCouleur(Del::Couleur::ETEINT);
+            break;
 
-        // Brancher le DEL sur PA0 et PA1
-        Del del(PORTA, PA0, PA1);
+        case JOUER_SON:
+            break;
 
-        // Brancher moteur sur PD4 (direction gauche), PD5 (direction droite),
-        // PD6 (activer gauche) et PD7 (activer droite)
-        PontH::initialiserRegistre();
-        PontH moteur;
+        case ARRETER_SON:
+            break;
 
-        uint16_t adresseBoucle = 0;
-        uint8_t compteurBoucle = 0;
+        case ARRETER_MOTEURS_1:
+        case ARRETER_MOTEURS_2:
+            moteur_.arreter();
+            break;
+            
+        case AVANCER:
+            moteur_.avancer((operande * 100) / 255);
+            break;
 
-        if (instruction == DEBUT) {
+        case RECULER:
+            moteur_.reculer((operande * 100) / 255);
+            break;
 
-            switch (instruction) {
-                case ATTENDRE:
-                    _delay_ms(25 * operande);
-                    break;
-                
-                case ALLUMER_LED:
-                    if (operande == 1) {
-                        del.allumerCouleur(Del::Couleur::VERT);
-                    }
-                    else if (operande == 2) {
-                        del.allumerCouleur(Del::Couleur::ROUGE);
-                    }
-                    else {
-                        del.allumerCouleur(Del::Couleur::ETEINT);
-                    }
+        case TOURNER_DROITE:
+            break;
 
-                    break;
+        case TOURNER_GAUCHE:
+            break;
 
-                case ETEINDRE_LED:
-                    del.allumerCouleur(Del::Couleur::ETEINT);
-                    break;
+        case DEBUT_BOUCLE:
+            adresseBoucle_ = adresse_;
+            compteurBoucle_ = operande_ + 1;
+            break;
+        
+        case FIN_BOUCLE:
+            if (compteurBoucle_ != 0) {
+                compteurBoucle_--;
+                adresse_ = adresseBoucle_;
+            }
+            break;
 
-                case JOUER_SON:
-                    break;
+        case FIN:
+            moteur_.arreter();
+            del_.allumerCouleur(Del::Couleur::ETEINT);
+            programmeFini_ = true;
+            break;
+    }
+}
 
-                case ARRETER_SON:
-                    break;
+void Lecture::lireMemoire()
+{
+    mem_.lecture(adresse_++, &donnee_);
+    uint16_t taille = donnee_;
+    mem_.lecture(adresse_++, &donnee_);
+    taille = (taille << 8) | donnee_;
 
-                case ARRETER_MOTEURS:
-                    moteur.arreter();
-                    break;
-                    
-                case AVANCER:
-                    moteur.avancer(operande / 255 * 100);
-                    break;
+    bool estDebutTrouve = false;
 
-                case RECULER:
-                    moteur.reculer(operande / 255 * 100);
-                    break;
+    for (uint16_t i = 0; i < taille && !programmeFini_; i += 2) {
+        mem_.lecture(adresse_++, &instruction_);
+        mem_.lecture(adresse_++, &operande_);
 
-                case TOURNER_DROITE:
-                    break;
-
-                case TOURNER_GAUCHE:
-                    break;
-
-                case DEBUT_BOUCLE:
-                    adresseBoucle = adresse;
-                    compteurBoucle = operande + 1;
-                    break;
-                
-                case FIN_BOUCLE:
-                    if (compteurBoucle != 0) {
-                        compteurBoucle--;
-                        adresse = adresseBoucle;
-                    }
-                    break;
-
-                case FIN:
-                    adresse = adresse + taille;
-                    break;
+        if (!estDebutTrouve) {
+            if (instruction_ == DEBUT) {
+                estDebutTrouve = true;
+            }
+            else {
+                continue;
             }
         }
-        
-        else {
-            continue;
+
+        if (estDebutTrouve) {
+            faireInstruction(instruction_, operande_);
         }
-
-    }
-    
-    // SWITCH CASE : CHAQUE INSTRUCTION CODER QUOI FAIRE
-
-    return 1;
+    }        
 }
