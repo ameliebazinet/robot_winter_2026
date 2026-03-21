@@ -10,6 +10,7 @@
 
 
 #include "Minuterie.hpp"
+#include <util/delay.h>
 
 class PontH
 {
@@ -30,6 +31,9 @@ public:
     // Le ratio doit etre compris entre 0 et 100 inclusivement.
     static void tournerDroite(uint8_t ratio);
     static void tournerGauche(uint8_t ratio);
+
+    static void tournerDroite90(uint8_t ratio);
+    static void tournerGauche90(uint8_t ratio);
 
     static void arreter();
 };
