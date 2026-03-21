@@ -1,10 +1,6 @@
-// % progmem -o programme.bin programme.txt
+include "ecriture.hpp"
 
-// % serieViaUSB -e -f programme.bin
-
-#include "ecriture.hpp"
-
-int main() {
+void ecrireDepuisUART() {
     Communication com;
     Memoire24CXXX memoire;
 
@@ -23,6 +19,4 @@ int main() {
     for (uint16_t i = 2; i < totalSize; i++) {
         memoire.ecriture(i, com.receptionUART());
     }
-
-    return 0;
 }
