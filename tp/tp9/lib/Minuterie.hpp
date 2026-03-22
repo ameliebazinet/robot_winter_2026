@@ -119,6 +119,9 @@ namespace Minuterie
         static void partirMinuterie(uint32_t tempsMs, Comparateur c);
         static void miseAJourCompteur(volatile bool &estMinuterieExpiree);
 
+        static void genererSon(uint16_t ocr);
+        static void arreterSon();
+
     private:
         static uint16_t prescaler_;
         static uint8_t nbIterationsCompletesRestantes_;

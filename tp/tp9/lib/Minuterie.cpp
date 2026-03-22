@@ -175,6 +175,25 @@ void Minuterie1::miseAJourCompteur(volatile bool &estMinuterieExpiree)
     }
 }
 
+void Minuterie1::genererSon(uint16_t ocr)
+{
+    cli();
+
+    // Mode CTC + toggle OC1A
+    TCCR1A = (1 << COM1A0);
+    TCCR1B = (1 << WGM12) | (1 << CS11); // prescaler 8
+
+    OCR1A = ocr;
+
+    sei();
+}
+
+void Minuterie1::arreterSon()
+{
+    TCCR1A = 0;
+    TCCR1B = 0;
+}
+
 // Minuterie2
 void Minuterie2::configurer(WaveformGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
 {
