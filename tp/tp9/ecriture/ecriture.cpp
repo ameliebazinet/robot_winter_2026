@@ -1,4 +1,4 @@
-include "ecriture.hpp"
+#include "ecriture.hpp"
 
 void ecrireDepuisUART() {
     Communication com;
@@ -16,7 +16,7 @@ void ecrireDepuisUART() {
     memoire.ecriture(1, lowByte);
 
     // receive and write the rest
-    for (uint16_t i = 2; i < totalSize; i++) {
-        memoire.ecriture(i, com.receptionUART());
+    for (uint16_t i = 0; i < totalSize; i++) {
+        memoire.ecriture(i + 2, com.receptionUART());
     }
 }

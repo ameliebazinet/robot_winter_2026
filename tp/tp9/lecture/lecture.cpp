@@ -1,4 +1,6 @@
+#define DEBUG 
 #include "lecture.hpp"
+#include "debug.h"
 
 Lecture::Lecture() 
     : adresse_(0x0000), donnee_(0), instruction_(0b00), 
@@ -17,7 +19,9 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
 {
     switch (instruction) {
         case ATTENDRE:
-            _delay_ms(25 * operande);
+            for (uint8_t i = 0; i < operande; i++) {
+                _delay_ms(25);
+            }
             break;
         
         case ALLUMER_LED:
@@ -34,7 +38,7 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
             break;
 
         case ETEINDRE_LED:
-        del_.allumerCouleur(Del::Couleur::ETEINT);
+            del_.allumerCouleur(Del::Couleur::ETEINT);
             break;
 
         case JOUER_SON:
@@ -45,15 +49,15 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
 
         case ARRETER_MOTEURS_1:
         case ARRETER_MOTEURS_2:
-            moteur_.arreter();
+           PontH::arreter();
             break;
             
         case AVANCER:
-            moteur_.avancer((operande * 100) / 255);
+            PontH::avancer((operande * 100) / 255);
             break;
 
         case RECULER:
-            moteur_.reculer((operande * 100) / 255);
+            PontH::reculer((operande * 100) / 255);
             break;
 
         case TOURNER_DROITE:
@@ -75,7 +79,7 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
             break;
 
         case FIN:
-            moteur_.arreter();
+            PontH::arreter();
             del_.allumerCouleur(Del::Couleur::ETEINT);
             programmeFini_ = true;
             break;
@@ -89,23 +93,24 @@ void Lecture::lireMemoire()
     mem_.lecture(adresse_++, &donnee_);
     taille = (taille << 8) | donnee_;
 
+
+
     bool estDebutTrouve = false;
 
-    for (uint16_t i = 0; i < taille && !programmeFini_; i += 2) {
+    while(adresse_ < taille && !programmeFini_) {
         mem_.lecture(adresse_++, &instruction_);
         mem_.lecture(adresse_++, &operande_);
+        DEBUG_PRINT(com_, "instruction = 0x%02X\r\n", instruction_);
+
+
 
         if (!estDebutTrouve) {
             if (instruction_ == DEBUT) {
                 estDebutTrouve = true;
             }
-            else {
-                continue;
-            }
+            continue;
         }
+        faireInstruction(instruction_, operande_);
 
-        if (estDebutTrouve) {
-            faireInstruction(instruction_, operande_);
-        }
     }        
 }

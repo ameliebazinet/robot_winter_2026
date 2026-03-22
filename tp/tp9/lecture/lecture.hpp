@@ -35,7 +35,7 @@ public:
     void lireMemoire();
     void faireInstruction(uint8_t instruction, uint8_t operande);
 
-    private:
+private:
     uint16_t adresse_;
     uint8_t donnee_;
     uint8_t instruction_;
@@ -45,7 +45,7 @@ public:
     uint8_t compteurBoucle_;
 
     Del del_;
-    PontH moteur_;
+    //PontH moteur_;
     Memoire24CXXX mem_;
     Communication com_;
 
