@@ -57,25 +57,3 @@ void PontH::arreter()
 {
     configurer(0, 0, 0, 0);
 }
-
-void PontH::tournerDroite90(uint8_t ratio)
-{
-    // fait par delay pour le moment. 
-    // il est possible qu'elle ait besoin d'etre fait par interupton dans le futur.
-
-    const int tempsTournerDroiteMs = 0; // a mesurer avec les batteries
-    PontH::tournerDroite(ratio);
-    attendreDelayMs(tempsTournerDroiteMs);
-}
-void PontH::tournerGauche90(uint8_t ratio)
-{
-    tournerGauche(ratio);
-    // completer lorsque tournerDroite90 fini.
-
-}
-
-void attendreDelayMs(int tempsMs) {
-    for(int i = 0; i < tempsMs; i++) {
-        _delay_ms(1);
-    }
-}

@@ -32,8 +32,5 @@ public:
     static void tournerDroite(uint8_t ratio);
     static void tournerGauche(uint8_t ratio);
 
-    static void tournerDroite90(uint8_t ratio);
-    static void tournerGauche90(uint8_t ratio);
-
     static void arreter();
 };

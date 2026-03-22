@@ -22,4 +22,7 @@ public:
     // Transmet une chaîne de caractères formatée via UART (similaire à printf)
     void transmissionFormatee(const char* format, ...);
 
+    // Reçoit une donnée de type uint8_t via UART
+    uint8_t receptionUART(void);
+
 };
