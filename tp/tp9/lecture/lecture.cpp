@@ -42,11 +42,9 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
             break;
 
         case JOUER_SON:
-            Son::jouer(operande);
             break;
 
         case ARRETER_SON:
-            Son::arreter();
             break;
 
         case ARRETER_MOTEURS_1:
