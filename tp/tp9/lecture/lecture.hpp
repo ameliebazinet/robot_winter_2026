@@ -1,3 +1,4 @@
+#pragma once
 #define F_CPU 8000000UL
 #include <util/delay.h>
 #include "Communication.hpp"
@@ -35,7 +36,7 @@ public:
     void lireMemoire();
     void faireInstruction(uint8_t instruction, uint8_t operande);
 
-private:
+
     uint16_t adresse_;
     uint8_t donnee_;
     uint8_t instruction_;
