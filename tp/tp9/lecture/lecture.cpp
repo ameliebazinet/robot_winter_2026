@@ -58,12 +58,12 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
         case AVANCER:
             PontH::initialiserRegistre();
 
-            PontH::avancer(((uint16_t)operande * 100) / 255);
+            PontH::avancer(operande);
             
             break;
 
         case RECULER:
-            PontH::reculer(((uint16_t)operande * 100) / 255);
+            PontH::reculer(operande);
             break;
 
         case TOURNER_DROITE:

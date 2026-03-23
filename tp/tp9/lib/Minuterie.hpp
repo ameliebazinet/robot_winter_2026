@@ -90,7 +90,7 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir un signal PWM.
-        // Les ratios doivent etre compris entre 0 et 100 inclusivement.
+        // Les ratios doivent etre compris entre 0 et 255 inclusivement.
         // OC0A => PB3; OC0B => PB4
         static void partirPWM(uint8_t ratioA, uint8_t ratioB);
 
@@ -152,7 +152,7 @@ namespace Minuterie
         static void desactiverInteruptionComparateurB();
 
         // Initialise tous les registres necessaire pour partir un signal PWM.
-        // Les ratios doivent etre compris entre 0 et 100 inclusivement.
+        // Les ratios doivent etre compris entre 0 et 255 inclusivement.
         // OC2A => PD7 / OC2B => PD6
         static void partirPWM(uint8_t ratioA, uint8_t ratioB);
 

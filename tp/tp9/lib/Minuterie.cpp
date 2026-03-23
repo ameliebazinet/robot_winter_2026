@@ -73,11 +73,12 @@ void Minuterie0::desactiverInteruptionComparateurB()
 
 void Minuterie0::partirPWM(uint8_t ratioA, uint8_t ratioB)
 {
+    cli();
     configurer(PWM, PRESCALER8, CLEAR_A, CLEAR_B);
+    sei();
 
-    // Conversion du pourcentage en valeur de 0 à 255 (8 bits, car signal PWM sur registre à 8 bits)
-    activerComparateurA(255 * ratioA / 100);
-    activerComparateurB(255 * ratioB / 100);
+    OCR0A = ratioA;
+    OCR0B = ratioB;
 }
 
 // Minuterie1
@@ -141,14 +142,14 @@ void Minuterie1::desactiverInteruptionComparateurB()
 void Minuterie1::partirMinuterie(uint32_t tempsMs, Comparateur c)
 {
     // 16 bits (65536) / (8MHz / 1024) = 8388 ms
-    const uint32_t tempsMaxMs = 8388;
+    const uint32_t TEMPS_MAX_MS = 8388;
 
-    nbIterationsCompletesRestantes_ = tempsMs / tempsMaxMs;
-    tempsRestantMs_ = tempsMs - (tempsMaxMs * nbIterationsCompletesRestantes_);
+    nbIterationsCompletesRestantes_ = tempsMs / TEMPS_MAX_MS;
+    tempsRestantMs_ = tempsMs - (TEMPS_MAX_MS * nbIterationsCompletesRestantes_);
     
     cli();
     if (nbIterationsCompletesRestantes_ > 0) {
-        activerComparateurA(tempsMaxMs);
+        activerComparateurA(TEMPS_MAX_MS);
         activerInteruptionComparateurA();
         configurer(NORMAL1A, NORMAL1B, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
         --nbIterationsCompletesRestantes_;
@@ -238,8 +239,7 @@ void Minuterie2::partirPWM(uint8_t ratioA, uint8_t ratioB)
     cli();
     configurer(PWM, PRESCALER8, CLEAR_A, CLEAR_B);
     sei();
-
-    // Conversion du pourcentage en valeur de 0 à 255 (8 bits, car signal PWM sur registre à 8 bits)
-    OCR2A = 255 * ratioA / 100;
-    OCR2B = 255 * ratioB / 100;
+    
+    OCR2A = ratioA;
+    OCR2B = ratioB;
 }
