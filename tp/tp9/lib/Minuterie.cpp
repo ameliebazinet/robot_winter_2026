@@ -2,8 +2,9 @@
 // Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
 // Description : Implémentation des méthodes pour la configuration et l'utilisation des minuteries 0, 1 et 2.
 
-#include "Minuterie.hpp"
+#define F_CPU 8000000UL
 #include <avr/interrupt.h>
+#include "Minuterie.hpp"
 
 using namespace Minuterie;
 
@@ -80,9 +81,10 @@ void Minuterie0::partirPWM(uint8_t ratioA, uint8_t ratioB)
 }
 
 // Minuterie1
-void Minuterie1::configurer(WaveformGenerator1 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
+void Minuterie1::configurer(WaveformGenerator1A wgmA, WaveformGenerator1B wgmB,
+    CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
 {
-    switch (cs)
+        switch (cs)
     {
         case OFF:
             prescaler_ = 0;
@@ -104,8 +106,8 @@ void Minuterie1::configurer(WaveformGenerator1 wgm, CounterSelect cs, CompareOut
             break;
     }
 
-    TCCR1A = uint8_t(wgm) | uint8_t(comB) | uint8_t(comA);
-    TCCR1B |= uint8_t(cs);
+    TCCR1A = uint8_t(wgmA) | uint8_t(comA) | uint8_t(comB);
+    TCCR1B  = uint8_t(wgmB) | uint8_t(cs); 
     TCCR1C = 0;
 }
 
@@ -148,11 +150,11 @@ void Minuterie1::partirMinuterie(uint32_t tempsMs, Comparateur c)
     if (nbIterationsCompletesRestantes_ > 0) {
         activerComparateurA(tempsMaxMs);
         activerInteruptionComparateurA();
-        configurer(NORMAL1, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
+        configurer(NORMAL1A, NORMAL1B, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
         --nbIterationsCompletesRestantes_;
     }
     else {
-        configurer(CTC1, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
+        configurer(CTC1A, CTC1B, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
         activerComparateurA(tempsMs);
         activerInteruptionComparateurA();
         tempsRestantMs_ = 0;
@@ -166,7 +168,7 @@ void Minuterie1::miseAJourCompteur(volatile bool &estMinuterieExpiree)
         --nbIterationsCompletesRestantes_;
     }
     else if (tempsRestantMs_ > 0) {
-        configurer(CTC1, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
+        configurer(CTC1A, CTC1B, PRESCALER1024, DECONNECTE_A, DECONNECTE_B);
         activerComparateurA(tempsRestantMs_);
         tempsRestantMs_ = 0;
     }
@@ -175,27 +177,8 @@ void Minuterie1::miseAJourCompteur(volatile bool &estMinuterieExpiree)
     }
 }
 
-void Minuterie1::genererSon(uint16_t ocr)
-{
-    cli();
-
-    // Mode CTC + toggle OC1A
-    TCCR1A = (1 << COM1A0);
-    TCCR1B = (1 << WGM12) | (1 << CS11); // prescaler 8
-
-    OCR1A = ocr;
-
-    sei();
-}
-
-void Minuterie1::arreterSon()
-{
-    TCCR1A = 0;
-    TCCR1B = 0;
-}
-
 // Minuterie2
-void Minuterie2::configurer(WaveformGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
+void Minuterie::Minuterie2::configurer(WaveformGenerator02 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB)
 {
     switch (cs)
     {

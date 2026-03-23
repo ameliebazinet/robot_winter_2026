@@ -2,9 +2,9 @@
 // Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
 // Description : Déclaration des méthodes pour la configuration et l'utilisation des minuteries 0, 1 et 2.
 
-#define F_CPU 8000000UL
-#include <avr/io.h>
+#pragma once
 #include <stdint.h>
+#include <avr/io.h>
 
 namespace Minuterie
 {
@@ -16,11 +16,16 @@ namespace Minuterie
         CTC = (1 << WGM01) | (0 << WGM00)
     };
 
-    enum WaveformGenerator1
-    {
-        NORMAL1 = (0 << WGM13) | (0 << WGM12) | (0 << WGM11) | (0 << WGM10),
-        PWM1 = (0 << WGM13) | (0 << WGM12) | (0 << WGM11) | (1 << WGM10),
-        CTC1 = (0 << WGM13) | (1 << WGM12) | (0 << WGM11) | (0 << WGM10)
+    enum WaveformGenerator1A : uint8_t {
+        NORMAL1A = (0 << WGM11) | (0 << WGM10),
+        PWM1A    = (0 << WGM11) | (1 << WGM10),
+        CTC1A    = (0 << WGM11) | (0 << WGM10),  // CTC : WGM11=0, WGM10=0
+    };
+
+    enum WaveformGenerator1B : uint8_t {
+        NORMAL1B = (0 << WGM13) | (0 << WGM12),
+        PWM1B    = (0 << WGM13) | (0 << WGM12),
+        CTC1B    = (0 << WGM13) | (1 << WGM12),  // CTC : WGM13=0, WGM12=1
     };
 
     enum CounterSelect
@@ -97,7 +102,8 @@ namespace Minuterie
     {
     public:
         // Configure les registres de la minuterie pour sont utilisation.
-        static void configurer(WaveformGenerator1 wgm, CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
+        static void configurer(WaveformGenerator1A wgmA, WaveformGenerator1B wgmB,
+            CounterSelect cs, CompareOutputModeA comA, CompareOutputModeB comB);
 
         // Fait le calcul necessaire pour transformer le tempsMs en nb de cycle de minuterie
         // et le met dans OCR1A.
@@ -118,9 +124,6 @@ namespace Minuterie
         // pour appelé timer.miseAJourCompteur(estMinuterieExpiree).
         static void partirMinuterie(uint32_t tempsMs, Comparateur c);
         static void miseAJourCompteur(volatile bool &estMinuterieExpiree);
-
-        static void genererSon(uint16_t ocr);
-        static void arreterSon();
 
     private:
         static uint16_t prescaler_;
