@@ -18,7 +18,7 @@ void ecrireDepuisUART() {
     memoire.ecriture(1, lowByte);
     _delay_ms(5);
     // receive and write the rest
-    for (uint16_t i = 0; i < totalSize - 2; i++) {
+    for (uint16_t i = 0; i < totalSize-2; i++) {
         memoire.ecriture(i + 2, com.receptionUART());
         _delay_ms(5);
     }

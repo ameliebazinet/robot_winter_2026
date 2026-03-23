@@ -5,8 +5,7 @@
 #include "memoire_24.h"
 #include "Del.hpp"
 #include "PontH.hpp"
-
-// INCLUDE SON
+#include "Son.hpp"
 
 constexpr uint8_t ADRESSE_TAILLE = 2;
 
@@ -46,7 +45,6 @@ public:
     uint8_t compteurBoucle_;
 
     Del del_;
-    //PontH moteur_;
     Memoire24CXXX mem_;
     Communication com_;
 

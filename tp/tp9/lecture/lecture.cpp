@@ -42,9 +42,11 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
             break;
 
         case JOUER_SON:
+            Son::jouer(operande);
             break;
 
         case ARRETER_SON:
+            Son::arreter();
             break;
 
         case ARRETER_MOTEURS_1:
@@ -55,23 +57,31 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
         case AVANCER:
             PontH::initialiserRegistre();
 
-            PontH::avancer((operande * 100) / 255);
+            PontH::avancer(((uint16_t)operande * 100) / 255);
             
             break;
 
         case RECULER:
-            PontH::reculer((operande * 100) / 255);
+            PontH::reculer(((uint16_t)operande * 100) / 255);
             break;
 
         case TOURNER_DROITE:
+            PontH::initialiserRegistre();
+            PontH::tournerDroite(255); 
+            _delay_ms(600); 
+            PontH::arreter();
             break;
 
         case TOURNER_GAUCHE:
+            PontH::initialiserRegistre();
+            PontH::tournerGauche(250); 
+            _delay_ms(450); 
+            PontH::arreter();
             break;
 
         case DEBUT_BOUCLE:
             adresseBoucle_ = adresse_;
-            compteurBoucle_ = operande_ + 1;
+            compteurBoucle_ = operande;
             break;
         
         case FIN_BOUCLE:
