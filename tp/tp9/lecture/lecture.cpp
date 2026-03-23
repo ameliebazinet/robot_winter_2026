@@ -67,17 +67,11 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
             break;
 
         case TOURNER_DROITE:
-            PontH::initialiserRegistre();
-            PontH::tournerDroite(255); 
-            _delay_ms(600); 
-            PontH::arreter();
+            PontH::tourner90DegresDroite();
             break;
 
         case TOURNER_GAUCHE:
-            PontH::initialiserRegistre();
-            PontH::tournerGauche(250); 
-            _delay_ms(450); 
-            PontH::arreter();
+            PontH::tourner90DegresGauche();
             break;
 
         case DEBUT_BOUCLE:

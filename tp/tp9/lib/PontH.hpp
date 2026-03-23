@@ -8,7 +8,9 @@
 // PB4 => Enable roue droite (OC0B)
 // PB5 => Direction roue droite
 
+#define F_CPU 8000000UL
 #include "Minuterie.hpp"
+#include <util/delay.h>
 
 class PontH
 {
@@ -30,5 +32,7 @@ public:
     static void tournerDroite(uint8_t ratio);
     static void tournerGauche(uint8_t ratio);
 
+    static void tourner90DegresDroite();
+    static void tourner90DegresGauche();
     static void arreter();
 };

@@ -1,25 +1,29 @@
 #include "ecriture.hpp"
 #include <util/delay.h>
 
-void ecrireDepuisUART() {
+const uint8_t DELAI_ECRITURE = 5;
+
+void ecrireDepuisUART()
+{
     Communication com;
     Memoire24CXXX memoire;
 
     com.initialisationUART();
 
-    // read the 2 size bytes
-    uint8_t highByte = com.receptionUART();
-    uint8_t lowByte  = com.receptionUART();
-    uint16_t totalSize = (highByte << 8) | lowByte;
+    // Lire les deux octets de taille
+    uint8_t octetHaut = com.receptionUART();
+    uint8_t octetBas  = com.receptionUART();
+    uint16_t tailleTotale = (octetHaut << 8) | octetBas;
 
-    // write the 2 size bytes to EEPROM
-    memoire.ecriture(0, highByte);
-    _delay_ms(5);
-    memoire.ecriture(1, lowByte);
-    _delay_ms(5);
-    // receive and write the rest
-    for (uint16_t i = 0; i < totalSize-2; i++) {
+    // Écrire les deux octets de taille dans EEPROM
+    memoire.ecriture(0, octetHaut);
+    _delay_ms(DELAI_ECRITURE);
+    memoire.ecriture(1, octetBas);
+    _delay_ms(DELAI_ECRITURE);
+
+    // Recevoir et écrire le reste
+    for (uint16_t i = 0; i < tailleTotale - 2; i++) {
         memoire.ecriture(i + 2, com.receptionUART());
-        _delay_ms(5);
+        _delay_ms(DELAI_ECRITURE);
     }
 }

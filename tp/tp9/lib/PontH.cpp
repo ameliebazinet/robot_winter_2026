@@ -3,8 +3,8 @@
 // Description : Implémentation des méthodes pour la génération de signal PWM à l'aide de la minuterie 2.
 // Envoi du signal PWM sur le pont en H pour le controle des roues.
 
-
 #include "PontH.hpp"
+const uint8_t VITESSE_MAX = 255;
 
 void PontH::initialiserRegistre()
 {
@@ -51,6 +51,25 @@ void PontH::tournerDroite(uint8_t ratio)
 void PontH::tournerGauche(uint8_t ratio)
 {
     configurer(1, ratio, 0, ratio);
+}
+
+void PontH::tourner90DegresDroite()
+{
+    uint16_t delaiTournerDroite = 600;
+    initialiserRegistre();
+    tournerDroite(VITESSE_MAX); 
+    _delay_ms(delaiTournerDroite); 
+    arreter();
+}
+
+void PontH::tourner90DegresGauche()
+{
+    uint16_t delaiTournerGauche = 500;
+    initialiserRegistre();
+    tournerGauche(VITESSE_MAX); 
+    _delay_ms(delaiTournerGauche); 
+    arreter();
+
 }
 
 void PontH::arreter()
