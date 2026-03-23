@@ -1,4 +1,5 @@
 #include "ecriture.hpp"
+#include <util/delay.h>
 
 void ecrireDepuisUART() {
     Communication com;
@@ -13,10 +14,12 @@ void ecrireDepuisUART() {
 
     // write the 2 size bytes to EEPROM
     memoire.ecriture(0, highByte);
+    _delay_ms(5);
     memoire.ecriture(1, lowByte);
-
+    _delay_ms(5);
     // receive and write the rest
-    for (uint16_t i = 0; i < totalSize; i++) {
+    for (uint16_t i = 0; i < totalSize - 2; i++) {
         memoire.ecriture(i + 2, com.receptionUART());
+        _delay_ms(5);
     }
 }
