@@ -8,6 +8,7 @@ Lecture::Lecture()
     programmeFini_(false)
 {
     PontH::initialiserRegistre();
+    Son::initialiserPiezo();
 }
 
 void Lecture::initialiserLecture()
@@ -42,14 +43,16 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
             break;
 
         case JOUER_SON:
+            Son::jouer(operande);
             break;
 
         case ARRETER_SON:
+            Son::arreter();
             break;
 
         case ARRETER_MOTEURS_1:
         case ARRETER_MOTEURS_2:
-           PontH::arreter();
+            PontH::arreter();
             break;
             
         case AVANCER:

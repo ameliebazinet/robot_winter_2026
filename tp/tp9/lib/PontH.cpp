@@ -8,30 +8,30 @@
 
 void PontH::initialiserRegistre()
 {
-    DDRD |= (1 << PD4) | (1 << PD5) | (1 << PD6) | (1 << PD7);
+    DDRB |= (1 << PB2) | (1 << PB3) | (1 << PB4) | (1 << PB5);
 }
 
 void PontH::configurer(bool directionGauche, uint8_t ratioGauche, bool directionDroite, uint8_t ratioDroite)
 {
-    //On envoie ratioDroite sur PD7 et ratioGauche sur PD6
-    Minuterie::Minuterie2::partirPWM(ratioDroite, ratioGauche);
+    //On envoie ratioDroite sur PB5 et ratioGauche sur PB3
+    Minuterie::Minuterie0::partirPWM(ratioDroite, ratioGauche);
 
     if (directionGauche == 0) {
         // Avance
-        PORTD &= ~(1 << PD4);
+        PORTB &= ~(1 << PB2);
     }
     else {
         // Recule
-        PORTD |= (1 << PD4);
+        PORTB |= (1 << PB2);
     }
 
     if (directionDroite == 0) {
         // Avance
-        PORTD &= ~(1 << PD5);
+        PORTB &= ~(1 << PB5);
     }
     else {
         // Recule
-        PORTD |= (1 << PD5);
+        PORTB |= (1 << PB5);
     }
 }
 

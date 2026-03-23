@@ -4,10 +4,10 @@
 // Le fil noir de la cellule piézoélectrique est branché sur PD4 (ground)
 
 #define F_CPU 8000000UL
-#include "Son.hpp"
-#include "Minuterie.hpp"
 #include <avr/io.h>
 #include <math.h>
+#include "Son.hpp"
+#include "Minuterie.hpp"
 
 using namespace Minuterie;
 
@@ -15,7 +15,7 @@ static const uint8_t  NOTE_MIN   = 45;
 static const uint8_t  NOTE_MAX   = 81;
 static const uint16_t PRESCALER  = 8;
 
-static void initialiserPiezo()
+void Son::initialiserPiezo()
 {
     DDRD |= (1 << PD5) | (1 << PD4);
     PORTD &= ~((1 << PD5) | (1 << PD4));

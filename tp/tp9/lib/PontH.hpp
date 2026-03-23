@@ -3,11 +3,10 @@
 // Description : Cette classe déclare les méthodes pour la generation de signal PWM à l'aide de la minuterie 2.
 // Branchements pour fontionner:
 //
-//   PD4 => Direction roue gauche
-//   PD5 => Direction roue droite
-//   PD6 => Enable roue gauche
-//   PD7 => Enable roue droite
-
+// PB2 => Direction roue gauche
+// PB3 => Enable roue gauche (OC0A)
+// PB4 => Enable roue droite (OC0B)
+// PB5 => Direction roue droite
 
 #include "Minuterie.hpp"
 

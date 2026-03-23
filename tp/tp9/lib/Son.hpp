@@ -8,7 +8,8 @@
 class Son
 {
 public:
-    // Initialise PD5 en sortie (fréquence à laquelle est connectée la cellule piézoélectrique) et PD4 en sortie à 0 (ground).
+    
+    // Initialise la cellule piézoélectrique en sortie sur le port PD5 et le port PD4 (ground).
     static void initialiserPiezo();
 
     // Joue la note MIDI donnée (45 à 81). Retourne false si la note est hors plage (la commande est ignorée).

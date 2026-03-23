@@ -18,7 +18,7 @@ void PontH::configurer(bool directionGauche, uint8_t ratioGauche, bool direction
     //   PB4 => Enable roue droite 
     //   PB5 => Direction roue droite
     //On envoie ratioDroite sur PB5 et ratioGauche sur PB3
-    Minuterie::Minuterie0::partirPWM(ratioGauche, ratioDroite);
+    Minuterie::Minuterie0::partirPWM(ratioDroite, ratioGauche);
 
     if (directionGauche == 0) {
         // Avance
