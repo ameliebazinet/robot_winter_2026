@@ -1,20 +1,40 @@
 dbt ;
+sgo 69 ;
 dal 1 ;
+att 50 ;
+det ;
+sar ;
+att 50 ;
+sgo 69 ;
+dal 1 ;
+att 50 ;
+det ;
+sar ;
 att 100 ;
+
 dal 2 ; 
-att 100 ;
-det ;
+sgo 76 ;
 mav 255 ;
-att 255 ;
+att 90 ;
+
 mar ;
-dal 1 ;
+sgo 69 ;
+att 30 ;
+
+dal 2 ;
+sgo 77 ;
 mre 255 ;
-att 255 ;
+att 90 ;
+
 mar ;
-att 100 ;
+sgo 74 ;
+att 30 ;
+
+sgo 76 ;
 trd ;
-att 200 ;
+att 100 ;
 trg ;
-att 200 ;
+att 100 ;
 det ;
+sar ;
 fin ; 

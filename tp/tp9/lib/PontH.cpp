@@ -4,7 +4,7 @@
 // Envoi du signal PWM sur le pont en H pour le controle des roues.
 
 #include "PontH.hpp"
-const uint8_t VITESSE_MAX = 255;
+const uint8_t VITESSE_TOURNER = 128;
 
 void PontH::initialiserRegistre()
 {
@@ -55,18 +55,18 @@ void PontH::tournerGauche(uint8_t ratio)
 
 void PontH::tourner90DegresDroite()
 {
-    uint16_t delaiTournerDroite = 600;
+    uint16_t delaiTournerDroite = 1100;
     initialiserRegistre();
-    tournerDroite(VITESSE_MAX); 
+    tournerDroite(VITESSE_TOURNER); 
     _delay_ms(delaiTournerDroite); 
     arreter();
 }
 
 void PontH::tourner90DegresGauche()
 {
-    uint16_t delaiTournerGauche = 500;
+    uint16_t delaiTournerGauche = 1050;
     initialiserRegistre();
-    tournerGauche(VITESSE_MAX); 
+    tournerGauche(VITESSE_TOURNER); 
     _delay_ms(delaiTournerGauche); 
     arreter();
 
