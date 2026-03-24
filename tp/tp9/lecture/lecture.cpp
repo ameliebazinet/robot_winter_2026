@@ -96,30 +96,16 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
 
 void Lecture::lireMemoire()
 {
-    
-    // TEMPORAIRE - vérification mémoire
-    //for (uint16_t i = 0; i < 12; i++) {
-        //uint8_t donnee;
-        //mem_.lecture(i, &donnee);
-    //DEBUG_PRINT(com_, "addr %d = 0x%02X\r\n", i, donnee);
-    //}
-    
-    
     mem_.lecture(adresse_++, &donnee_);
     uint16_t taille = donnee_;
     mem_.lecture(adresse_++, &donnee_);
     taille = (taille << 8) | donnee_;
-
-
 
     bool estDebutTrouve = false;
 
     while(adresse_ < taille && !programmeFini_) {
         mem_.lecture(adresse_++, &instruction_);
         mem_.lecture(adresse_++, &operande_);
-        //com_.transmissionFormatee("inst=0x%02X op=0x%02X\r\n", instruction_, operande_);
-
-
 
         if (!estDebutTrouve) {
             if (instruction_ == DEBUT) {
