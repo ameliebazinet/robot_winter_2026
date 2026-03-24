@@ -52,3 +52,9 @@ void Communication::transmissionFormatee(const char* format, ...)
     
     transmissionChaine(buffer);
 }
+
+uint8_t Communication::receptionUART() 
+{
+    while (!(UCSR0A & (1 << RXC0)));
+    return UDR0;
+}
