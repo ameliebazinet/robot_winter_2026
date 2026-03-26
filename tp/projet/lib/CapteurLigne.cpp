@@ -22,7 +22,7 @@ bool CapteurLigne::estTropADroite() const
 
 bool CapteurLigne::estObstacleAuCentre() const
 {
-    return (CAPTEUR_D3 & PINC);
+    return ((CAPTEUR_D3 & PINC) || ((CAPTEUR_D2 | CAPTEUR_D3) & PINC) || ((CAPTEUR_D3 & CAPTEUR_D4) & PINC));
 }
 
 bool CapteurLigne::estSurLignePleine() const
