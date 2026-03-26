@@ -1,0 +1,40 @@
+dbt ;
+sgo 69 ;
+dal 1 ;
+att 50 ;
+det ;
+sar ;
+att 50 ;
+sgo 69 ;
+dal 1 ;
+att 50 ;
+det ;
+sar ;
+att 100 ;
+
+dal 2 ; 
+sgo 76 ;
+mav 255 ;
+att 90 ;
+
+mar ;
+sgo 69 ;
+att 30 ;
+
+dal 2 ;
+sgo 77 ;
+mre 255 ;
+att 90 ;
+
+mar ;
+sgo 74 ;
+att 30 ;
+
+sgo 76 ;
+trd ;
+att 100 ;
+trg ;
+att 100 ;
+det ;
+sar ;
+fin ; 
