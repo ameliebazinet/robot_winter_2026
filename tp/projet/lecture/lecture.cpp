@@ -2,14 +2,69 @@
 #include "lecture.hpp"
 #include "debug.h"
 
-Lecture::Lecture() 
-    : adresse_(0x0000), donnee_(0), instruction_(0b00), 
-    operande_(0b00), adresseBoucle_(0), del_(PORTA, PA0, PA1),
-    programmeFini_(false)
+const uint16_t DELAI_2_SECONDES = 2000;
+const uint8_t DELAI_1_SECONDE = 1000;
+const uint8_t DELAI_INTERRUPTION = 50;
+
+Lecture::Lecture() : adresse_(0x0000), donnee_(0), instruction_(0b00), 
+    operande_(0b00), adresseBoucle_(0), del_(PORTA, PA0, PA1), programmeFini_(false)
 {
     PontH::initialiserRegistre();
     Son::initialiserPiezo();
 }
+
+void Lecture::selectionMode(volatile bool& boutonClique, volatile bool& tempsEcoule)
+{
+    InterruptionExterne boutonMateriel;
+    _delay_ms(DELAI_2_SECONDES);
+
+    // INT0 sur any logical change
+    boutonMateriel.initialisation(0,1);
+
+    bool modeChoisi = false;
+
+    del_.allumerCouleur(Del::Couleur::VERT);
+    Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
+
+    while (!boutonClique && !tempsEcoule) {
+        // Attente active
+    }
+
+        if (boutonClique) {
+            Minuterie::Minuterie1::desactiverInteruptionComparateurA();
+            
+            // LOGIQUE : SET AU MODE RAPPORT
+            modeChoisi = true;
+        } 
+        else if (tempsEcoule) {
+            del_.allumerCouleur(Del::Couleur::ETEINT);
+            _delay_ms(DELAI_1_SECONDE);
+        }
+
+    boutonClique = false;
+    tempsEcoule = false;
+    
+    del_.allumerCouleur(Del::Couleur::ROUGE);
+    Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
+
+    while (!boutonClique && !tempsEcoule) {
+        // Attente active
+    }
+
+    if (boutonClique) {
+        Minuterie::Minuterie1::desactiverInteruptionComparateurA();
+        
+        // LOGIQUE : SET AU MODE RAPPORT
+        modeChoisi = true;
+    } 
+    else if (tempsEcoule) {
+        del_.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(DELAI_1_SECONDE);
+    }
+
+    boutonMateriel.desactiverInterruption(0);
+}
+
 
 void Lecture::initialiserLecture()
 {

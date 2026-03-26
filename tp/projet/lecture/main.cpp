@@ -1,15 +1,21 @@
-
 #include "lecture.hpp"
 
+volatile bool tempsEcoule = false;
+volatile bool boutonClique = false;
+
+ISR(INT0_vect) {
+    boutonClique = true;
+}
+
+ISR(TIMER1_COMPA_vect) {
+    Minuterie::Minuterie1::miseAJourCompteur(tempsEcoule);
+}
 
 int main()
 {   
-
-    // PontH::initialiserRegistre();
-    // PontH::avancer(100);
-
    
     Lecture lecture; 
+    lecture.selectionMode(boutonClique, tempsEcoule);
     lecture.initialiserLecture(); 
     lecture.lireMemoire();
     

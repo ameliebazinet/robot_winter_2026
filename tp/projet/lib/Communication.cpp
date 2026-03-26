@@ -37,14 +37,16 @@ void Communication::transmissionChaine(const char* message)
 
 void Communication::transmissionFormatee(const char* format, ...) 
 {
-    char buffer[64];
+    // Attention, si les données dépassent 64 octets, elles seront tronquées.
+    uint8_t grandeurTampon = 64;
+    char tampon[grandeurTampon];
 
-    va_list args;
-    va_start(args, format);
-    vsnprintf(buffer, sizeof(buffer), format, args);
-    va_end(args);
+    va_list arguments;
+    va_start(arguments, format);
+    vsnprintf(tampon, sizeof(tampon), format, arguments);
+    va_end(arguments);
     
-    transmissionChaine(buffer);
+    transmissionChaine(tampon);
 }
 
 uint8_t Communication::receptionUART() 

@@ -24,8 +24,8 @@ class Lecture
 {
 public:
     Lecture();    
+    void selectionMode(volatile bool& boutonClique, volatile bool& tempsEcoule);
     void initialiserLecture();
-    void selectionMode();
     void lireMemoire();
     void faireInstruction(uint8_t instruction, uint8_t operande);
     
