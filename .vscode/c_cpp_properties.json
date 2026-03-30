@@ -6,7 +6,7 @@
             "includePath": [
                 "/**",
                 "/usr/avr/include/**",
-                "${workspaceFolder}/tp/tp9/lib/"
+                "${workspaceFolder}/tp/projet/lib/"
 
             ],
             "defines": [
