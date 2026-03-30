@@ -10,6 +10,7 @@
 #include "Minuterie.hpp"
 
 constexpr uint8_t ADRESSE_TAILLE = 2;
+const uint8_t TAILLE_TABLEAU_NOTE = 3; 
 
 enum Instruction {
     DEBUT = 0b00000001,
@@ -20,27 +21,41 @@ enum Instruction {
     FIN = 0b11111111
 };
 
+enum Mode {
+    SELECTION, 
+    INSTRUCTION, 
+    RAPPORT, 
+    EXECUTION
+}; 
+
 class Lecture
 {
 public:
     Lecture();    
-    void selectionMode(volatile bool& boutonClique, volatile bool& tempsEcoule);
+    Mode selectionMode(volatile bool& boutonClique, volatile bool& tempsEcoule);
+    void implementationMode(const Mode& mode);
     void initialiserLecture();
     void lireMemoire();
     void faireInstruction(uint8_t instruction, uint8_t operande);
+ 
+
     
 
     uint16_t adresse_;
     uint8_t donnee_;
     uint8_t instruction_;
     uint8_t operande_;
+    
+    
+    uint8_t note_[TAILLE_TABLEAU_NOTE];
+    bool directionHoraire_; 
+    uint8_t valeurAtt_;
 
-    uint16_t adresseBoucle_;
-    uint8_t compteurBoucle_;
+    bool programmeFini_; 
+
+    uint8_t adresseTableauNote = 0;
 
     Del del_;
     Memoire24CXXX mem_;
     Communication com_;
-
-    bool programmeFini_;
 };
