@@ -1,6 +1,6 @@
 // Fichier : PontH.cpp
 // Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
-// Description : Implémentation des méthodes pour la génération de signal PWM à l'aide de la minuterie 2.
+// Description : Implémentation des méthodes pour la génération de signal PWM à l'aide de la minuterie 0.
 // Envoi du signal PWM sur le pont en H pour le controle des roues.
 
 #include "PontH.hpp"
@@ -13,7 +13,6 @@ void PontH::initialiserRegistre()
 
 void PontH::configurer(bool directionGauche, uint8_t ratioGauche, bool directionDroite, uint8_t ratioDroite)
 {
-    //On envoie ratioDroite sur PB5 et ratioGauche sur PB3
     Minuterie::Minuterie0::partirPWM(ratioDroite, ratioGauche);
 
     if (directionGauche == 0) {
