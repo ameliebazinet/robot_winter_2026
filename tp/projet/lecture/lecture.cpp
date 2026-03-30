@@ -2,14 +2,69 @@
 #include "lecture.hpp"
 #include "debug.h"
 
-Lecture::Lecture() 
-    : adresse_(0x0000), donnee_(0), instruction_(0b00), 
-    operande_(0b00), adresseBoucle_(0), del_(PORTA, PA0, PA1),
-    programmeFini_(false)
+const uint16_t DELAI_2_SECONDES = 2000;
+const uint8_t DELAI_1_SECONDE = 1000;
+const uint8_t DELAI_INTERRUPTION = 50;
+
+Lecture::Lecture() : adresse_(0x0000), donnee_(0), instruction_(0b00), 
+    operande_(0b00), adresseBoucle_(0), del_(PORTA, PA0, PA1), programmeFini_(false)
 {
     PontH::initialiserRegistre();
     Son::initialiserPiezo();
 }
+
+void Lecture::selectionMode(volatile bool& boutonClique, volatile bool& tempsEcoule)
+{
+    InterruptionExterne boutonMateriel;
+    _delay_ms(DELAI_2_SECONDES);
+
+    // INT0 sur any logical change
+    boutonMateriel.initialisation(0,1);
+
+    bool modeChoisi = false;
+
+    del_.allumerCouleur(Del::Couleur::VERT);
+    Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
+
+    while (!boutonClique && !tempsEcoule) {
+        // Attente active
+    }
+
+        if (boutonClique) {
+            Minuterie::Minuterie1::desactiverInteruptionComparateurA();
+            
+            // LOGIQUE : SET AU MODE RAPPORT
+            modeChoisi = true;
+        } 
+        else if (tempsEcoule) {
+            del_.allumerCouleur(Del::Couleur::ETEINT);
+            _delay_ms(DELAI_1_SECONDE);
+        }
+
+    boutonClique = false;
+    tempsEcoule = false;
+    
+    del_.allumerCouleur(Del::Couleur::ROUGE);
+    Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
+
+    while (!boutonClique && !tempsEcoule) {
+        // Attente active
+    }
+
+    if (boutonClique) {
+        Minuterie::Minuterie1::desactiverInteruptionComparateurA();
+        
+        // LOGIQUE : SET AU MODE RAPPORT
+        modeChoisi = true;
+    } 
+    else if (tempsEcoule) {
+        del_.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(DELAI_1_SECONDE);
+    }
+
+    boutonMateriel.desactiverInterruption(0);
+}
+
 
 void Lecture::initialiserLecture()
 {
@@ -19,77 +74,20 @@ void Lecture::initialiserLecture()
 void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
 {
     switch (instruction) {
-        case ATTENDRE:
-            for (uint8_t i = 0; i < operande; i++) {
-                _delay_ms(25);
-            }
+        case PLACE_DE_STATIONNEMENT:
             break;
         
-        case ALLUMER_LED:
-            if (operande == 1) {
-                del_.allumerCouleur(Del::Couleur::VERT);
-            }
-            else if (operande == 2) {
-                del_.allumerCouleur(Del::Couleur::ROUGE);
-            }
-            else {
-                del_.allumerCouleur(Del::Couleur::ETEINT);
-            }
-
+        case NOTE_JOUEE:
             break;
 
-        case ETEINDRE_LED:
-            del_.allumerCouleur(Del::Couleur::ETEINT);
+        case PARCOURS_SENS_HORAIRE:
             break;
 
-        case JOUER_SON:
-            Son::jouer(operande);
-            break;
-
-        case ARRETER_SON:
-            Son::arreter();
-            break;
-
-        case ARRETER_MOTEURS_1:
-        case ARRETER_MOTEURS_2:
-            PontH::arreter();
-            break;
-            
-        case AVANCER:
-            PontH::initialiserRegistre();
-
-            PontH::avancer(operande);
-            
-            break;
-
-        case RECULER:
-            PontH::reculer(operande);
-            break;
-
-        case TOURNER_DROITE:
-            PontH::tourner90DegresDroite();
-            break;
-
-        case TOURNER_GAUCHE:
-            PontH::tourner90DegresGauche();
-            break;
-
-        case DEBUT_BOUCLE:
-            adresseBoucle_ = adresse_;
-            compteurBoucle_ = operande;
-            break;
-        
-        case FIN_BOUCLE:
-            if (compteurBoucle_ != 0) {
-                compteurBoucle_--;
-                adresse_ = adresseBoucle_;
-            }
+        case PARCOURS_SENS_ANTIHORAIRE:
             break;
 
         case FIN:
-            PontH::arreter();
-            del_.allumerCouleur(Del::Couleur::ETEINT);
-            programmeFini_ = true;
+            programmeFini_ = true;    
             break;
     }
 }
@@ -103,19 +101,21 @@ void Lecture::lireMemoire()
 
     bool estDebutTrouve = false;
 
-    while(adresse_ < taille && !programmeFini_) {
+    while (adresse_ < taille && !programmeFini_) {
         mem_.lecture(adresse_++, &instruction_);
         mem_.lecture(adresse_++, &operande_);
 
-        if (!estDebutTrouve) {
-            if (instruction_ == DEBUT) {
-                estDebutTrouve = true;
-            }
-            continue;
+        if (instruction_ == DEBUT) {
+            break;
         }
-        faireInstruction(instruction_, operande_);
+    }
 
-    }        
+    while (adresse_ < taille && !programmeFini_) {
+        mem_.lecture(adresse_++, &instruction_);
+        mem_.lecture(adresse_++, &operande_);
+
+        faireInstruction(instruction_, operande_);
+    }
 }
 
 
