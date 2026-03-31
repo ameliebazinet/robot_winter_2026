@@ -116,8 +116,6 @@ void Lecture::implementationMode(const Mode& mode)
             break;
         
         case RAPPORT:
-
-
             break;
 
         case EXECUTION:
