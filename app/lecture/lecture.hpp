@@ -21,8 +21,7 @@ enum Instruction {
     FIN = 0b11111111
 };
 
-enum Mode {
-    SELECTION, 
+enum Mode { 
     INSTRUCTION, 
     RAPPORT, 
     EXECUTION
@@ -32,8 +31,19 @@ class Lecture
 {
 public:
     Lecture();    
-    Mode selectionMode(volatile bool& boutonClique, volatile bool& tempsEcoule);
-    void implementationMode(const Mode& mode);
+    Mode selectionnerMode(volatile bool& boutonClique, volatile bool& tempsEcoule);
+    Mode attenteActive(volatile bool& boutonClique, volatile bool& tempsEcoule); 
+
+
+
+    void demarrerPhase(Del::Couleur couleur, uint16_t delai); 
+    void attendreEvenement(volatile bool& boutonClique, volatile bool& tempsEcoule);
+    void attendreEntrePhase(volatile bool& boutonClique, volatile bool& tempsEcoule); 
+    Mode confirmerMode(InterruptionExterne& bouton, Mode mode);
+    
+    
+    
+    
     void initialiserLecture();
     void lireMemoire();
     void faireInstruction(uint8_t instruction, uint8_t operande);

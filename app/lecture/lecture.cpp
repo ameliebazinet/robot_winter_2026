@@ -19,129 +19,65 @@ Lecture::Lecture() : adresse_(0x0000), donnee_(0), instruction_(0b00),
 
 
 
-Mode Lecture:: attenteActive(volatile bool& boutonClique, volatile bool& tempsEcoule)
+void Lecture::demarrerPhase(Del::Couleur couleur, uint16_t delai)
 {
-    InterruptionExterne boutonMateriel;
-    while (!boutonClique && !tempsEcoule) {
-        // Attente active
-    }
-
-    if (boutonClique) {
-        Minuterie::Minuterie1::desactiverInteruptionComparateurA();
-        boutonMateriel.desactiverInterruption(0); // selection de mode est fait, on ne veux plus qui aille des intéruptions sur le bouton 
-        del_.allumerCouleur(Del::Couleur::ETEINT);
-        return Mode::INSTRUCTION;  
-    } 
+    del_.allumerCouleur(couleur); 
+    Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
 }
 
-Mode Lecture::selectionMode(volatile bool& boutonClique, volatile bool& tempsEcoule)
+void Lecture::attendreEvenement(volatile bool& boutonClique, volatile bool& tempsEcoule)
 {
-    InterruptionExterne boutonMateriel;
-    _delay_ms(DELAI_2_SECONDES);
-
-    // INT0 sur any logical change
-    boutonMateriel.initialisation(0,1);
-
-    del_.allumerCouleur(Del::Couleur::VERT);
-    Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
-
-    while (!boutonClique && !tempsEcoule) {
+        while (!boutonClique && !tempsEcoule) {
         // Attente active
     }
+}
 
-    if (boutonClique) {
-        Minuterie::Minuterie1::desactiverInteruptionComparateurA();
-        boutonMateriel.desactiverInterruption(0); // selection de mode est fait, on ne veux plus qui aille des intéruptions sur le bouton 
-        del_.allumerCouleur(Del::Couleur::ETEINT);
-        return Mode::INSTRUCTION; 
-        
-    } 
-    
-    // le temps est écoulée, il n'a pas eu d'intéruption. 
-    // pause, la del est etteinte
+void Lecture::attendreEntrePhase(volatile bool& boutonClique, volatile bool& tempsEcoule)
+{
     boutonClique = false; 
     tempsEcoule = false; 
     del_.allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(DELAI_1_SECONDE); 
+}
 
-    // phase rouge
-    del_.allumerCouleur(Del::Couleur::ROUGE); 
-    Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
-    
-    
-    while (!boutonClique && !tempsEcoule) {
-    // Attente active
-    }
+Mode Lecture::confirmerMode(InterruptionExterne& boutonMateriel, Mode mode)
+{
+    Minuterie::Minuterie1::desactiverInteruptionComparateurA();
+    boutonMateriel.desactiverInterruption(0); // selection de mode est fait, on ne veux plus qui aille des intéruptions sur le bouton 
+    del_.allumerCouleur(Del::Couleur::ETEINT);
+    return Mode::INSTRUCTION; 
+}
 
-    if (boutonClique) {
-        Minuterie::Minuterie1::desactiverInteruptionComparateurA();
-        boutonMateriel.desactiverInterruption(0); // selection de mode est fait, on ne veux plus qui aille des intéruptions sur le bouton 
-        del_.allumerCouleur(Del::Couleur::ETEINT);
-        return Mode::RAPPORT; 
-    }
-    // LA SÉQUENCE C'EST COMPLÉTER SANS INTERRUPTION : 
+
+
+Mode Lecture::selectionnerMode(volatile bool& boutonClique, volatile bool& tempsEcoule)
+{
+    InterruptionExterne boutonMateriel;
+    // INT0 sur any logical change
+    boutonMateriel.initialisation(0,1);
+
+    // Phase verte. 
+    demarrerPhase(Del::Couleur::VERT, DELAI_2_SECONDES); 
+    attendreEvenement(boutonClique,tempsEcoule); 
+    if(boutonClique)
+        return confirmerMode(boutonMateriel,Mode::INSTRUCTION);
+
+    // pause
+    attendreEntrePhase(boutonClique,tempsEcoule); 
+
+    // Phase rouge. 
+    demarrerPhase(Del::Couleur::ROUGE, DELAI_2_SECONDES); 
+    attendreEvenement(boutonClique,tempsEcoule); 
+    if(boutonClique) 
+        return confirmerMode(boutonMateriel,Mode::RAPPORT);
+    
     boutonClique = false; 
     tempsEcoule = false; 
     boutonMateriel.desactiverInterruption(0); 
     del_.allumerCouleur(Del::Couleur::ETEINT); 
     _delay_ms(DELAI_1_SECONDE);
     return Mode::EXECUTION;
-}
 
-void Lecture::implementationMode(const Mode& mode)
-{
-    switch (mode) {
-        case Mode::INSTRUCTION:
-            // siganlement du début 
-            for (uint8_t i = 0; i < 8; i++)
-            {
-                del_.allumerCouleur(Del::Couleur::VERT); 
-                _delay_ms(125); 
-                del_.allumerCouleur(Del::Couleur::ETEINT); 
-                _delay_ms(125); 
-            }
-            lireMemoire(); 
-            for(uint8_t i = 0; i < 3; i++) {
-                Son::jouer(note_[i]);
-                _delay_ms(250); 
-                Son::arreter();
-                _delay_ms(125); 
-            }
-
-            _delay_ms(DELAI_2_SECONDES); 
-            if(directionHoraire_){
-                // allumer vert
-                del_.allumerCouleur(Del::Couleur::VERT); 
-                _delay_ms(DELAI_2_SECONDES); 
-            }
-            else {
-                del_.allumerCouleur(Del::Couleur::ROUGE); 
-                _delay_ms(DELAI_2_SECONDES); 
-            }
-
-            _delay_ms(DELAI_2_SECONDES);
-
-            // allumer la del ambre : 
-
-            for(uint8_t i = 0; i < valeurAtt_; i++)
-            {
-                del_.allumerCouleurAmbre(); 
-                _delay_ms(DELAI_CLIGNOTEMENT_AMBRE); 
-                del_.allumerCouleur(Del::Couleur::ETEINT); 
-                _delay_ms(DELAI_CLIGNOTEMENT_AMBRE); 
-            }
-
-            break;
-        
-        case RAPPORT:
-            genererRapport();
-            break;
-
-        case EXECUTION:
-            faireExecution();
-            break;
-
-    }
 }
 
 
