@@ -11,10 +11,11 @@ int main()
 
     while (true)
     {
+        // com.transmissionFormatee("distance lue: %d \r\n", ci.distance);
+
+        
         ci.lireDistance();
-        com.transmissionFormatee("voltage lu: %d \r\n", ci.distance);
-        ci.lireDistance();
-        if(ci.objetDetecte){
+        if(ci.estObjetDetecte()){
             del.allumerCouleur(Del::Couleur::ROUGE);
 
         }
