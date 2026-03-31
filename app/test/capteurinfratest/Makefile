@@ -10,7 +10,7 @@ PROJECTNAME=main
 PRJSRC=maintest.cpp
 
 # Librairie
-LIBDIR=../lib
+LIBDIR=./../../../lib
 LIBS=$(LIBDIR)/libstatique.a
 
 

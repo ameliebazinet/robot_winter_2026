@@ -9,7 +9,9 @@ public:
     void lireVoltage();
     // Converti le voltage en distance
     void lireDistance();
-    
+    uint16_t getVoltage();
+    uint8_t getDistance();
+    bool estObjetDetecte();
     can can1;
 
     uint16_t voltage;
