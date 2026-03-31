@@ -1,4 +1,12 @@
-void faireExecution()
-{
+void faireExecution();
+
+enum Etat {
+    SORTIE_STATIONNEMENT,
+    PREMIER_COULOIR_SUD,
+    TOURNER_COIN,
+    PREMIER_COULOIR_LONG,
+    ENTRER_PIECE,
+    DEUXIEME_COULOIR_LONG,
     
-}
+
+};
