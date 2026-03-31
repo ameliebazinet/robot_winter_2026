@@ -1,6 +1,9 @@
 #define DEBUG 
 #include "lecture.hpp"
 #include "debug.h"
+#include "../modes/execution.hpp"
+#include "../modes/instruction.hpp"
+#include "../modes/rapport.hpp"
 
 const uint16_t DELAI_2_SECONDES = 2000;
 const uint16_t DELAI_1_SECONDE = 1000;
@@ -131,9 +134,11 @@ void Lecture::implementationMode(const Mode& mode)
             break;
         
         case RAPPORT:
+            genererRapport();
             break;
 
         case EXECUTION:
+            faireExecution();
             break;
 
     }
