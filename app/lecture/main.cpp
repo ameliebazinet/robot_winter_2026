@@ -27,8 +27,4 @@ int main()
     //     lecture.mem_.lecture(i, &donnee);
     //     lecture.com_.transmissionFormatee("addr %d = 0x%02X\r\n", i, donnee);
     // }
-
-    // }
-
-   
 }

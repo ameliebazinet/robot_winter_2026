@@ -6,7 +6,7 @@
             "includePath": [
                 "/**",
                 "/usr/avr/include/**",
-                "${workspaceFolder}/tp/projet/lib/"
+                "${workspaceFolder}/lib/"
 
             ],
             "defines": [
@@ -23,7 +23,7 @@
             "includePath": [
                 "/**",
                 "/opt/homebrew/opt/avr-gcc@14/avr/include/**",
-                "./tp/tp9/lib/"
+                "./lib/"
             ],
             "defines": [
                 "__AVR_ATmega324PA__"
