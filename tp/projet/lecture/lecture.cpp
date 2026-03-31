@@ -142,8 +142,6 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
         case NOTE_JOUEE:
             note_[adresseTableauNote] = operande;
             adresseTableauNote++;
-            // call une fonction jouerSerieNotes(adresse) qu'on implemente ailleurs
-            
             break;
 
         case PARCOURS_SENS_HORAIRE:
@@ -155,7 +153,6 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
             break;
 
         case FIN:
-            // call une fonction effectuerProgramme() qu'on implemente ailleurs
             programmeFini_ = true;    
             break;
     }
