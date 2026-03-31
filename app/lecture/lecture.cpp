@@ -113,7 +113,7 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
 }
 
 void Lecture::lireMemoire()
-{
+{   // faudrait enlever la section trouver début ?
     mem_.lecture(adresse_++, &donnee_);
     uint16_t taille = donnee_;
     mem_.lecture(adresse_++, &donnee_);
