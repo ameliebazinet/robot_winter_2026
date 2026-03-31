@@ -14,5 +14,5 @@ public:
 
     uint16_t voltage;
     uint8_t distance;
-    bool detecteObjet;
+    bool objetDetecte;
 };
