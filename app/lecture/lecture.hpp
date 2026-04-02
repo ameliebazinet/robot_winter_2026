@@ -12,6 +12,11 @@
 constexpr uint8_t ADRESSE_TAILLE = 2;
 const uint8_t TAILLE_TABLEAU_NOTE = 3; 
 
+const uint16_t DELAI_2_SECONDES = 2000;
+const uint16_t DELAI_1_SECONDE = 1000;
+const uint8_t DELAI_INTERRUPTION = 50;
+const uint16_t DELAI_CLIGNOTEMENT_AMBRE= 500;
+
 enum Instruction {
     DEBUT = 0b00000001,
     PLACE_DE_STATIONNEMENT = 0b00000010, 
@@ -34,36 +39,33 @@ public:
     Mode selectionnerMode(volatile bool& boutonClique, volatile bool& tempsEcoule);
     Mode attenteActive(volatile bool& boutonClique, volatile bool& tempsEcoule); 
 
-
-
     void demarrerPhase(Del::Couleur couleur, uint16_t delai); 
     void attendreEvenement(volatile bool& boutonClique, volatile bool& tempsEcoule);
     void attendreEntrePhase(volatile bool& boutonClique, volatile bool& tempsEcoule); 
     Mode confirmerMode(InterruptionExterne& bouton, Mode mode);
     
-    
-    
-    
     void initialiserLecture();
     void lireMemoire();
     void faireInstruction(uint8_t instruction, uint8_t operande);
- 
 
-    
+    Del& getDel() { return del_; }
+    const uint8_t* getNote() const { return note_; }
+    bool getDirectionHoraire() const { return directionHoraire_; }
+    uint8_t getNumStationnement() const { return numStationnement_; }
 
+private:
     uint16_t adresse_;
     uint8_t donnee_;
     uint8_t instruction_;
     uint8_t operande_;
     
-    
     uint8_t note_[TAILLE_TABLEAU_NOTE];
     bool directionHoraire_; 
-    uint8_t valeurAtt_;
+    uint8_t numStationnement_;
 
     bool programmeFini_; 
 
-    uint8_t adresseTableauNote = 0;
+    uint8_t adresseTableauNote_ = 0;
 
     Del del_;
     Memoire24CXXX mem_;
