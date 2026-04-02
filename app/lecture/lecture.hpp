@@ -37,12 +37,10 @@ class Lecture
 public:
     Lecture();    
     Mode selectionnerMode(volatile bool& boutonClique, volatile bool& tempsEcoule);
-    Mode attenteActive(volatile bool& boutonClique, volatile bool& tempsEcoule); 
 
     void demarrerPhase(Del::Couleur couleur, uint16_t delai); 
-    void attendreEvenement(volatile bool& boutonClique, volatile bool& tempsEcoule);
-    void attendreEntrePhase(volatile bool& boutonClique, volatile bool& tempsEcoule); 
-    Mode confirmerMode(InterruptionExterne& bouton, Mode mode);
+    void attendreEntrePhases(volatile bool& boutonClique, volatile bool& tempsEcoule); 
+    void confirmerMode(InterruptionExterne &boutonMateriel);
     
     void initialiserLecture();
     void lireMemoire();
