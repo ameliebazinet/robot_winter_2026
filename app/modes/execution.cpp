@@ -1,5 +1,10 @@
 #include "execution.hpp"
 #include <avr/io.h>
+#define F_CPU 8000000UL
+#include "PontH.hpp"
+#include "CapteurLigne.hpp"
+#include <util/delay.h>
+
 
 enum class Etat 
 {
@@ -17,6 +22,31 @@ enum class Etat
 
     ENTRER_STATIONNEMENT
 };
+
+void suivreCouloir()
+{
+    CapteurLigne capteur;
+    PontH::initialiserRegistre();
+
+    PontH::avancer(255);
+    _delay_ms(100);
+
+    while (!capteur.estSurLignePleine()) {
+
+        if (capteur.estTropADroite()) {
+            PontH::configurer(1, 100, 0, 100);
+        }
+
+        else if (capteur.estTropAGauche()) {
+            PontH::configurer(0, 100, 1, 100);
+        }
+
+        else {
+            PontH::avancer(100);
+        }
+    }
+    PontH::arreter();
+}
 
 void sortirStationnement() {}
 
