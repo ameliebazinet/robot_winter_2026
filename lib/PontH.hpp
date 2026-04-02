@@ -7,7 +7,7 @@
 // PB3 => Enable roue gauche (OC0A)
 // PB4 => Enable roue droite (OC0B)
 // PB5 => Direction roue droite
-
+#pragma once
 #define F_CPU 8000000UL
 #include "Minuterie.hpp"
 #include <util/delay.h>

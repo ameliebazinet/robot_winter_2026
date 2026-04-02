@@ -8,5 +8,15 @@ int main()
 {
     // Trouve le mode (fait dans lecture)
     // EXECUTER instruction, rapport ou "execution" (modes/whatever)
+    CapteurLigne capteur;
+
+    suivreCouloir();
+
+    if(capteur.estSurLignePleine())
+    {
+        tournerDroite();
+
+    }
+    
 
 }
