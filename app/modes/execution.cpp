@@ -1,9 +1,4 @@
 #include "execution.hpp"
-#include <avr/io.h>
-#define F_CPU 8000000UL
-#include "PontH.hpp"
-#include "CapteurLigne.hpp"
-#include <util/delay.h>
 
 void suivreCouloir()
 {
@@ -11,16 +6,16 @@ void suivreCouloir()
     PontH::initialiserRegistre();
 
     PontH::avancer(255);
-    _delay_ms(100);
+    _delay_ms(250);
 
     while (!capteur.estSurLignePleine()) {
 
         if (capteur.estTropADroite()) {
-            PontH::configurer(1, 150, 0, 150);
+            PontH::configurer(1, 185, 0, 185);
         }
 
         else if (capteur.estTropAGauche()) {
-            PontH::configurer(0, 150, 1, 150);
+            PontH::configurer(0, 185, 1, 185);
         }
 
         else {
@@ -39,6 +34,18 @@ void scanPoteaux() {} // bip quand poteaux A D
 void compterPersonnes() {} // B C compter tape
 
 void entrerStationnement() {}
+
+void tournerDroite()
+{
+   CapteurLigne capteur;
+   PontH::arreter();
+   _delay_ms(1000);
+    PontH::avancer(255);
+    _delay_ms(100);
+   PontH::tourner90DegresDroite();
+   suivreCouloir();
+    
+}
 
 void faireExecution() 
 {

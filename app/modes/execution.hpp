@@ -1,3 +1,9 @@
+#include <avr/io.h>
+#define F_CPU 8000000UL
+#include "PontH.hpp"
+#include "CapteurLigne.hpp"
+#include <util/delay.h>
+
 enum Etat 
 {
     SORTIR_STATIONNEMENT,
@@ -18,7 +24,8 @@ enum Etat
 void suivreCouloir();
 void sortirStationnement();
 void parcourirCouloir();
-void scanPoteaux() {};
+void scanPoteaux();
 void compterPersonnes();
 void entrerStationnement();
+void tournerDroite();
 void faireExecution();
