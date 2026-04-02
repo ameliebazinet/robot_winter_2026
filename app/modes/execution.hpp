@@ -1,5 +1,3 @@
-void faireExecution();
-
 enum Etat 
 {
     SORTIR_STATIONNEMENT,
@@ -16,3 +14,11 @@ enum Etat
 
     ENTRER_STATIONNEMENT
 };
+
+void suivreCouloir();
+void sortirStationnement();
+void parcourirCouloir();
+void scanPoteaux() {};
+void compterPersonnes();
+void entrerStationnement();
+void faireExecution();
