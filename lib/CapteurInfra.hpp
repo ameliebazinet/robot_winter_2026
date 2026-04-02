@@ -13,8 +13,8 @@ public:
     uint8_t getDistance();
     bool estObjetDetecte();
     can can1;
-
-    uint16_t voltage;
-    uint8_t distance;
-    bool objetDetecte;
+private:
+    uint16_t voltage_;
+    uint8_t distance_;
+    bool objetDetecte_;
 };
