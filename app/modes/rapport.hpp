@@ -14,9 +14,18 @@ uint8_t nZonesEndommageesCouloirEst, uint8_t nZonesEndommageesCouloirOuest)
     bool conformiteEst = (nZonesEndommageesCouloirEst==0)? true:false;
     bool conformiteOuest = (nZonesEndommageesCouloirOuest==0)? true:false;
     com.transmissionFormatee("Emplacement \t\t Conformite \t\t detail \r\n");
-    com.transmissionFormatee("Emplacement \\t Conformite \\t detail \r\n");
-    
+    com.transmissionOccurence('-',15);
 
+    ecrireLigne(com, conformiteA, "Local A", nPersonnesLocalA);
+    ecrireLigne(com, conformiteB, "Local B", nObjetsLocalB);
+    ecrireLigne(com, conformiteC, "Local C", nObjetsLocalC);
+    ecrireLigne(com, conformiteD, "Local D", nPersonnesLocalD);
+    ecrireLigne(com, conformiteOuest, "Couloir OUEST", nZonesEndommageesCouloirOuest);
+    ecrireLigne(com, conformiteEst, "Couloir EST", nZonesEndommageesCouloirEst);
 
-
+}
+void ecrireLigne(Communication com, bool conformite,const char* nom, uint8_t nombre)
+{
+    if(conformite) com.transmissionFormatee("%s :\t oui \r\n",nom);
+    else com.transmissionFormatee("%s :\t\t non\t\t %d zones endommagees \r\n",nom,nombre);
 }
