@@ -25,7 +25,19 @@ void suivreCouloir()
     PontH::arreter();
 }
 
-void sortirStationnement() {}
+void sortirStationnement() 
+{
+    CapteurLigne capteur; 
+    PontH::tourner180(); 
+    PontH::arreter();
+
+
+    while (!(capteur.estSurLignePleine()))
+    {
+        PontH::avancer(128);
+    }
+    PontH::arreter(); 
+}
 
 void parcourirCouloir() {}
 

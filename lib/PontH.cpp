@@ -73,8 +73,11 @@ void PontH::tourner90DegresGauche()
 
 void PontH::tourner180()
 {
-    tourner90DegresDroite();
-    tourner90DegresDroite();
+    uint16_t delaiTournerGauche = 1050;
+    initialiserRegistre();
+    tournerGauche(200); 
+    _delay_ms(1170); 
+    arreter();
 }
 
 void PontH::arreter()
