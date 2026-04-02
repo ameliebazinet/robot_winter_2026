@@ -15,7 +15,8 @@ int main()
 {   
    
     Lecture lecture; 
-    lecture.selectionMode(boutonClique, tempsEcoule);
+    sei();
+    lecture.selectionnerMode(boutonClique, tempsEcoule);
     lecture.initialiserLecture(); 
     lecture.lireMemoire();
     

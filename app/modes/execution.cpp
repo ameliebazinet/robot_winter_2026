@@ -74,6 +74,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
         {
             case SORTIR_STATIONNEMENT:
                 parcourirCouloir();
+                _delay_ms(2000);
                 // quand tu sens la derniere ptite coche selon place parking 
                 etat = PREMIER_COULOIR_SUD;
                 // next state : premier_couloir_sud QUAND arrivé devant

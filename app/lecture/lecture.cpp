@@ -18,15 +18,7 @@ void Lecture::demarrerPhase(Del::Couleur couleur, uint16_t delai)
     Minuterie::Minuterie1::partirMinuterie(DELAI_2_SECONDES, Minuterie::Comparateur::A);
 }
 
-void Lecture::attendreEvenement(volatile bool &boutonClique, volatile bool &tempsEcoule)
-{
-    while (!boutonClique && !tempsEcoule)
-    {
-        // Attente active
-    }
-}
-
-void Lecture::attendreEntrePhase(volatile bool &boutonClique, volatile bool &tempsEcoule)
+void Lecture::attendreEntrePhases(volatile bool &boutonClique, volatile bool &tempsEcoule)
 {
     boutonClique = false;
     tempsEcoule = false;
@@ -34,40 +26,41 @@ void Lecture::attendreEntrePhase(volatile bool &boutonClique, volatile bool &tem
     _delay_ms(DELAI_1_SECONDE);
 }
 
-Mode Lecture::confirmerMode(InterruptionExterne &boutonMateriel, Mode mode)
+void Lecture::confirmerMode(InterruptionExterne &boutonMateriel)
 {
     Minuterie::Minuterie1::desactiverInteruptionComparateurA();
     boutonMateriel.desactiverInterruption(0); // selection de mode est fait, on ne veux plus qui aille des intéruptions sur le bouton
     del_.allumerCouleur(Del::Couleur::ETEINT);
-    return Mode::INSTRUCTION;
 }
 
 Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &tempsEcoule)
 {
+    _delay_ms(2000);
     InterruptionExterne boutonMateriel;
     // INT0 sur any logical change
     boutonMateriel.initialisation(0, 1);
 
     // Phase verte.
     demarrerPhase(Del::Couleur::VERT, DELAI_2_SECONDES);
-    attendreEvenement(boutonClique, tempsEcoule);
-    if (boutonClique)
-        return confirmerMode(boutonMateriel, Mode::INSTRUCTION);
+    while (!boutonClique && !tempsEcoule) {}
+    if (boutonClique) {
+        confirmerMode(boutonMateriel);
+        return Mode::INSTRUCTION;
+    }
 
     // pause
-    attendreEntrePhase(boutonClique, tempsEcoule);
+    attendreEntrePhases(boutonClique, tempsEcoule);
 
     // Phase rouge.
     demarrerPhase(Del::Couleur::ROUGE, DELAI_2_SECONDES);
-    attendreEvenement(boutonClique, tempsEcoule);
-    if (boutonClique)
-        return confirmerMode(boutonMateriel, Mode::RAPPORT);
+    while (!boutonClique && !tempsEcoule) {}
+    if (boutonClique) {
+        confirmerMode(boutonMateriel);
+        return Mode::RAPPORT;
+    }
 
-    boutonClique = false;
-    tempsEcoule = false;
-    boutonMateriel.desactiverInterruption(0);
-    del_.allumerCouleur(Del::Couleur::ETEINT);
-    _delay_ms(DELAI_1_SECONDE);
+    // pause
+    attendreEntrePhases(boutonClique, tempsEcoule);
     return Mode::EXECUTION;
 }
 

@@ -7,7 +7,7 @@ MCU=atmega324pa
 PROJECTNAME=main
 
 # Fichier source exec
-PRJSRC=main.cpp modes/execution.cpp
+PRJSRC=main.cpp modes/execution.cpp lecture/lecture.cpp
 
 # Librairie
 LIBDIR=../lib
