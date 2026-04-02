@@ -25,4 +25,6 @@ public:
     // Reçoit une donnée de type uint8_t via UART
     uint8_t receptionUART(void);
 
+    void transmissionOccurence(const char c, uint8_t occurence);
+
 };
