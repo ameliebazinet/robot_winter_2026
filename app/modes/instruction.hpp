@@ -1,3 +1,3 @@
-// #include "../lecture/lecture.hpp"
+#include "../lecture/lecture.hpp"
 
 void faireInstruction();
