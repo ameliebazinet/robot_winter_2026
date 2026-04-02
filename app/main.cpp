@@ -4,19 +4,49 @@
 #include "modes/instruction.hpp"
 #include "modes/rapport.hpp"
 
+volatile bool boutonClique;
+volatile bool tempsEcoule;
+
 int main()
 {
-    // Trouve le mode (fait dans lecture)
-    // EXECUTER instruction, rapport ou "execution" (modes/whatever)
-    CapteurLigne capteur;
+    Lecture l;
 
-    suivreCouloir();
+    uint8_t nPersonnesLocalA, 
+            nObjetsLocalB, 
+            nObjetsLocalC, 
+            nPersonnesLocalD, 
+            nZonesEndommageesCouloirEst,
+            nZonesEndommageesCouloirOuest;
 
-    if(capteur.estSurLignePleine())
+    while (true)
     {
-        tournerDroite();
+    // Trouve le mode (fait dans lecture)
+    Mode mode = l.selectionnerMode(boutonClique, tempsEcoule);
 
-    }
+    // EXECUTER instruction, rapport ou "execution" (modes/whatever)
+    switch (mode)
+    {
+        case INSTRUCTION:
+            faireInstruction();
+            break;
     
+        case EXECUTION:
+            faireExecution(nPersonnesLocalA, 
+                           nObjetsLocalB, 
+                           nObjetsLocalC, 
+                           nPersonnesLocalD, 
+                           nZonesEndommageesCouloirEst,
+                           nZonesEndommageesCouloirOuest);
+            break;
 
+        case RAPPORT:
+            genererRapport(nPersonnesLocalA, 
+                           nObjetsLocalB, 
+                           nObjetsLocalC, 
+                           nPersonnesLocalD, 
+                           nZonesEndommageesCouloirEst,
+                           nZonesEndommageesCouloirOuest);
+            break;
+        }
+    }
 }
