@@ -71,6 +71,12 @@ void PontH::tourner90DegresGauche()
 
 }
 
+void PontH::tourner180()
+{
+    tourner90DegresDroite();
+    tourner90DegresDroite();
+}
+
 void PontH::arreter()
 {
     configurer(0, 0, 0, 0);
