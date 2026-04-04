@@ -20,6 +20,11 @@ bool CapteurLigne::estTropADroite() const
     return (CAPTEUR_D5 & PINC);
 }
 
+bool CapteurLigne::estTropPresMur() const
+{
+    return ( (PINC & CAPTEUR_D4) && (PINC & CAPTEUR_D5) );
+}
+
 bool CapteurLigne::estObstacleAuCentre() const
 {
     return ((CAPTEUR_D3 & PINC) || ((CAPTEUR_D2 | CAPTEUR_D3) & PINC) || ((CAPTEUR_D3 | CAPTEUR_D4) & PINC));

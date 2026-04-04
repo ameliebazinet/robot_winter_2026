@@ -10,6 +10,7 @@ public:
 
     bool estTropAGauche() const;
     bool estTropADroite() const;
+    bool estTropPresMur() const;
     bool estObstacleAuCentre() const;
     bool estSurLignePleine() const;
 

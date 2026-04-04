@@ -13,7 +13,7 @@ void PontH::initialiserRegistre()
 
 void PontH::configurer(bool directionGauche, uint8_t ratioGauche, bool directionDroite, uint8_t ratioDroite)
 {
-    Minuterie::Minuterie0::partirPWM(ratioDroite, ratioGauche);
+    Minuterie::Minuterie0::partirPWM(ratioGauche, ratioDroite);
 
     if (directionGauche == 0) {
         // Avance
