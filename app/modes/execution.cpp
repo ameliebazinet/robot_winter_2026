@@ -1,4 +1,5 @@
 #include "execution.hpp"
+#include "../lib/CapteurInfra.hpp"
 
 void suivreCouloir()
 {
@@ -41,7 +42,34 @@ void sortirStationnement()
 
 void parcourirCouloir() {}
 
-void scanPoteaux() {} // bip quand poteaux A D
+void scanPoteaux() {
+    CapteurInfra ci;
+    PontH pontH;
+
+    const uint16_t DUREE_TOTALE_MS = 1170;
+    const uint8_t  INTERVALLE_MS   = 10;
+    uint16_t tempsEcoule = 0;
+
+    pontH.tournerDroite(200);
+
+    while (tempsEcoule < DUREE_TOTALE_MS)
+    {
+        ci.lireDistance();
+
+        if(ci.estObjetDetecte()){
+            _delay_ms(INTERVALLE_MS);
+
+            // y joue son calisse
+        }
+        else{
+            // pis y arreter de jouer calisse
+        }
+        ci.incrementerPersonne();
+        tempsEcoule += INTERVALLE_MS;
+    }
+
+    pontH.arreter();
+} 
 
 void compterPersonnes() {} // B C compter tape
 
@@ -104,6 +132,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 // y scan calisse
                 // pis y retourne
                 // next state : COULOIR_NORD
+                scanPoteaux();
+                etat = COULOIR_NORD;
                 break;
             case PIECE_B_C:
                 // voir plus haut (mais tapes au lieu de poteaux)
