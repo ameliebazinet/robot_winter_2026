@@ -1,5 +1,6 @@
 #include "execution.hpp"
 #include "../lib/CapteurInfra.hpp"
+#include "Del.hpp"
 
 void suivreCouloir()
 {
@@ -45,7 +46,7 @@ void parcourirCouloir() {}
 void scanPoteaux() {
     CapteurInfra ci;
     PontH pontH;
-
+    Del del(PORTA, PA2, PA3);
     const uint16_t DUREE_TOTALE_MS = 1170;
     const uint8_t  INTERVALLE_MS   = 10;
     uint16_t tempsEcoule = 0;
@@ -58,11 +59,12 @@ void scanPoteaux() {
 
         if(ci.estObjetDetecte()){
             _delay_ms(INTERVALLE_MS);
+            del.allumerCouleur(Del::Couleur::ROUGE);
 
-            // y joue son calisse
         }
         else{
-            // pis y arreter de jouer calisse
+            del.allumerCouleur(Del::Couleur::VERT);
+
         }
         ci.incrementerPersonne();
         tempsEcoule += INTERVALLE_MS;
@@ -129,9 +131,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 // next State DERNIER_COULOIR_LONG
                 break;
             case PIECE_A_D:
-                // y scan calisse
-                // pis y retourne
-                // next state : COULOIR_NORD
+                // scanner les personnes avec capteurInfra
+                // prochain etat = COULOIR_NORD  
                 scanPoteaux();
                 etat = COULOIR_NORD;
                 break;
