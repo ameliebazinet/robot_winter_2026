@@ -12,18 +12,21 @@ int main()
     while (true)
     {
         // com.transmissionFormatee("distance lue: %d \r\n", ci.distance);
-
-        
         ci.lireDistance();
         if(ci.estObjetDetecte()){
             del.allumerCouleur(Del::Couleur::ROUGE);
+        
 
         }
         else{
             del.allumerCouleur(Del::Couleur::VERT);
         }
+        
+        ci.incrementerPersonne();
     }
+
 }
+
 
 // 17cm
 // 30 cm

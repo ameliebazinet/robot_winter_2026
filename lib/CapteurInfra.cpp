@@ -3,7 +3,7 @@
 const uint8_t NUM_PORTA_ENTREE_ANALOGIQUE = 0;
 const uint8_t DISTANCE_MAXIMAL_CM = 40;
 
-CapteurInfra::CapteurInfra() : voltage_(0), distance_(0), objetDetecte_(false) {}
+CapteurInfra::CapteurInfra() : voltage_(0), distance_(0), objetDetecte_(false), estUnePersonne_(false), nPersonnes_(0) {}
 
 
 
@@ -34,4 +34,15 @@ void CapteurInfra::lireDistance() {
     //     distance = 255;  // hors portée
     
     objetDetecte_ = distance_ < DISTANCE_MAXIMAL_CM;
+}
+
+
+void CapteurInfra::incrementerPersonne(){
+    if(objetDetecte_ && estUnePersonne_){
+        nPersonnes_++;
+        estUnePersonne_ = false;
+    }
+    else if (!objetDetecte_){
+        estUnePersonne_ = true;
+    }
 }

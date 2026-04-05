@@ -12,9 +12,13 @@ public:
     uint16_t getVoltage();
     uint8_t getDistance();
     bool estObjetDetecte();
+    void incrementerPersonne();
     can can1;
+    
 private:
     uint16_t voltage_;
     uint8_t distance_;
     bool objetDetecte_;
+    uint8_t nPersonnes_;
+    bool estUnePersonne_;
 };

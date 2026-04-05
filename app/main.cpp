@@ -2,7 +2,7 @@
 #include "ecriture/ecriture.hpp"
 #include "modes/execution.hpp"
 #include "modes/instruction.hpp"
-// #include "modes/rapport.hpp"
+#include "modes/rapport.hpp"
 #include "../lib/Son.hpp"
 
 volatile bool boutonClique = false;
@@ -60,12 +60,12 @@ int main()
                 Son::jouer(80);
                 _delay_ms(1000);
                 Son::arreter();
-                // genererRapport(nPersonnesLocalA, 
-                //                nObjetsLocalB, 
-                //                nObjetsLocalC, 
-                //                nPersonnesLocalD, 
-                //                nZonesEndommageesCouloirEst,
-                //                nZonesEndommageesCouloirOuest);
+                genererRapport(nPersonnesLocalA, 
+                               nObjetsLocalB, 
+                               nObjetsLocalC, 
+                               nPersonnesLocalD, 
+                               nZonesEndommageesCouloirEst,
+                               nZonesEndommageesCouloirOuest);
                 break;
         }
     }
