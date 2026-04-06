@@ -12,12 +12,22 @@ uint8_t CapteurLigne::lireTousCapteurs() const
 
 bool CapteurLigne::estTropAGauche() const
 {
-    return (CAPTEUR_D1 & PINC);
+    return (CAPTEUR_D1 & PINC) && (CAPTEUR_D2 & PINC);
 }
 
 bool CapteurLigne::estTropADroite() const
 {
+    return (CAPTEUR_D5 & PINC) && (CAPTEUR_D4 & PINC);
+}
+
+bool CapteurLigne::estTropADroitePrecis() const
+{
     return (CAPTEUR_D5 & PINC);
+}
+
+bool CapteurLigne::estTropAGauchePrecis() const
+{
+    return (CAPTEUR_D1 & PINC);
 }
 
 bool CapteurLigne::estTropPresMur() const

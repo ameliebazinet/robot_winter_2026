@@ -1,7 +1,7 @@
 // Fichier : Del.hpp
 // Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
 // Description : Cette classe déclare les méthodes pour la manipulation d'une DEL à deux broches.
-
+#pragma once
 #include <avr/io.h>
 #include <stdint.h>
 

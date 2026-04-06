@@ -1,6 +1,7 @@
 #include "execution.hpp"
 #include "../lib/CapteurInfra.hpp"
 #include "Del.hpp"
+#include "../lecture/lecture.hpp"
 
 void suivreCouloir()
 {
@@ -13,33 +14,138 @@ void suivreCouloir()
     while (!capteur.estSurLignePleine()) {
 
         if (capteur.estTropADroite()) {
-            PontH::configurer(1, 185, 0, 185);
+            PontH::configurer(1, 150, 1, 80);
         }
 
         else if (capteur.estTropAGauche()) {
-            PontH::configurer(0, 185, 1, 185);
+            PontH::configurer(1, 80, 1, 150);
         }
 
         else {
-            PontH::avancer(100);
+            PontH::avancer(120);
         }
+
+        _delay_ms(50);
     }
     PontH::arreter();
 }
 
-void sortirStationnement() 
+void longerLigneGauche()
+{
+    CapteurLigne capteur; 
+    PontH::initialiserRegistre(); 
+
+
+    while(!(capteur.estSurLignePleine())) {
+        if(capteur.estTropAGauche()) {
+            PontH::configurer(0,60,0,120);
+        }
+        else if (capteur.estTropADroite()){
+            PontH::configurer(0,120,0,60);
+        }
+
+        else {
+
+            PontH::avancer(110);
+        }
+
+
+    }
+    PontH::arreter();
+
+}
+
+void longerLigneDroite()
+{
+
+        CapteurLigne capteur; 
+    PontH::initialiserRegistre(); 
+
+
+    while(!(capteur.estSurLignePleine() >= 0x0F )) {
+        PontH::avancer(110);
+        if(capteur.estTropADroite()) {
+            PontH::configurer(0,95,0,105);
+        }
+        else {
+            PontH::avancer(100); 
+        }
+    }
+    PontH::arreter();
+
+}
+
+void sortirStationnementHorraire() 
 {
     CapteurLigne capteur; 
     PontH::tourner180(); 
     PontH::arreter();
+    _delay_ms(1000);
 
 
     while (!(capteur.estSurLignePleine()))
     {
         PontH::avancer(128);
     }
-    PontH::arreter(); 
+    PontH::arreter();
+    _delay_ms(1000); 
+
+    PontH::tourner90DegresDroite();
+    PontH::arreter();
+    _delay_ms(1000);
+
+
+    // longerLigneGauche();
+    // suivreCouloir();
 }
+
+void sortirStationnementAntiHorraire() 
+{
+    CapteurLigne capteur; 
+    PontH::tourner180(); 
+    PontH::arreter();
+    _delay_ms(1000);
+
+
+    while (!(capteur.estSurLignePleine()))
+    {
+        PontH::avancer(128);
+    }
+    PontH::arreter();
+    _delay_ms(1000); 
+
+    PontH::tourner90DegresGauche();
+    PontH::arreter();
+    _delay_ms(1000);
+    while(!capteur.estSurLignePleine())
+    {
+        if(capteur.estTropADroite())
+        PontH::configurer(0,60,0,120);
+
+        else if (capteur.estTropADroitePrecis())
+        {
+            PontH::arreter();
+            _delay_ms(1000);
+            PontH::avancer(100);
+            _delay_ms(1000);
+        }
+
+        else 
+            PontH::configurer(0,80,0,60);
+    
+    }
+
+    PontH::arreter();
+    // {
+
+    //     if(capteur.estTropAGauchePrecis())
+    //         PontH::avancer(100);
+    //     else
+    //         PontH::configurer(0, 80, 0, 150);
+    // }
+
+}
+
 
 void parcourirCouloir() {}
 
@@ -75,7 +181,39 @@ void scanPoteaux() {
 
 void compterPersonnes() {} // B C compter tape
 
-void entrerStationnement() {}
+void entrerStationnementHorraire() 
+{
+    uint8_t placeStationnement; 
+    CapteurLigne capteur; 
+    Lecture l; 
+
+    uint8_t nStationnement = l.getNumStationnement(); 
+
+    if(capteur.estTropAGauchePrecis())
+        placeStationnement++; 
+        PontH::avancer(100);
+
+    if(placeStationnement == nStationnement)
+    {
+        PontH::avancer(100);
+        _delay_ms(250);
+        PontH::tourner90DegresDroite(); 
+        while(!(capteur.estSurLignePleine()))
+        {
+            PontH::avancer(100); 
+
+        }
+        PontH::arreter(); 
+
+    }
+    
+    
+
+
+
+
+
+}
 
 void tournerDroite()
 {

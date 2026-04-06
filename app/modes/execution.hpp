@@ -22,11 +22,14 @@ enum Etat
 };
 
 void suivreCouloir();
-void sortirStationnement();
+void longerLigneGauche(); 
+void longerLigneDroite();
+void sortirStationnementHorraire();
+void sortirStationnementAntiHorraire();
 void parcourirCouloir();
 void scanPoteaux();
 void compterPersonnes();
-void entrerStationnement();
+void entrerStationnementHorraire();
 void tournerDroite();
 void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nObjetsLocalB,
