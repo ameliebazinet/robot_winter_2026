@@ -3,8 +3,6 @@
 #include "Del.hpp"
 #include "../lecture/lecture.hpp"
 
-void parcourirCouloir() {}
-
 void suivreCouloir()
 {
     CapteurLigne capteur;
@@ -137,6 +135,43 @@ void sortirStationnementAntiHoraire()
 
 
 void parcourirCouloir() {}
+
+void arreterMoteurs()
+{
+    OCR0A = 0;
+    OCR0B = 0;
+    PORTB &= ~((1 << PB2) | (1 << PB3) | (1 << PB4) | (1 << PB5));
+}
+
+void clignoterVert(Del& del)
+{
+    for(uint8_t i = 0; i < 8; i++){
+        del.allumerCouleur(Del::Couleur::VERT);
+        _delay_ms(125);
+        del.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(125);
+    }
+}
+
+void gererPoteau(Del& del, CapteurInfra& ci)
+{
+    while(true)
+    {
+        // A remplacer par son
+        del.allumerCouleur(Del::Couleur::ROUGE);
+        _delay_ms(500);
+        del.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(500);
+
+        _delay_ms(2000);
+
+        ci.lireDistance();
+        if(!ci.estObjetDetecte()){
+            clignoterVert(del);
+            return;
+        }
+    }
+}
 
 void scanPoteaux() {
     CapteurInfra ci;
