@@ -5,17 +5,17 @@
 
 MCU=atmega324pa
 PROJECTNAME=main
+F_CPU=8000000UL
 
 # Fichier source exec
-PRJSRC=maintest.cpp
+PRJSRC=maintest.cpp ../../modes/rapport.cpp
 
 # Librairie
 LIBDIR=./../../../lib
 LIBS=$(LIBDIR)/libstatique.a
 
-
 # Inclusions : headers de la lib
-INC= -I. -I$(LIBDIR)
+INC= -I. -I$(LIBDIR) -I../../modes
 
 # Niveau d'optimisation
 OPTLEVEL=s
@@ -34,7 +34,8 @@ HEXFORMAT=ihex
 ####### Flags #######
 
 CFLAGS= $(INC) -MMD -g -mmcu=$(MCU) -O$(OPTLEVEL) \
-	-std=c++14 -fshort-enums -funsigned-bitfields -funsigned-char -Wall
+	-std=c++14 -fshort-enums -funsigned-bitfields -funsigned-char -Wall \
+	-DF_CPU=$(F_CPU)
 CXXFLAGS=-fno-exceptions
 LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU)
 
@@ -71,8 +72,7 @@ $(TRG): $(MAINOBJ) $(LIBS)
 # Installation du programme sur la carte
 install: $(HEXROMTRG)
 	$(AVRDUDE) -c $(AVRDUDE_PROGRAMMERID) \
-	-p $(MCU) -P usb -B 10 -e -U flash:w:$(HEXROMTRG)
-
+	-p $(MCU) -P usb -B 100 -e -U flash:w:$(HEXROMTRG)
 # Nettoyage des .o, des dépendances et des executables
 clean:
 	$(REMOVE) *.o *.d $(TRG) $(HEXROMTRG) *.map

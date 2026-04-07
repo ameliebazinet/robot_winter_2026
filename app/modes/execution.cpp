@@ -149,34 +149,96 @@ void sortirStationnementAntiHorraire()
 
 void parcourirCouloir() {}
 
+void arreterMoteurs()
+{
+    OCR0A = 0;
+    OCR0B = 0;
+    PORTB &= ~((1 << PB2) | (1 << PB3) | (1 << PB4) | (1 << PB5));
+}
+
+void clignoterVert(Del& del)
+{
+    for(uint8_t i = 0; i < 8; i++){
+        del.allumerCouleur(Del::Couleur::VERT);
+        _delay_ms(125);
+        del.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(125);
+    }
+}
+
+void gererPoteau(Del& del, CapteurInfra& ci)
+{
+    while(true)
+    {
+        // A remplacer par son
+        del.allumerCouleur(Del::Couleur::ROUGE);
+        _delay_ms(500);
+        del.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(500);
+
+        _delay_ms(2000);
+
+        ci.lireDistance();
+        if(!ci.estObjetDetecte()){
+            clignoterVert(del);
+            return;
+        }
+    }
+}
+
 void scanPoteaux() {
     CapteurInfra ci;
     PontH pontH;
-    Del del(PORTA, PA2, PA3);
-    const uint16_t DUREE_TOTALE_MS = 1170;
-    const uint8_t  INTERVALLE_MS   = 10;
+    Del del(PORTA, PA0, PA1);
+    pontH.initialiserRegistre();
+    
+    const uint16_t DUREE_TOTALE_MS = 2340;
+    const uint8_t  INTERVALLE_MS   = 5;
+    const uint8_t  VITESSE_CRUISE  = 80;
+    const uint8_t  VITESSE_BOOST   = 180;
     uint16_t tempsEcoule = 0;
-
-    pontH.tournerDroite(200);
+        
+    pontH.tournerDroite(VITESSE_BOOST);
+    _delay_ms(80);
+    pontH.tournerDroite(VITESSE_CRUISE);
+    
+    bool enMouvement = true;
 
     while (tempsEcoule < DUREE_TOTALE_MS)
     {
         ci.lireDistance();
 
         if(ci.estObjetDetecte()){
-            _delay_ms(INTERVALLE_MS);
-            del.allumerCouleur(Del::Couleur::ROUGE);
+            if(enMouvement){
+                arreterMoteurs();
+                enMouvement = false;
+            }
+            ci.incrementerPersonne(); 
+            gererPoteau(del, ci);
+            ci.resetEstUnePersonne();
+            
+            pontH.tournerDroite(VITESSE_BOOST);
+            _delay_ms(80);
+            pontH.tournerDroite(VITESSE_CRUISE);
+            enMouvement = true;
 
         }
         else{
+            if(!enMouvement){
+                pontH.tournerDroite(VITESSE_BOOST);
+                _delay_ms(80);
+                pontH.tournerDroite(VITESSE_CRUISE);
+                enMouvement = true;
+            }
             del.allumerCouleur(Del::Couleur::VERT);
+            tempsEcoule += INTERVALLE_MS;
+            ci.incrementerPersonne();
 
         }
-        ci.incrementerPersonne();
-        tempsEcoule += INTERVALLE_MS;
+        _delay_ms(INTERVALLE_MS);
     }
 
-    pontH.arreter();
+    arreterMoteurs();
 } 
 
 void compterPersonnes() {} // B C compter tape

@@ -13,6 +13,7 @@ uint8_t nZonesEndommageesCouloirEst, uint8_t nZonesEndommageesCouloirOuest)
     bool conformiteOuest = (nZonesEndommageesCouloirOuest==0)? true:false;
     com.transmissionFormatee("Emplacement \t\t Conformite \t\t detail \r\n");
     com.transmissionOccurence('-',15);
+    com.transmissionFormatee("\r\n");
 
     ecrireLigne(com, conformiteA, "Local A", nPersonnesLocalA,"personnes");
     ecrireLigne(com, conformiteB, "Local B", nObjetsLocalB,"objets");

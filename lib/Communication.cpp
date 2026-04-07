@@ -57,9 +57,7 @@ uint8_t Communication::receptionUART()
 
 void Communication::transmissionOccurence(char c, uint8_t occurence)
 {
-    for(uint8_t i = 0; i<occurence; i++){
-        transmissionFormatee(&c);
+    for(uint8_t i = 0; i < occurence; i++){
+        transmissionUART((uint8_t)c);
     }
-
 }
-

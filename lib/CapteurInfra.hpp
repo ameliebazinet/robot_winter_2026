@@ -14,11 +14,13 @@ public:
     bool estObjetDetecte();
     void incrementerPersonne();
     can can1;
-    
+    uint8_t getnPersonnes();
+    void resetEstUnePersonne();
+    uint8_t nPersonnes_;
+
 private:
     uint16_t voltage_;
     uint8_t distance_;
     bool objetDetecte_;
-    uint8_t nPersonnes_;
     bool estUnePersonne_;
 };
