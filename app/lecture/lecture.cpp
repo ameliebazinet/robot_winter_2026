@@ -6,7 +6,7 @@
 #include "../modes/rapport.hpp"
 
 Lecture::Lecture() : adresse_(0x0000), donnee_(0), instruction_(0b00),
-                     operande_(0b00), del_(PORTA, PA0, PA1), programmeFini_(false)
+                     operande_(0b00), del_(PORTC, PC6, PC7), programmeFini_(false)
 {
     PontH::initialiserRegistre();
     Son::initialiserPiezo();

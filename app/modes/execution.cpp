@@ -51,19 +51,20 @@ void sortirStationnementHoraire()
     PontH::arreter();
     _delay_ms(1000);
 
-
     while (!(capteur.estSurLignePleine())) {
         PontH::avancer(150);
         _delay_ms(10);
-        PontH::avancer(100);
     }
     PontH::arreter();
     _delay_ms(1000); 
 
-    PontH::tournerDroite(255);
-    _delay_ms(20);
-    PontH::tournerDroite(100);
-    _delay_ms(1000);
+    PontH::tournerDroite(150);
+    while(!(capteur.estTropAGauchePrecis())) {}
+
+    // PontH::tournerDroite(255);
+    // _delay_ms(20);
+    // PontH::tournerDroite(150);
+    // _delay_ms(1000);
 
     PontH::arreter();
     _delay_ms(1000);
@@ -75,11 +76,12 @@ void sortirStationnementHoraire()
             break;
         }
         else if (capteur.estTropAGauchePrecis()) {
-            PontH::tournerDroite(120);
+            // PontH::tournerDroite(110);
+            PontH::configurer(0, 150, 0, 80);
             _delay_ms(100);
         }
         else
-            PontH::configurer(0, 90, 0, 130);
+            PontH::configurer(0, 110, 0, 130);
     }
 
     PontH::arreter();
@@ -228,7 +230,49 @@ void scanPoteaux() {
     arreterMoteurs();
 } 
 
-void compterPersonnes() {} // B C compter tape
+
+void compterPersonnes(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C compter tape
+{
+    Communication c;
+    c.initialisationUART();
+
+    // -- Commence quand la piece est detecter
+
+    // tourne a droite/gauche de 90
+    PontH::tourner90DegresDroite(); // ---
+
+    // avance de (temps requis) seconde en comptant le nombre de ligne parcouru. 
+    uint32_t tempsMsParcoursBC = 3000;
+
+    PontH::avancer(120);
+    
+    CapteurLigne cl;
+    bool vuPrecedent = false;
+    tempsEcoule = false;
+    Minuterie::Minuterie1::partirMinuterie(tempsMsParcoursBC, Minuterie::A);
+    while(!tempsEcoule)
+    {
+        bool vuActuel = !cl.estSurLignePleine();
+        if (vuActuel && !vuPrecedent) nObjetsLocal++;
+        vuPrecedent = vuActuel;
+    }
+    Son::jouer(46);
+    _delay_ms(4000);
+    Son::arreter();
+    PontH::arreter();
+
+    // apres (temps requis), quand tu rencontre une ligne. tourne de 180
+    while(!cl.estSurLignePleine()) {}
+    PontH::tourner180(); 
+
+    // avance jusqu'a trouve le mur du fond du couloir (5 capteurs actifs)
+    PontH::avancer(120);
+    while(!cl.estSurLignePleine()) {}
+
+    // tourne de 90 vers la gauche/droite
+    PontH::tourner90DegresGauche(); // ---
+    
+} 
 
 void entrerStationnementHoraire() 
 {
@@ -253,15 +297,7 @@ void entrerStationnementHoraire()
 
         }
         PontH::arreter(); 
-
     }
-    
-    
-
-
-
-
-
 }
 
 void tournerDroite()
@@ -277,7 +313,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nObjetsLocalC,
                     uint8_t& nPersonnesLocalD,
                     uint8_t& nZonesEndommageesCouloirEst, 
-                    uint8_t& nZonesEndommageesCouloirOuest) 
+                    uint8_t& nZonesEndommageesCouloirOuest,
+                    volatile bool& tempsEcoule) 
 {
     uint8_t compteurPiecesNord = 0;
     Etat etat = SORTIR_STATIONNEMENT;
@@ -286,8 +323,9 @@ void faireExecution(uint8_t& nPersonnesLocalA,
         switch (etat)
         {
             case SORTIR_STATIONNEMENT:
-                parcourirCouloir();
-                _delay_ms(2000);
+                compterPersonnes(nObjetsLocalB, tempsEcoule);
+                // parcourirCouloir();
+                // _delay_ms(2000);
                 // quand tu sens la derniere ptite coche selon place parking 
                 etat = PREMIER_COULOIR_SUD;
                 // next state : premier_couloir_sud QUAND arrivé devant

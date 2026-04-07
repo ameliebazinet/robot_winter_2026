@@ -18,10 +18,10 @@ public:
     bool estVide() const;
 
 private:
-    static const uint8_t CAPTEUR_D1 = (1 << PC0);
-    static const uint8_t CAPTEUR_D2 = (1 << PC1);
-    static const uint8_t CAPTEUR_D3 = (1 << PC2);
-    static const uint8_t CAPTEUR_D4 = (1 << PC3);
-    static const uint8_t CAPTEUR_D5 = (1 << PC4);
+    static const uint8_t CAPTEUR_D1 = (1 << PA1);
+    static const uint8_t CAPTEUR_D2 = (1 << PA2);
+    static const uint8_t CAPTEUR_D3 = (1 << PA3);
+    static const uint8_t CAPTEUR_D4 = (1 << PA4);
+    static const uint8_t CAPTEUR_D5 = (1 << PA5);
     static const uint8_t TOUS_LES_CAPTEURS = (CAPTEUR_D1 | CAPTEUR_D2 | CAPTEUR_D3 | CAPTEUR_D4 | CAPTEUR_D5);
 };
