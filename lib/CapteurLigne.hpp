@@ -15,6 +15,7 @@ public:
     bool estTropPresMur() const;
     bool estObstacleAuCentre() const;
     bool estSurLignePleine() const;
+    bool estVide() const;
 
 private:
     static const uint8_t CAPTEUR_D1 = (1 << PC0);

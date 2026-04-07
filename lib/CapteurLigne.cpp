@@ -44,3 +44,9 @@ bool CapteurLigne::estSurLignePleine() const
 {
     return (lireTousCapteurs() == TOUS_LES_CAPTEURS);
 }
+
+bool CapteurLigne::estVide() const
+{
+    return (lireTousCapteurs() == !(TOUS_LES_CAPTEURS));
+}
+

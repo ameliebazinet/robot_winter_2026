@@ -24,12 +24,12 @@ enum Etat
 void suivreCouloir();
 void longerLigneGauche(); 
 void longerLigneDroite();
-void sortirStationnementHorraire();
-void sortirStationnementAntiHorraire();
+void sortirStationnementHoraire();
+void sortirStationnementAntiHoraire();
 void parcourirCouloir();
 void scanPoteaux();
 void compterPersonnes();
-void entrerStationnementHorraire();
+void entrerStationnementHoraire();
 void tournerDroite();
 void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nObjetsLocalB,
