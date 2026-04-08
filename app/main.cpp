@@ -45,9 +45,9 @@ int main()
                 break;
         
             case EXECUTION:
-                Son::jouer(69);
-                _delay_ms(1000);
-                Son::arreter();
+                // Son::jouer(69);
+                // _delay_ms(1000);
+                // Son::arreter();
 
                 faireExecution(nPersonnesLocalA, 
                                nObjetsLocalB, 

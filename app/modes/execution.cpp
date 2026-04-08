@@ -235,14 +235,17 @@ void compterPersonnes(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C
 {
     Communication c;
     c.initialisationUART();
+    PontH::initialiserRegistre();
 
     // -- Commence quand la piece est detecter
 
     // tourne a droite/gauche de 90
     PontH::tourner90DegresDroite(); // ---
+    PontH::arreter();
+    _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru. 
-    uint32_t tempsMsParcoursBC = 3000;
+    uint32_t tempsMsParcoursBC = 2500;
 
     PontH::avancer(120);
     
@@ -256,21 +259,24 @@ void compterPersonnes(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C
         if (vuActuel && !vuPrecedent) nObjetsLocal++;
         vuPrecedent = vuActuel;
     }
-    Son::jouer(46);
-    _delay_ms(4000);
-    Son::arreter();
-    PontH::arreter();
 
     // apres (temps requis), quand tu rencontre une ligne. tourne de 180
     while(!cl.estSurLignePleine()) {}
+    PontH::arreter();
+    _delay_ms(500);
     PontH::tourner180(); 
+    PontH::arreter();
+    _delay_ms(1000);
 
     // avance jusqu'a trouve le mur du fond du couloir (5 capteurs actifs)
     PontH::avancer(120);
     while(!cl.estSurLignePleine()) {}
+    _delay_ms(600);
+    PontH::arreter();
+    _delay_ms(500);
 
     // tourne de 90 vers la gauche/droite
-    PontH::tourner90DegresGauche(); // ---
+    PontH::tourner90DegresDroite(); // ---
     
 } 
 
