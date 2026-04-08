@@ -2,7 +2,7 @@
 
 CapteurLigne::CapteurLigne()
 {
-    DDRC &= ~(TOUS_LES_CAPTEURS);
+    DDRA &= ~(TOUS_LES_CAPTEURS);
 }
 
 uint8_t CapteurLigne::lireTousCapteurs() const
@@ -37,7 +37,10 @@ bool CapteurLigne::estTropPresMur() const
 
 bool CapteurLigne::estObstacleAuCentre() const
 {
-    return ((CAPTEUR_D3 & PINA) || ((CAPTEUR_D2 | CAPTEUR_D3) & PINA) || ((CAPTEUR_D3 | CAPTEUR_D4) & PINA));
+    if (estSurLignePleine())
+        return false;
+    else
+        return estTropAGauche() || estTropADroite() || (lireTousCapteurs() & CAPTEUR_D3);
 }
 
 bool CapteurLigne::estSurLignePleine() const
@@ -47,7 +50,7 @@ bool CapteurLigne::estSurLignePleine() const
 
 bool CapteurLigne::estVide() const
 {
-    return (lireTousCapteurs() == !(TOUS_LES_CAPTEURS));
+    return (lireTousCapteurs() == 0);
 }
 
 bool CapteurLigne::estAllumeCapteurQuelconque() const

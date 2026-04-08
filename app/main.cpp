@@ -18,15 +18,7 @@
 
 int main()
 {
- 
-    sortirStationnementHoraire(); 
-    suivreCouloir();
-        PontH::avancer(120);
-    _delay_ms(600);
-    PontH::arreter();
-    _delay_ms(500);
-    PontH::tourner90DegresDroite();
-    suivreCouloir();
+     suivreCouloir();
 
 
     // Lecture l;
