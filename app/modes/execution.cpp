@@ -6,7 +6,7 @@
 void suivreCouloir()
 {
     CapteurLigne capteur;
-    Del del(PORTA, PA2, PA3);
+    Del del(PORTA, PC6, PC7);
     PontH::initialiserRegistre();
 
     uint8_t nObstacles = 0;
@@ -112,7 +112,7 @@ void sortirStationnementAntiHoraire()
 
     bool couloirTrouve = false;
     while (!couloirTrouve) {
-        if (capteur.estTropAGauche() || capteur.estTropAGauchePrecis()) {
+        if (capteur.estTropAGauche() || capteur.estTropAGauchePrecis() || capteur.estSurLignePleine()) {
             couloirTrouve = true;
             break;
         }
@@ -133,16 +133,6 @@ void sortirStationnementAntiHoraire()
     //         PontH::configurer(0, 80, 0, 150);
     // }
 
-}
-
-
-void parcourirCouloir() {}
-
-void arreterMoteurs()
-{
-    OCR0A = 0;
-    OCR0B = 0;
-    PORTB &= ~((1 << PB2) | (1 << PB3) | (1 << PB4) | (1 << PB5));
 }
 
 void clignoterVert(Del& del)
@@ -175,7 +165,7 @@ void gererPoteau(Del& del, CapteurInfra& ci)
     }
 }
 
-void scanPoteaux() {
+void executerSallesAD() {
     CapteurInfra ci;
     PontH pontH;
     Del del(PORTA, PA0, PA1);
@@ -199,7 +189,7 @@ void scanPoteaux() {
 
         if(ci.estObjetDetecte()){
             if(enMouvement){
-                arreterMoteurs();
+                PontH::arreter();
                 enMouvement = false;
             }
             ci.incrementerPersonne(); 
@@ -227,11 +217,11 @@ void scanPoteaux() {
         _delay_ms(INTERVALLE_MS);
     }
 
-    arreterMoteurs();
+    PontH::arreter();
 } 
 
 
-void compterPersonnes(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C compter tape
+void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C compter tape
 {
     Communication c;
     c.initialisationUART();
@@ -255,7 +245,7 @@ void compterPersonnes(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C
     Minuterie::Minuterie1::partirMinuterie(tempsMsParcoursBC, Minuterie::A);
     while(!tempsEcoule)
     {
-        bool vuActuel = !cl.estSurLignePleine();
+        bool vuActuel = !cl.estAllumeCapteurQuelconque();
         if (vuActuel && !vuPrecedent) nObjetsLocal++;
         vuPrecedent = vuActuel;
     }
@@ -329,7 +319,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
         switch (etat)
         {
             case SORTIR_STATIONNEMENT:
-                compterPersonnes(nObjetsLocalB, tempsEcoule);
+                executerSallesBC(nObjetsLocalB, tempsEcoule);
                 // parcourirCouloir();
                 // _delay_ms(2000);
                 // quand tu sens la derniere ptite coche selon place parking 
@@ -360,7 +350,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             case PIECE_A_D:
                 // scanner les personnes avec capteurInfra
                 // prochain etat = COULOIR_NORD  
-                scanPoteaux();
+                executerSallesAD();
                 etat = COULOIR_NORD;
                 break;
             case PIECE_B_C:

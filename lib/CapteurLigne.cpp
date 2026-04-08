@@ -50,3 +50,7 @@ bool CapteurLigne::estVide() const
     return (lireTousCapteurs() == !(TOUS_LES_CAPTEURS));
 }
 
+bool CapteurLigne::estAllumeCapteurQuelconque() const
+{
+    return (lireTousCapteurs());
+}

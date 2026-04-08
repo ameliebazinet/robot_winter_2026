@@ -27,15 +27,15 @@ int main()
         switch (etat)
         {
             case Etat::COULOIR:
-                if (!capteur.estTropADroite() && !capteur.estTropPresMur()) {
-                    while (!capteur.estTropADroite())
+                if (!capteur.estActiveD4D5() && !capteur.estActiveD4D5()) {
+                    while (!capteur.estActiveD4D5())
                         PontH::tournerDroite(130);
                 }
-                else if (!capteur.estTropADroite()) {
+                else if (!capteur.estActiveD4D5()) {
                     PontH::arreter();
                     etat = Etat::VERIFICATION_ENTREE;
                 }
-                else if (capteur.estTropPresMur()) {
+                else if (capteur.estActiveD4D5()) {
                     PontH::tournerGauche(75);
                 }
                 else {
@@ -47,10 +47,10 @@ int main()
                 PontH::tournerDroite(150);
                 _delay_ms(20);
                 PontH::arreter();
-                if (!capteur.estTropADroite()) {
+                if (!capteur.estActiveD4D5()) {
                     etat = Etat::ENTREE_TROUVEE;
                 }
-                else if (capteur.estTropADroite()) {
+                else if (capteur.estActiveD4D5()) {
                     etat = Etat::COULOIR;
                 }
                 break;

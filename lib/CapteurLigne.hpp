@@ -16,6 +16,7 @@ public:
     bool estObstacleAuCentre() const;
     bool estSurLignePleine() const;
     bool estVide() const;
+    bool estAllumeCapteurQuelconque() const;
 
 private:
     static const uint8_t CAPTEUR_D1 = (1 << PA1);

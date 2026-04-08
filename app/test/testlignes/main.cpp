@@ -31,9 +31,9 @@ int main()
 
         estSurObstacleAvant = estSurObstacleMaintenant;
 
-        if (capteur.estTropADroite())
+        if (capteur.estActiveD4D5())
             PontH::configurer(1, 175, 0, 175);
-        else if (capteur.estTropAGauche())
+        else if (capteur.estActiveD1D2())
             PontH::configurer(0, 175, 1, 175);
         else
             PontH::avancer(100);

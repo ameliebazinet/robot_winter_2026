@@ -27,8 +27,8 @@ void longerLigneDroite();
 void sortirStationnementHoraire();
 void sortirStationnementAntiHoraire();
 void parcourirCouloir();
-void scanPoteaux();
-void compterPersonnes();
+void executerSallesAD();
+void executerSallesBC();
 void entrerStationnementHoraire();
 void tournerDroite();
 void faireExecution(uint8_t& nPersonnesLocalA,
