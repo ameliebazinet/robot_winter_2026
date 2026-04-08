@@ -167,15 +167,41 @@ int main()
     Del del(PORTA, PA0, PA1);
     pontH.initialiserRegistre();
     
+    Communication com;
+    com.initialisationUART();
+
     const uint16_t DUREE_TOTALE_MS = 2340;
     const uint8_t  INTERVALLE_MS   = 5;
     const uint8_t  VITESSE_CRUISE  = 80;
     const uint8_t  VITESSE_BOOST   = 180;
     uint16_t tempsEcoule = 0;
     
-    Communication com;
-    com.initialisationUART();
-    
+
+    const uint16_t DUREE_ROTATION_180_MS = 650;  // à calibrer
+    const uint16_t DUREE_AVANCE_5CM_MS   = 300;  // à calibrer
+    const uint8_t  VITESSE_ROTATION      = 120;
+    const uint8_t  VITESSE_AVANCE        = 80;
+  
+    // tourner 180 droite
+    pontH.tournerDroite(VITESSE_ROTATION);
+    _delay_ms(DUREE_ROTATION_180_MS);
+    arreterMoteurs();
+    _delay_ms(100); // stabilisation
+
+    // avancer 5cm
+    pontH.avancer(VITESSE_AVANCE);   
+    _delay_ms(DUREE_AVANCE_5CM_MS);
+    arreterMoteurs();
+    _delay_ms(100);
+
+    // tourner 180 vers la gauche
+    pontH.tournerGauche(VITESSE_ROTATION);
+    _delay_ms(DUREE_ROTATION_180_MS);
+    arreterMoteurs();
+    _delay_ms(100);
+
+
+// le scan en lui mm
     pontH.tournerDroite(VITESSE_BOOST);
     _delay_ms(80);
     pontH.tournerDroite(VITESSE_CRUISE);
