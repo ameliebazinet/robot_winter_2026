@@ -5,7 +5,7 @@
 #define F_CPU 8000000UL
 #include "Del.hpp"
 #include <util/delay.h>
-
+// Del + = PC7 && Del - = PC6
 Del::Del(volatile uint8_t &port, uint8_t pin1, uint8_t pin2)
 :   port_(port), 
     pin1_(pin1 & 0b111), 
