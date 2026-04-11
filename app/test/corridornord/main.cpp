@@ -47,7 +47,7 @@ int main()
                 PontH::arreter();
                 _delay_ms(500);
 
-                if (capteur.estTropADroite()) {
+                if (!capteur.estVide()) {
                     // Ligne retrouvée, c'était une déviation
                     etat = Etat::COULOIR;
                 }
