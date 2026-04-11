@@ -7,25 +7,29 @@
 enum Etat 
 {
     SORTIR_STATIONNEMENT,
-
-    COULOIRS_COTES,
+    PREMIER_COULOIR_SUD,
+    COULOIR_COTE,
 
     COULOIR_NORD,
     PIECE_A_D,
     PIECE_B_C,
 
+    DERNIER_COULOIR_SUD,
+
     ENTRER_STATIONNEMENT
 };
 
 void suivreCouloir();
-void longerLigneGauche(); 
-void longerLigneDroite();
+void tournerCouloirGauche();
+void tournerCouloirDroite();
+void tournerBoutCouloir();
 void sortirStationnementHoraire();
-void sortirStationnementAntiHoraire();
+void sortirStationnementAntihoraire();
 void parcourirCouloir();
 void executerSallesAD();
 void executerSallesBC();
-void entrerStationnementHoraire();
+void entrerStationnementHoraire(Lecture& l);
+void entrerStationnementAntihoraire(Lecture& l);
 void tournerDroite();
 void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nObjetsLocalB,

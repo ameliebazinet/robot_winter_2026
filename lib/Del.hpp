@@ -25,6 +25,8 @@ public:
     // Simule la couleur ambre sur la DEL.  
     void allumerCouleurAmbre();
 
+    void clignoterVert();
+
 private : 
     volatile uint8_t &port_;
     uint8_t pin1_;

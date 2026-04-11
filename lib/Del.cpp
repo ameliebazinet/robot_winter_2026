@@ -48,3 +48,14 @@ void Del::allumerCouleurAmbre()
     allumerCouleur(Couleur::VERT);
     _delay_ms(DELAI_AMBRE);
 }
+
+void Del::clignoterVert()
+{
+    uint8_t delaiClignotement = 125;
+    for(uint8_t i = 0; i < 8; i++){
+        allumerCouleur(Del::Couleur::VERT);
+        _delay_ms(delaiClignotement);
+        allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(delaiClignotement);
+    }
+}

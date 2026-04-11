@@ -10,22 +10,22 @@ uint8_t CapteurLigne::lireTousCapteurs() const
     return (TOUS_LES_CAPTEURS & PINA);
 }
 
-bool CapteurLigne::estTropAGauche() const
+bool CapteurLigne::estTropAGaucheLarge() const
 {
     return (CAPTEUR_D1 & PINA) && (CAPTEUR_D2 & PINA);
 }
 
-bool CapteurLigne::estTropADroite() const
+bool CapteurLigne::estTropADroiteLarge() const
 {
     return (CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA);
 }
 
-bool CapteurLigne::estTropADroitePrecis() const
+bool CapteurLigne::estTropADroite() const
 {
     return (CAPTEUR_D5 & PINA);
 }
 
-bool CapteurLigne::estTropAGauchePrecis() const
+bool CapteurLigne::estTropAGauche() const
 {
     return (CAPTEUR_D1 & PINA);
 }
@@ -40,7 +40,7 @@ bool CapteurLigne::estObstacleAuCentre() const
     if (estSurLignePleine())
         return false;
     else
-        return estTropAGauche() || estTropADroite() || (lireTousCapteurs() & CAPTEUR_D3);
+        return estTropAGaucheLarge() || estTropADroiteLarge() || (lireTousCapteurs() & CAPTEUR_D3);
 }
 
 bool CapteurLigne::estSurLignePleine() const

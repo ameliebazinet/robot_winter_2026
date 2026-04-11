@@ -1,9 +1,7 @@
 #include "instruction.hpp"
 
-void faireInstruction()
+void faireInstruction(Lecture& lecture)
 {
-    Lecture lecture;
-
     // signalement du début
     for (uint8_t i = 0; i < 8; i++)
     {
@@ -12,7 +10,7 @@ void faireInstruction()
         lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
         _delay_ms(125);
     }
-    lecture.lireMemoire();
+
     for (uint8_t i = 0; i < 3; i++)
     {
         Son::jouer(lecture.getNote()[i]);
@@ -33,7 +31,7 @@ void faireInstruction()
         lecture.getDel().allumerCouleur(Del::Couleur::ROUGE);
         _delay_ms(DELAI_2_SECONDES);
     }
-
+    lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(DELAI_2_SECONDES);
 
     // allumer la del ambre :
@@ -44,4 +42,5 @@ void faireInstruction()
         lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
         _delay_ms(DELAI_CLIGNOTEMENT_AMBRE);
     }
+    lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
 }

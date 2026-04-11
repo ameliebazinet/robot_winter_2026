@@ -1,5 +1,3 @@
-// Test pour vérifier si le code de track des lignes marche.
-
 #define F_CPU 8000000UL
 #include "PontH.hpp"
 #include "CapteurLigne.hpp"
@@ -16,7 +14,7 @@ enum Etat {
 int main()
 {
     CapteurLigne capteur;
-    Del del(PORTA, PA2, PA3);
+    Del del(PORTC, PC6, PC7);
     PontH::initialiserRegistre();
     Etat etat = Etat::COULOIR;
 
@@ -27,46 +25,53 @@ int main()
         switch (etat)
         {
             case Etat::COULOIR:
-                if (!capteur.estActiveD4D5() && !capteur.estActiveD4D5()) {
-                    while (!capteur.estActiveD4D5())
-                        PontH::tournerDroite(130);
+                if (capteur.estTropADroiteLarge()) {
+                    // D4 et D5 actifs, trop près du mur, corriger à gauche
+                    PontH::configurer(0, 110, 0, 100);
                 }
-                else if (!capteur.estActiveD4D5()) {
-                    PontH::arreter();
-                    etat = Etat::VERIFICATION_ENTREE;
-                }
-                else if (capteur.estActiveD4D5()) {
-                    PontH::tournerGauche(75);
+                else if (capteur.estTropADroite()) {
+                    // D5 actif seulement, on suit bien la ligne
+                    PontH::configurer(0, 110, 0, 115);
                 }
                 else {
-                    PontH::configurer(0, 130, 0, 130);
+                    // D5 désactivé, possible entrée
+                    PontH::arreter();
+                    _delay_ms(500);
+                    etat = Etat::VERIFICATION_ENTREE;
                 }
                 break;
 
-            case Etat::VERIFICATION_ENTREE :
+            case Etat::VERIFICATION_ENTREE:
                 PontH::tournerDroite(150);
-                _delay_ms(20);
+                _delay_ms(150);
                 PontH::arreter();
-                if (!capteur.estActiveD4D5()) {
-                    etat = Etat::ENTREE_TROUVEE;
-                }
-                else if (capteur.estActiveD4D5()) {
+                _delay_ms(500);
+
+                if (capteur.estTropADroite()) {
+                    // Ligne retrouvée, c'était une déviation
                     etat = Etat::COULOIR;
+                }
+                else {
+                    // Toujours pas de ligne, c'est une entrée
+                    // Corriger le petit virage à droite
+                    PontH::tournerGauche(150);
+                    _delay_ms(150);
+                    PontH::arreter();
+                    etat = Etat::ENTREE_TROUVEE;
                 }
                 break;
             
-            case Etat::ENTREE_TROUVEE :
+            case Etat::ENTREE_TROUVEE:
                 del.allumerCouleur(Del::Couleur::VERT);
                 PontH::arreter();
                 _delay_ms(1000);
                 etat = Etat::FIN;
                 break;
 
-            case Etat::FIN :
+            case Etat::FIN:
                 del.allumerCouleur(Del::Couleur::ETEINT);
                 PontH::arreter();
                 return 0;
-                break;
         }
     }
 }
