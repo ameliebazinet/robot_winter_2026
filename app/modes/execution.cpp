@@ -21,6 +21,7 @@ void recalibrer()
 void suivreCouloir()
 {
     CapteurLigne capteur;
+    Lecture l;
     Del del(PORTC, PC6, PC7);
     PontH::initialiserRegistre();
 
@@ -59,6 +60,13 @@ void suivreCouloir()
     }
     PontH::arreter();
     _delay_ms(250);
+
+    if (l.getDirectionHoraire()) {
+        tournerCorridorDroite();
+    }
+    else
+        tournerCorridorGauche();
+
 }
 
 void sortirStationnementHoraire() 
@@ -284,39 +292,22 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C
     
 } 
 
-// void entrerStationnementHoraire() 
-// {
-//     uint8_t placeStationnement; 
-//     CapteurLigne capteur; 
-//     Lecture l; 
-
-//     uint8_t nStationnement = l.getNumStationnement(); 
-
-//     if(capteur.estTropAGauchePrecis())
-
-//         placeStationnement++; 
-//         PontH::avancer(100);
-
-//     if(placeStationnement == nStationnement)
-//     {
-//         PontH::avancer(100);
-//         _delay_ms(250);
-//         PontH::tourner90DegresDroite(); 
-//         while(!(capteur.estSurLignePleine()))
-//         {
-//             PontH::avancer(100); 
-
-//         }
-//         PontH::arreter(); 
-//     }
-// }
-
-void tournerDroite()
+void tournerCorridorDroite()
 {
-   CapteurLigne capteur;
-   PontH::arreter();
-   _delay_ms(1000);
-   PontH::tourner90DegresDroite();    
+    PontH::avancer(120);
+    _delay_ms(600);
+    PontH::arreter();
+    _delay_ms(500);
+    PontH::tourner90DegresDroite();
+}
+
+void tournerCorridorGauche()
+{
+    PontH::avancer(120);
+    _delay_ms(600);
+    PontH::arreter();
+    _delay_ms(500);
+    PontH::tourner90DegresGauche();
 }
 
 void faireExecution(uint8_t& nPersonnesLocalA,
@@ -329,27 +320,22 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 {
     uint8_t compteurPiecesNord = 0;
     Etat etat = SORTIR_STATIONNEMENT;
-    
+    Lecture l;
     while (true) {
         switch (etat)
         {
             case SORTIR_STATIONNEMENT:
-                executerSallesBC(nObjetsLocalB, tempsEcoule);
-                // parcourirCouloir();
-                // _delay_ms(2000);
-                // quand tu sens la derniere ptite coche selon place parking 
-                etat = PREMIER_COULOIR_SUD;
-                // next state : premier_couloir_sud QUAND arrivé devant
+                if (l.getDirectionHoraire()) {
+                    sortirStationnementHoraire();
+                }
+                else
+                    sortirStationnementAntiHoraire();
+                etat = COULOIRS_COTES;
                 break;
-            case PREMIER_COULOIR_SUD:
-                // rouler jusqu'au bout
-                // tourne 90
-                // next state : PREMIER_COULOIR_LONG quand fini de tourner
-                break;
-            case PREMIER_COULOIR_LONG:
-                // compter obstacles en se bornant aux murs
-                // tourner 90
-                // next state : COULOIR_NORD quand fini tourner
+            case COULOIRS_COTES:
+                suivreCouloir();
+                suivreCouloir();
+                etat = COULOIR_NORD;
                 break;
             case COULOIR_NORD:
                 // roule jusqu'a porte de A,B,C,D
@@ -363,24 +349,14 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 // next State DERNIER_COULOIR_LONG
                 break;
             case PIECE_A_D:
-                // scanner les personnes avec capteurInfra
-                // prochain etat = COULOIR_NORD  
                 executerSallesAD();
                 etat = COULOIR_NORD;
                 break;
             case PIECE_B_C:
-                // voir plus haut (mais tapes au lieu de poteaux)
-                break;
-            case DERNIER_COULOIR_LONG:
-                // compter obstacles en se bornant aux murs
-                // tourner 90
-                // next state : DERNIER_COULOIR_SUD quand fini tourner
-                break;
-            case DERNIER_COULOIR_SUD:
-                // rouler borné jusqu'a la fin
-                // quand tu sens la ptite coche mais rien d'autre next state ENTRER_STATIONNEMENT
+                executerSallesBC(nObjetsLocalB, tempsEcoule);
                 break;
             case ENTRER_STATIONNEMENT:
+                
                 // SI sens horaire : nb coches avant park = 5 - valeurPlaceParking
                 // SI sens antihoraire : nb coches avant park = valeurPlaceParking
                 break;

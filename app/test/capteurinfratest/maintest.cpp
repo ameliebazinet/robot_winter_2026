@@ -208,6 +208,12 @@ int main()
     
     bool enMouvement = true;
 
+    for(uint8_t i = 0; i < 20; i++){
+        ci.lireDistance();
+        com.transmissionFormatee("adc: %d  dist: %d\r\n", ci.getVoltage(), ci.getDistance());
+        _delay_ms(500);
+    }
+
     while (tempsEcoule < DUREE_TOTALE_MS)
     {
         ci.lireDistance();
