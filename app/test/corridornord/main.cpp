@@ -27,11 +27,20 @@ int main()
             case Etat::COULOIR:
                 if (capteur.estTropADroiteLarge()) {
                     // D4 et D5 actifs, trop près du mur, corriger à gauche
-                    PontH::configurer(0, 110, 0, 100);
+                    PontH::configurer(0, 100, 0, 110);
                 }
                 else if (capteur.estTropADroite()) {
-                    // D5 actif seulement, on suit bien la ligne
+                    // D5 actif seulement, on suit bien la ligness
                     PontH::configurer(0, 110, 0, 115);
+                }
+
+                else if (capteur.estTropAGauche() || capteur.estTropAGaucheLarge())
+                {
+                    while(!(capteur.estTropADroite()))
+                    {
+                        PontH::tournerDroite(63);
+                    }
+
                 }
                 else {
                     // D5 désactivé, possible entrée
@@ -39,6 +48,7 @@ int main()
                     _delay_ms(500);
                     etat = Etat::VERIFICATION_ENTREE;
                 }
+
                 break;
 
             case Etat::VERIFICATION_ENTREE:
@@ -47,7 +57,7 @@ int main()
                 PontH::arreter();
                 _delay_ms(500);
 
-                if (!capteur.estVide()) {
+                if (capteur.estTropADroite()) {
                     // Ligne retrouvée, c'était une déviation
                     etat = Etat::COULOIR;
                 }

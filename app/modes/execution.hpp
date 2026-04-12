@@ -28,8 +28,8 @@ void sortirStationnementAntihoraire();
 void parcourirCouloir();
 void executerSallesAD();
 void executerSallesBC();
-void entrerStationnementHoraire(Lecture& l);
-void entrerStationnementAntihoraire(Lecture& l);
+//void entrerStationnementHoraire(Lecture& l);
+//void entrerStationnementAntihoraire(Lecture& l);
 void tournerDroite();
 void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nObjetsLocalB,

@@ -96,6 +96,7 @@ void sortirStationnementHoraire()
 
     while (!(capteur.estAllumeCapteurQuelconque())) {
         PontH::avancer(130);
+        
     }
 
     PontH::arreter();
@@ -126,6 +127,7 @@ void sortirStationnementHoraire()
     PontH::arreter();
     _delay_ms(500);
 }
+
 
 void sortirStationnementAntihoraire() 
 {
@@ -291,151 +293,150 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C
     
 } 
 
-void entrerStationnementHoraire(Lecture& l) 
-{
-    uint8_t placeStationnement = l.getNumStationnement(); 
-    CapteurLigne capteur; 
-    bool temp = true;
-    uint8_t compteurStationnement = 0; 
-    PontH::avancer(255);
-    _delay_ms(100);
+// void entrerStationnementHoraire(Lecture& l) 
+// {
+//     uint8_t placeStationnement = l.getNumStationnement(); 
+//     CapteurLigne capteur; 
+//     bool temp = true;
+//     uint8_t compteurStationnement = 0; 
+//     PontH::avancer(255);
+//     _delay_ms(100);
 
-    while(compteurStationnement != placeStationnement){
+//     while(compteurStationnement != placeStationnement){
 
-        // Incrementation place
-        if(capteur.estTropAGaucheLarge() ) {
-            if(temp){
-                compteurStationnement++;
-                temp = false;
-            }
-        }
-        // correction
-        else if(capteur.estTropAGauche()){
-            PontH::configurer(0,120,0,90);
-            temp = true;
-        }
-        // normal
-        else{
-            temp = true;
-            PontH::configurer(0,90,0,110);
-        } 
-    }
+//         // Incrementation place
+//         if(capteur.estTropAGaucheLarge() ) {
+//             if(temp){
+//                 compteurStationnement++;
+//                 temp = false;
+//             }
+//         }
+//         // correction
+//         else if(capteur.estTropAGauche()){
+//             PontH::configurer(0,120,0,90);
+//             temp = true;
+//         }
+//         // normal
+//         else{
+//             temp = true;
+//             PontH::configurer(0,90,0,110);
+//         } 
+//     }
 
-    PontH::arreter();
-    _delay_ms(500);
-    PontH::tourner90DegresDroite();
-    _delay_ms(700);
-    PontH::avancer(250);
-    _delay_ms(200);
-    PontH::avancer(110);
-    while(!capteur.estSurLignePleine()){}
-    PontH::arreter();
-    _delay_ms(500);
-    PontH::reculer(150);
-    _delay_ms(500);
-    PontH::arreter();
-}
+//     PontH::arreter();
+//     _delay_ms(500);
+//     PontH::tourner90DegresDroite();
+//     _delay_ms(700);
+//     PontH::avancer(250);
+//     _delay_ms(200);
+//     PontH::avancer(110);
+//     while(!capteur.estSurLignePleine()){}
+//     PontH::arreter();
+//     _delay_ms(500);
+//     PontH::reculer(150);
+//     _delay_ms(500);
+//     PontH::arreter();
+// }
+// void entrerStationnementAntihoraire(Lecture& l) 
+// {
+//     uint8_t placeStationnement = l.getNumStationnement(); 
+//     CapteurLigne capteur; 
+//     bool temp = true;
+//     uint8_t compteurStationnement = 5; 
+//     PontH::avancer(255);
+//     _delay_ms(100);
 
-void entrerStationnementAntihoraire(Lecture& l) 
-{
-    uint8_t placeStationnement = l.getNumStationnement(); 
-    CapteurLigne capteur; 
-    bool temp = true;
-    uint8_t compteurStationnement = 5; 
-    PontH::avancer(255);
-    _delay_ms(100);
+//     while(compteurStationnement != placeStationnement){
 
-    while(compteurStationnement != placeStationnement){
+//         if(capteur.estTropADroiteLarge()) {
+//             if(temp){
+//                 compteurStationnement--;
+//                 temp = false;
+//             }
+//         }
+//         else if(capteur.estTropADroite()){
+//             PontH::configurer(0,90,0,120);
+//             temp = true;
+//         }
+//         else{
+//             temp = true;
+//             PontH::configurer(0,110,0,90);
+//         } 
+//     }
 
-        if(capteur.estTropADroiteLarge()) {
-            if(temp){
-                compteurStationnement--;
-                temp = false;
-            }
-        }
-        else if(capteur.estTropADroite()){
-            PontH::configurer(0,90,0,120);
-            temp = true;
-        }
-        else{
-            temp = true;
-            PontH::configurer(0,110,0,90);
-        } 
-    }
+//     PontH::arreter();
+//     _delay_ms(500);
+//     PontH::tourner90DegresGauche();
+//     _delay_ms(700);
+//     PontH::avancer(250);
+//     _delay_ms(200);
+//     PontH::avancer(110);
+//     while(!capteur.estSurLignePleine()){}
+//     PontH::arreter();
+//     _delay_ms(500);
+//     PontH::reculer(150);
+//     _delay_ms(500);
+//     PontH::arreter();
+// }
 
-    PontH::arreter();
-    _delay_ms(500);
-    PontH::tourner90DegresGauche();
-    _delay_ms(700);
-    PontH::avancer(250);
-    _delay_ms(200);
-    PontH::avancer(110);
-    while(!capteur.estSurLignePleine()){}
-    PontH::arreter();
-    _delay_ms(500);
-    PontH::reculer(150);
-    _delay_ms(500);
-    PontH::arreter();
-}
+// void faireExecution(uint8_t& nPersonnesLocalA,
+//                     uint8_t& nObjetsLocalB,
+//                     uint8_t& nObjetsLocalC,
+//                     uint8_t& nPersonnesLocalD,
+//                     uint8_t& nZonesEndommageesCouloirEst, 
+//                     uint8_t& nZonesEndommageesCouloirOuest,
+//                     volatile bool& tempsEcoule) 
+// {
+//     uint8_t compteurPiecesNord = 0;
+//     Etat etat = SORTIR_STATIONNEMENT;
+//     Lecture l;
+//     while (true) {
+//         switch (etat)
+//         {
+//             case SORTIR_STATIONNEMENT:
+//                 if (l.getDirectionHoraire()) {
+//                     sortirStationnementHoraire();
+//                 }
+//                 else
+//                     sortirStationnementAntihoraire();
+//                 etat = PREMIER_COULOIR_SUD;
+//                 break;
 
-void faireExecution(uint8_t& nPersonnesLocalA,
-                    uint8_t& nObjetsLocalB,
-                    uint8_t& nObjetsLocalC,
-                    uint8_t& nPersonnesLocalD,
-                    uint8_t& nZonesEndommageesCouloirEst, 
-                    uint8_t& nZonesEndommageesCouloirOuest,
-                    volatile bool& tempsEcoule) 
-{
-    uint8_t compteurPiecesNord = 0;
-    Etat etat = SORTIR_STATIONNEMENT;
-    Lecture l;
-    while (true) {
-        switch (etat)
-        {
-            case SORTIR_STATIONNEMENT:
-                if (l.getDirectionHoraire()) {
-                    sortirStationnementHoraire();
-                }
-                else
-                    sortirStationnementAntihoraire();
-                etat = PREMIER_COULOIR_SUD;
-                break;
+//             case PREMIER_COULOIR_SUD :
+//                 suivreCouloir();
+//                 tournerBoutCouloir();
+//                 etat = COULOIR_COTE;
 
-            case PREMIER_COULOIR_SUD :
-                suivreCouloir();
-                tournerBoutCouloir();
-                etat = COULOIR_COTE;
+//             case COULOIR_COTE:
+//                 suivreCouloir();
+//                 tournerBoutCouloir();
+//                 etat = COULOIR_NORD;
+//                 break;
+//             case COULOIR_NORD:
+//                 // roule jusqu'a porte de A,B,C,D
+//                 // compteur part a 0
+//                 // si compteur a 0 ou 3 on passe a PIECE_A_D
+//                 // sinon compteur 1 ou 2 : PIECE_B_C
+//                 // compteur++
 
-            case COULOIR_COTE:
-                suivreCouloir();
-                tournerBoutCouloir();
-                etat = COULOIR_NORD;
-                break;
-            case COULOIR_NORD:
-                // roule jusqu'a porte de A,B,C,D
-                // compteur part a 0
-                // si compteur a 0 ou 3 on passe a PIECE_A_D
-                // sinon compteur 1 ou 2 : PIECE_B_C
-                // compteur++
-
-                // quand compteur = 4 : rouler jusqua ligne pleine
-                // virage 90
-                // next State DERNIER_COULOIR_LONG
-                break;
-            case PIECE_A_D:
-                executerSallesAD();
-                etat = COULOIR_NORD;
-                break;
-            case PIECE_B_C:
-                executerSallesBC(nObjetsLocalB, tempsEcoule);
-                break;
-            case ENTRER_STATIONNEMENT:
-                if (l.getDirectionHoraire()) {
-                    entrerStationnementHoraire(l);
-                }
-                else
-                    entrerStationnementAntihoraire(l);
-                return;
-        }
-    }
-}
+//                 // quand compteur = 4 : rouler jusqua ligne pleine
+//                 // virage 90
+//                 // next State DERNIER_COULOIR_LONG
+//                 break;
+//             case PIECE_A_D:
+//                 executerSallesAD();
+//                 etat = COULOIR_NORD;
+//                 break;
+//             case PIECE_B_C:
+//                 executerSallesBC(nObjetsLocalB, tempsEcoule);
+//                 break;
+//             case ENTRER_STATIONNEMENT:
+//                 if (l.getDirectionHoraire()) {
+//                     entrerStationnementHoraire(l);
+//                 }
+//                 else
+//                     entrerStationnementAntihoraire(l);
+//                 return;
+//         }
+//     }
+// }
