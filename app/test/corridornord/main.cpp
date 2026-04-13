@@ -17,6 +17,7 @@ int main()
     Del del(PORTC, PC6, PC7);
     PontH::initialiserRegistre();
     Etat etat = Etat::COULOIR;
+    uint8_t nEntreeTrouver = 0 ; 
 
     PontH::avancer(255);
     _delay_ms(100);

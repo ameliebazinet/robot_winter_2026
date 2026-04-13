@@ -1,7 +1,11 @@
+#pragma once 
 #include <avr/io.h>
 #define F_CPU 8000000UL
 #include "PontH.hpp"
 #include "CapteurLigne.hpp"
+#include "../lib/CapteurInfra.hpp"
+#include "Del.hpp"
+#include "../lecture/lecture.hpp"
 #include <util/delay.h>
 
 enum Etat 
@@ -19,15 +23,25 @@ enum Etat
     ENTRER_STATIONNEMENT
 };
 
+
+enum EtatCouloir {
+    COULOIR,
+    VERIFICATION_ENTREE,
+    ENTREE_TROUVEE,
+    FIN_COULOIR
+};
+
+void recalibrerHoraire(); 
 void suivreCouloir();
 void tournerCouloirGauche();
 void tournerCouloirDroite();
-void tournerBoutCouloir();
+void tournerBoutCouloir(Lecture& l);
 void sortirStationnementHoraire();
 void sortirStationnementAntihoraire();
 void parcourirCouloir();
 void executerSallesAD();
 void executerSallesBC();
+void couloirNord(); 
 //void entrerStationnementHoraire(Lecture& l);
 //void entrerStationnementAntihoraire(Lecture& l);
 void tournerDroite();
