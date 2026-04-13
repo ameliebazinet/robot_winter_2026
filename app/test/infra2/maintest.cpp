@@ -41,13 +41,17 @@ int main()
     Son::initialiserPiezo();
     PontH::initialiserRegistre();
     
-    const uint8_t VITESSE_SCAN = 90;
+    const uint8_t VITESSE_BOOST = 150;
+    const uint8_t VITESSE_SCAN = 95;
 
     Communication com;
     com.initialisationUART();
 
     PontH::tourner90DegresDroite();
     _delay_ms(500);
+
+    PontH::tournerDroite(VITESSE_BOOST);
+    _delay_ms(50);
 
     while (!cl.estTropADroite()) {
         ci.lireVoltage();
@@ -56,9 +60,10 @@ int main()
             PontH::arreter();
             ci.nPersonnes_++;
             attendreRetraitPoteau(del, ci, l);
+            PontH::tournerDroite(VITESSE_BOOST);
+            _delay_ms(50);
         }
         else {
-            del.allumerCouleur(Del::Couleur::VERT);
             PontH::tournerDroite(VITESSE_SCAN);
         }
 
@@ -66,13 +71,10 @@ int main()
     }
 
     PontH::arreter();
-    del.allumerCouleur(Del::Couleur::ETEINT);
     com.transmissionFormatee("nb prsn: %d\r\n", ci.nPersonnes_);
 
-    for (uint8_t i = 0; i < 2; i++) {
-        while (!cl.estTropAGauche())
-            PontH::tournerGauche(VITESSE_SCAN);
-    }
-
+    while (!cl.estTropAGauche())
+        PontH::tournerGauche(VITESSE_SCAN);
+        
     PontH::arreter();
 }
