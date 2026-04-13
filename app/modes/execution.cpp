@@ -23,6 +23,7 @@ void tournerCouloirDroite()
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresDroite();
+    recalibrerHoraire();
 }
 
 void tournerCouloirGauche()
@@ -58,6 +59,7 @@ void suivreCouloir()
     PontH::avancer(255);
     _delay_ms(100);
 
+
     while (!capteur.estSurLignePleine()) {
         bool estSurObstacleMaintenant = capteur.estObstacleAuCentre();
         
@@ -75,7 +77,7 @@ void suivreCouloir()
             del.allumerCouleur(Del::Couleur::ETEINT);
 
 
-            if (capteur.estTropADroite() || capteur.estAllumeMilieu()) {
+            if (capteur.estTropADroite()) {
                 PontH::configurer(0, 70, 0, 100);
             }
             else if (capteur.estTropAGauche()) {
@@ -391,78 +393,77 @@ void couloirNord()
     Del del(PORTC, PC6, PC7);
     PontH::initialiserRegistre();
     EtatCouloir etat = EtatCouloir::COULOIR;
+
     PontH::avancer(255);
     _delay_ms(100);
 
-    recalibrerHoraire();
+    // Tourner doucement à droite jusqu'à trouver D5
+    while (!capteur.estTropADroite()) {
+        PontH::tournerDroite(70);  // vitesse basse pour ne pas dépasser
+    }
+    // Dès que D5 est trouvé, si D4 aussi allumé, corriger un peu à gauche
+    while (capteur.estTropADroiteLarge()) {
+        PontH::tournerGauche(70);
+    }
+    PontH::arreter();
+    _delay_ms(200);
+    PontH::avancer(255);
+    _delay_ms(100);
     while (true) {
         switch (etat)
         {
             case EtatCouloir::COULOIR:
                 if (capteur.estTropADroiteLarge()) {
-                    // D4 et D5 actifs, trop près du mur, corriger à gauche
-                    PontH::configurer(0, 110, 0, 120);
+                    // D4+D5 : trop près du mur, corriger à gauche
+                    PontH::configurer(0, 90, 0, 120);
                 }
                 else if (capteur.estTropADroite()) {
-                    // D5 actif seulement, on suit bien la ligness
-                    PontH::configurer(0, 110, 0, 115);
+                    // D5 seul : bien borné, avancer normalement
+                    PontH::avancer(110);
                 }
-
-                else if (capteur.estTropAGauche() || capteur.estTropAGaucheLarge())
-                {
-                    while(!(capteur.estTropADroite()))
-                    {
-                        PontH::tournerDroite(63);
-                    }
-
+                else if (capteur.estTropAGauche()) {
+                    // D1 : trop loin du mur, corriger à droite
+                    PontH::configurer(0, 120, 0, 90);
                 }
                 else {
-                    // D5 désactivé, possible entrée
+                    // Aucun capteur latéral : possible entrée
                     PontH::arreter();
-                    _delay_ms(500);
+                    _delay_ms(300);
                     etat = EtatCouloir::VERIFICATION_ENTREE;
                 }
-
                 break;
 
             case EtatCouloir::VERIFICATION_ENTREE:
                 PontH::tournerDroite(150);
-                _delay_ms(200);
+                _delay_ms(150);
                 PontH::arreter();
-                _delay_ms(500);
+                _delay_ms(300);
 
                 if (capteur.estTropADroite()) {
-                    // Ligne retrouvée, c'était une déviation
+                    PontH::avancer(255);
+                    _delay_ms(100);
                     etat = EtatCouloir::COULOIR;
                 }
                 else {
-                    // Toujours pas de ligne, c'est une entrée
-                    // Corriger le petit virage à droite
                     PontH::tournerGauche(150);
                     _delay_ms(150);
                     PontH::arreter();
                     etat = EtatCouloir::ENTREE_TROUVEE;
                 }
                 break;
-            
+
             case EtatCouloir::ENTREE_TROUVEE:
                 del.allumerCouleur(Del::Couleur::VERT);
                 PontH::arreter();
                 _delay_ms(1000);
-                 del.allumerCouleur(Del::Couleur::ETEINT);
-                 while(!(capteur.estAllumeCapteurQuelconque()))
-                    PontH::avancer(128); 
-                PontH::arreter(); 
-                _delay_ms(1000); 
-                //etat = EtatCouloir::FIN;
+                del.allumerCouleur(Del::Couleur::ETEINT);
+                while (!capteur.estAllumeCapteurQuelconque())
+                    PontH::avancer(128);
+                PontH::arreter();
+                _delay_ms(1000);
                 return;
-
-            // case EtatCouloir::FIN:
-            //     del.allumerCouleur(Del::Couleur::ETEINT);
-            //     PontH::arreter();
         }
     }
-
 }
 
 void faireExecution(uint8_t& nPersonnesLocalA,
@@ -502,7 +503,6 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case COULOIR_COTE:
             {
-                recalibrerHoraire();
                 suivreCouloir();
                 tournerBoutCouloir(l);
                 etat = COULOIR_NORD;
@@ -512,26 +512,14 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case COULOIR_NORD:
             {
-                // roule jusqu'a porte de A,B,C,D
-                // compteur part a 0
-                // si compteur a 0 ou 3 on passe a PIECE_A_D
-                // sinon compteur 1 ou 2 : PIECE_B_C
-                // compteur++
-
-                // quand compteur = 4 : rouler jusqua ligne pleine
-                // virage 90
-                // next State DERNIER_COULOIR_LONG
                 couloirNord();
                 compteurPiecesNord++; 
                 
-                if (compteurPiecesNord == 1 || compteurPiecesNord == 4) {
+                if (compteurPiecesNord == 1 || compteurPiecesNord == 4)
                     etat = PIECE_A_D;
-                }
 
-                else if (compteurPiecesNord == 2 || compteurPiecesNord == 3) {
+                else if (compteurPiecesNord == 2 || compteurPiecesNord == 3)
                     etat = PIECE_B_C;
-                }
-
 
                 break;
             }

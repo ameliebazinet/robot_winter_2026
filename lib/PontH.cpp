@@ -78,7 +78,7 @@ void PontH::tourner180()
 {
     initialiserRegistre();
     tournerGauche(140); 
-    _delay_ms(1500); 
+    _delay_ms(1400); 
     arreter();
 }
 

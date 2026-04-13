@@ -60,18 +60,11 @@ can::lecture( uint8_t pos)
 
    // important: remettre le bit d'indication de fin de cycle a zero 
    // pour la prochaine conversion ce qui se fait en l'ajustant a un.
-
-
-   //------------------------------------------------------
-   //ADCSRA |= (1 << ADIF);
+   ADCSRA |= (1 << ADIF);
 
    // Aller chercher le resultat sur 16 bits.
-   adcVal = ADC;  // registre 16-bit combiné, le plus simple
-   ADCSRA |= (1 << ADIF);
-   
-   // adcVal =   ADCL ;
-   // adcVal +=  ADCH << 8;
-   //------------------------------------------------------
+   adcVal =   ADCL ;
+   adcVal +=  ADCH << 8;
 
    // resultat sur 16 bits
    return adcVal;

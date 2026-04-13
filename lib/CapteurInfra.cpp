@@ -1,19 +1,22 @@
 #include "CapteurInfra.hpp"
 
-const uint8_t NUM_PORTA_ENTREE_ANALOGIQUE = 3;
-const uint8_t DISTANCE_MAXIMAL_CM = 29;
+const uint8_t NUM_PORTA_ENTREE_ANALOGIQUE = 2;
+const uint8_t VALEUR_ADC_MIN = 200;
 
 CapteurInfra::CapteurInfra() : voltage_(0), distance_(0), objetDetecte_(false), estUnePersonne_(false), nPersonnes_(0) {
     resetEstUnePersonne();
 }
 
-
+uint16_t CapteurInfra::getValeurADC()
+{
+    return can1.lecture(NUM_PORTA_ENTREE_ANALOGIQUE);
+}
 
 void CapteurInfra::lireVoltage() {
-    uint16_t adcValeur = can1.lecture(NUM_PORTA_ENTREE_ANALOGIQUE);
-    
-    voltage_ = adcValeur;//(adcValeur / 1023.0) * 5.0;
+    voltage_ = can1.lecture(NUM_PORTA_ENTREE_ANALOGIQUE);
+    objetDetecte_ = (voltage_ > VALEUR_ADC_MIN);
 }
+
 uint16_t CapteurInfra::getVoltage(){
     return voltage_;
 }
@@ -44,7 +47,7 @@ void CapteurInfra::lireDistance() {
     // else
     //     distance = 255;  // hors portée
     
-    objetDetecte_ = distance_ < DISTANCE_MAXIMAL_CM;
+    objetDetecte_ = distance_ < VALEUR_ADC_MIN;
 }
 
 void CapteurInfra::incrementerPersonne(){

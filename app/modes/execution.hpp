@@ -27,8 +27,7 @@ enum Etat
 enum EtatCouloir {
     COULOIR,
     VERIFICATION_ENTREE,
-    ENTREE_TROUVEE,
-    FIN_COULOIR
+    ENTREE_TROUVEE
 };
 
 void recalibrerHoraire(); 

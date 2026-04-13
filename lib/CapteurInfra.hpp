@@ -8,6 +8,7 @@ public:
     CapteurInfra();
     // Lit le voltage produit par le capteur infra avec Can
     void lireVoltage();
+    uint16_t getValeurADC();
     // Converti le voltage en distance
     void lireDistance();
     uint16_t getVoltage();
