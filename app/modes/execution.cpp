@@ -19,7 +19,7 @@ void recalibrerHoraire()
 void tournerCouloirDroite()
 {
     PontH::avancer(120);
-    _delay_ms(850);
+    _delay_ms(1000);
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresDroite();
@@ -28,7 +28,7 @@ void tournerCouloirDroite()
 void tournerCouloirGauche()
 {
     PontH::avancer(120);
-    _delay_ms(600);
+    _delay_ms(1000);
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresGauche();
@@ -57,8 +57,6 @@ void suivreCouloir()
     }
     PontH::avancer(255);
     _delay_ms(100);
-
-    recalibrerHoraire();
 
     while (!capteur.estSurLignePleine()) {
         bool estSurObstacleMaintenant = capteur.estObstacleAuCentre();
@@ -396,6 +394,7 @@ void couloirNord()
     PontH::avancer(255);
     _delay_ms(100);
 
+    recalibrerHoraire();
     while (true) {
         switch (etat)
         {
@@ -503,6 +502,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case COULOIR_COTE:
             {
+                recalibrerHoraire();
                 suivreCouloir();
                 tournerBoutCouloir(l);
                 etat = COULOIR_NORD;

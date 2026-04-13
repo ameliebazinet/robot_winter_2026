@@ -53,6 +53,12 @@ bool CapteurLigne::estVide() const
     return (lireTousCapteurs() == 0);
 }
 
+bool CapteurLigne::estAllumeMilieu() const
+{
+    return(PINA & CAPTEUR_D3 ); 
+
+}
+
 bool CapteurLigne::estAllumeCapteurQuelconque() const
 {
     return (lireTousCapteurs());
