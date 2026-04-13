@@ -55,14 +55,22 @@ int main()
     Communication com;
     com.initialisationUART();
 
+    PontH::tourner90DegresDroite();
+    _delay_ms(500);
+
+    PontH::tournerDroite(VITESSE_BOOST);
+    _delay_ms(80);
+    PontH::tournerDroite(VITESSE_CRUISE);
+
     bool enMouvement = true;
 
-    while (!cl.estTropADroite()) {
+    while (tempsEcoule < DUREE_TOTALE_MS)
+    {
         ci.lireVoltage();
-        // com.transmissionFormatee("adc: %d\r\n", ci.getVoltage());
+        com.transmissionFormatee("adc: %d\r\n", ci.getVoltage());
         
-    if(ci.estObjetDetecte()) {
-            if(enMouvement) {
+    if(ci.estObjetDetecte()){
+            if(enMouvement){
                 PontH::arreter();
                 enMouvement = false;
             }
@@ -76,8 +84,8 @@ int main()
             enMouvement = true;
 
         }
-        else {
-            if(!enMouvement) {
+        else{
+            if(!enMouvement){
                 PontH::tournerDroite(VITESSE_BOOST);
                 _delay_ms(80);
                 PontH::tournerDroite(VITESSE_CRUISE);
@@ -91,13 +99,11 @@ int main()
         _delay_ms(INTERVALLE_MS);
     }
 
-    
-
     while(!cl.estTropAGauche())
-        PontH::tournerGauche(100);
-        
+        PontH::tournerGauche(120);
     com.transmissionFormatee("nb prsn: %d\r\n", ci.nPersonnes_);
     PontH::arreter();
 
-   
+    PontH::tourner90DegresDroite();
+
 }
