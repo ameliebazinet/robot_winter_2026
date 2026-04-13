@@ -18,24 +18,23 @@ ISR(TIMER1_COMPA_vect) {
 
 int main()
 { 
-    // Lecture l;
-    // l.initialiserLecture();
-    // l.lireMemoire();
-    // sei();
-    // Son::initialiserPiezo();
-    // uint8_t nPersonnesLocalA = 0, 
-    //         nObjetsLocalB = 0, 
-    //         nObjetsLocalC = 0, 
-    //         nPersonnesLocalD = 0, 
-    //         nZonesEndommageesCouloirEst = 0,
-    //         nZonesEndommageesCouloirOuest = 0;
+    Lecture l;
+    l.initialiserLecture();
+    l.lireMemoire();
+    sei();
+    Son::initialiserPiezo();
+    uint8_t nPersonnesLocalA = 0, 
+            nObjetsLocalB = 0, 
+            nObjetsLocalC = 0, 
+            nPersonnesLocalD = 0, 
+            nZonesEndommageesCouloirEst = 0,
+            nZonesEndommageesCouloirOuest = 0;
 
-    // volatile bool tempsEcoule = false; 
+    volatile bool tempsEcoule = false; 
 
-    //     faireExecution(nPersonnesLocalA, nObjetsLocalB, nObjetsLocalC, nPersonnesLocalD,
-    //                nZonesEndommageesCouloirEst, nZonesEndommageesCouloirOuest, tempsEcoule);
+        faireExecution(nPersonnesLocalA, nObjetsLocalB, nObjetsLocalC, nPersonnesLocalD,
+                   nZonesEndommageesCouloirEst, nZonesEndommageesCouloirOuest, tempsEcoule);
         
-    couloirNord();
     // while (true)
     // {
     // // Trouve le mode (fait dans lecture)

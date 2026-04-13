@@ -1,7 +1,7 @@
 #include "CapteurInfra.hpp"
 
 const uint8_t NUM_PORTA_ENTREE_ANALOGIQUE = 2;
-const uint8_t VALEUR_ADC_MIN = 200;
+const uint8_t VALEUR_ADC_MIN = 120;
 
 CapteurInfra::CapteurInfra() : voltage_(0), distance_(0), objetDetecte_(false), estUnePersonne_(false), nPersonnes_(0) {
     resetEstUnePersonne();
