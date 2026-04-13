@@ -8,11 +8,16 @@
 #include "CapteurLigne.hpp"
 #include <util/delay.h>
 
+
 void clignoterVert(Del& del)
 {
-    
+    for(uint8_t i = 0; i < 8; i++){
+        del.allumerCouleur(Del::Couleur::VERT);
+        _delay_ms(125);
+        del.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(125);
+    }
 }
-
 
 void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
 {
@@ -27,13 +32,16 @@ void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
 
         ci.lireVoltage();
         if(!ci.estObjetDetecte()) {
-            for(uint8_t i = 0; i < 8; i++) {
-                del.allumerCouleur(Del::Couleur::VERT);
-                _delay_ms(125);
-                del.allumerCouleur(Del::Couleur::ETEINT);
-                _delay_ms(125);
-            }
+            // for(uint8_t i = 0; i < 8; i++) {
+            //     del.allumerCouleur(Del::Couleur::VERT);
+            //     _delay_ms(125);
+            //     del.allumerCouleur(Del::Couleur::ETEINT);
+            //     _delay_ms(125);
+            // }
+
+            clignoterVert(del);
         }
+        return;
     }
 }
 
