@@ -8,7 +8,7 @@ PROJECTNAME=main
 F_CPU=8000000UL
 
 # Fichier source exec
-PRJSRC=maintest.cpp ../../modes/rapport.cpp
+PRJSRC=maintest.cpp ../../modes/rapport.cpp ../../lecture/lecture.cpp
 
 # Librairie
 LIBDIR=./../../../lib
