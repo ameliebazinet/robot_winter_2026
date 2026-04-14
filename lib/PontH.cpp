@@ -56,7 +56,7 @@ void PontH::tournerGauche(uint8_t ratio)
 
 void PontH::tourner90DegresDroite()
 {
-    uint16_t delaiTournerDroite = 1150;
+    uint16_t delaiTournerDroite = 1100;
     tournerDroite(VITESSE_TOURNER); 
     _delay_ms(delaiTournerDroite); 
     arreter();
@@ -65,7 +65,7 @@ void PontH::tourner90DegresDroite()
 
 void PontH::tourner90DegresGauche()
 {
-    uint16_t delaiTournerGauche = 1150;
+    uint16_t delaiTournerGauche = 1100;
     tournerGauche(VITESSE_TOURNER); 
     _delay_ms(delaiTournerGauche); 
     arreter();

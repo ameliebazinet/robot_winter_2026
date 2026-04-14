@@ -40,7 +40,7 @@ void sortirStationnement(Lecture& l);
 void parcourirCouloir();
 void executerSallesAD();
 void executerSallesBC();
-void couloirNord(Lecture& l); 
+void couloirNordHoraire(); 
 //void entrerStationnementHoraire(Lecture& l);
 //void entrerStationnementAntihoraire(Lecture& l);
 void tournerDroite();

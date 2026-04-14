@@ -9,6 +9,7 @@ public:
     uint8_t lireTousCapteurs() const;
 
     bool estTropAGaucheLarge() const;
+    bool estAllumeD2() const;
     bool estAllumeD4() const;
     bool estAllumeD5() const;
     bool estTropAGauche() const;

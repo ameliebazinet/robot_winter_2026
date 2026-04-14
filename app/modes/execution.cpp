@@ -9,7 +9,7 @@ void recalibrer()
     while (!capteur.estVide()) {
         if (capteur.estAllumeD4() || capteur.estTropADroite())
             PontH::tournerGauche(100);
-        if (capteur.estAllumeD5() || capteur.estTropAGauche())
+        if (capteur.estAllumeD2() || capteur.estTropAGauche())
             PontH::tournerDroite(100);
 
     }
@@ -38,8 +38,9 @@ void recalibrerVirage(Lecture& l)
 
 void tournerCouloirDroite(Lecture& l)
 {
+    PontH::accelererMax();
     PontH::avancer(120);
-    _delay_ms(1000);
+    _delay_ms(750);
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresDroite();
@@ -48,8 +49,9 @@ void tournerCouloirDroite(Lecture& l)
 
 void tournerCouloirGauche(Lecture& l)
 {
+    PontH::accelererMax();
     PontH::avancer(120);
-    _delay_ms(1000);
+    _delay_ms(750);
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresGauche();
@@ -73,9 +75,6 @@ void suivreCouloir()
 
     uint8_t nObstacles = 0;
     bool estSurObstacleAvant = false;
-
-    if (capteur.estSurLignePleine())
-        return;
 
     recalibrer();
 
@@ -115,46 +114,38 @@ void sortirStationnement(Lecture& l)
     PontH::arreter();
     _delay_ms(1000);
 
-    while (!capteur.estAllumeCapteurQuelconque())
-        PontH::avancer(120);
-
-    _delay_ms(250);
+    while (!capteur.estAllumeCapteurQuelconque()) {
+        PontH::avancer(130);
+    }
+    _delay_ms(500);
     PontH::arreter();
     _delay_ms(500);
 
     if (horaire) {
         while (!capteur.estTropAGauche())
-            PontH::tournerDroite(150);
+            PontH::tournerDroite(130);
     }
     else {
         while (!capteur.estTropADroite())
-            PontH::tournerGauche(150);
+            PontH::tournerGauche(130);
     }
-
+    
     PontH::arreter();
     _delay_ms(1000);
 
-    bool couloirTrouve = false;
-    while (!couloirTrouve) {
-        if (capteur.estSurLignePleine())
-            break;
+    PontH::accelererMax();
 
+    while (!capteur.estSurLignePleine()) {
         if (horaire) {
-            if (capteur.estTropADroite()) {
-                couloirTrouve = true;
-            }
-            else if (capteur.estTropAGauche() || capteur.estTropAGaucheLarge()) 
-                PontH::configurer(0, 140, 0, 70);
+            if (capteur.estTropAGauche() || capteur.estAllumeD2()) 
+                PontH::configurer(0, 120, 0, 80);
             else
                 PontH::configurer(0, 80, 0, 110);
         }
         else {
-            if (capteur.estTropAGauche()) {
-                couloirTrouve = true;
-            }
-            else if (capteur.estTropADroite()) {
-                PontH::configurer(0, 70, 0, 120);
-                _delay_ms(250);
+            if (capteur.estTropADroite() || capteur.estAllumeD4()) {
+                PontH::configurer(0, 80, 0, 120);
+                _delay_ms(100);
             }
             else
                 PontH::configurer(0, 110, 0, 80);
@@ -188,7 +179,6 @@ void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
         }
     }
 }
-
 
 void executerSallesAD() 
 {
@@ -274,7 +264,9 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule) // B C
     while(!cl.estSurLignePleine()) {}
     PontH::arreter();
     _delay_ms(500);
-    PontH::tourner180(); 
+    // PontH::tourner180(); 
+    PontH::tournerGauche(140);
+    _delay_ms(1400); 
     PontH::arreter();
     _delay_ms(1000);
 
@@ -374,7 +366,7 @@ void entrerStationnementAntihoraire(Lecture& l)
     PontH::arreter();
 }
 
-void couloirNord()
+void couloirNordHoraire()
 {
     CapteurLigne capteur;
     Del del(PORTC, PC6, PC7);
@@ -384,7 +376,7 @@ void couloirNord()
     recalibrer();
     _delay_ms(500);
 
-    PontH::accelererMax();
+    // PontH::accelererMax();
 
     // Tourner doucement à droite jusqu'à trouver D5
     while (!capteur.estTropADroite()) {
@@ -395,13 +387,13 @@ void couloirNord()
         PontH::tournerGauche(80);
     }
     PontH::arreter();
-    _delay_ms(200);
+    _delay_ms(250);
 
     while (true) {
         switch (etat)
         {
             case EtatCouloir::COULOIR:
-                if (capteur.estTropADroiteLarge()) {
+                if (capteur.estAllumeD4()) {
                     // D4+D5 : trop près du mur, corriger à gauche
                     PontH::configurer(0, 90, 0, 120);
                 }
@@ -429,7 +421,7 @@ void couloirNord()
                 _delay_ms(300);
 
                 if (capteur.estTropADroite()) {
-                    PontH::accelererMax();
+                    PontH::configurer(0, 120, 0, 110);
                     etat = EtatCouloir::COULOIR;
                 }
                 else {
@@ -447,7 +439,7 @@ void couloirNord()
                 del.allumerCouleur(Del::Couleur::ETEINT);
                 PontH::accelererMax();
                 while (!capteur.estAllumeCapteurQuelconque()) {
-                    PontH::configurer(0,110,0, 100);
+                    PontH::avancer(120);
                 }
                 PontH::arreter();
                 _delay_ms(1000);
@@ -473,19 +465,19 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             case SORTIR_STATIONNEMENT:
             {
                 sortirStationnement(l);
-                etat = PREMIER_COULOIR_SUD;
-                break;
-
-            }
-
-            case PREMIER_COULOIR_SUD :
-            {
-                suivreCouloir();
                 tournerBoutCouloir(l);
                 etat = COULOIR_COTE;
                 break;
+
             }
 
+            // case PREMIER_COULOIR_SUD :
+            // {
+            //     suivreCouloir();
+            //     tournerBoutCouloir(l);
+            //     etat = COULOIR_COTE;
+            //     break;
+            // }
 
             case COULOIR_COTE:
             {
@@ -498,7 +490,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case COULOIR_NORD:
             {
-                couloirNord();
+                couloirNordHoraire();
                 compteurPiecesNord++; 
                 
                 if (compteurPiecesNord == 1 || compteurPiecesNord == 4)

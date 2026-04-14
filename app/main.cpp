@@ -30,8 +30,8 @@ int main()
             nZonesEndommageesCouloirEst = 0,
             nZonesEndommageesCouloirOuest = 0;
 
-        faireExecution(nPersonnesLocalA, nObjetsLocalB, nObjetsLocalC, nPersonnesLocalD,
-                   nZonesEndommageesCouloirEst, nZonesEndommageesCouloirOuest, tempsEcoule);
+    faireExecution(nPersonnesLocalA, nObjetsLocalB, nObjetsLocalC, nPersonnesLocalD,
+                nZonesEndommageesCouloirEst, nZonesEndommageesCouloirOuest, tempsEcoule);
         
     // while (true)
     // {
