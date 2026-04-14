@@ -31,16 +31,17 @@ enum EtatCouloir {
 };
 
 void recalibrer(); 
-void suivreCouloir();
-void tournerCouloirGauche();
-void tournerCouloirDroite();
+void recalibrerVirage(Lecture& l);
+void suivreCouloir(Lecture& l);
+void tournerCouloirGauche(Lecture& l);
+void tournerCouloirDroite(Lecture& l);
 void tournerBoutCouloir(Lecture& l);
 void sortirStationnementHoraire();
 void sortirStationnementAntihoraire();
 void parcourirCouloir();
 void executerSallesAD();
 void executerSallesBC();
-void couloirNord(); 
+void couloirNord(Lecture& l); 
 //void entrerStationnementHoraire(Lecture& l);
 //void entrerStationnementAntihoraire(Lecture& l);
 void tournerDroite();

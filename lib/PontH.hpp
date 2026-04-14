@@ -36,4 +36,5 @@ public:
     static void tourner90DegresGauche();
     static void tourner180();
     static void arreter();
+    static void accelererMax();
 };

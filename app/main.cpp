@@ -30,8 +30,6 @@ int main()
             nZonesEndommageesCouloirEst = 0,
             nZonesEndommageesCouloirOuest = 0;
 
-    volatile bool tempsEcoule = false; 
-
         faireExecution(nPersonnesLocalA, nObjetsLocalB, nObjetsLocalC, nPersonnesLocalD,
                    nZonesEndommageesCouloirEst, nZonesEndommageesCouloirOuest, tempsEcoule);
         

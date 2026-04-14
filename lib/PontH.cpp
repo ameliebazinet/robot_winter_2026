@@ -5,6 +5,8 @@
 
 #include "PontH.hpp"
 const uint8_t VITESSE_TOURNER = 120;
+const uint8_t VITESSE_MAX = 255;
+const uint8_t DELAI_ACCELERATION = 100;
 
 void PontH::initialiserRegistre()
 {
@@ -76,11 +78,17 @@ void PontH::tourner180()
 {
     initialiserRegistre();
     tournerGauche(140); 
-    _delay_ms(1400); 
+    _delay_ms(1500); 
     arreter();
 }
 
 void PontH::arreter()
 {
     configurer(0, 0, 0, 0);
+}
+
+void PontH::accelererMax()
+{
+    PontH::avancer(VITESSE_MAX);
+    _delay_ms(DELAI_ACCELERATION);
 }
