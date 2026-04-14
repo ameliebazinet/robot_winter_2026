@@ -73,11 +73,11 @@ void suivreCouloir()
             del.allumerCouleur(Del::Couleur::ETEINT);
 
         if (capteur.estTropADroite())
-            PontH::configurer(0, 70, 0, 100);
+            PontH::configurer(0, 80, 0, 110);
         else if (capteur.estTropAGauche())
-            PontH::configurer(0, 100, 0, 70);
+            PontH::configurer(0, 110, 0, 80);
         else
-            PontH::avancer(90);
+            PontH::avancer(100);
     }
 
     PontH::arreter();
@@ -107,13 +107,13 @@ void sortirStationnementHoraire()
     bool couloirTrouve = false;
     while (!couloirTrouve) {
         if (capteur.estTropADroite()) {
-            PontH::configurer(0, 70, 0, 100);
+            PontH::configurer(0, 80, 0, 110);
             couloirTrouve = true;
             break;
         }
         
         else if (capteur.estTropAGauche()) {
-            PontH::configurer(0, 140, 0, 70);
+            PontH::configurer(0, 140, 0, 80);
             _delay_ms(250);
         }
 
@@ -205,9 +205,6 @@ void executerSallesAD()
 
     Communication com;
     com.initialisationUART();
-
-    PontH::tourner90DegresDroite();
-    _delay_ms(500);
 
     PontH::tournerDroite(VITESSE_BOOST);
     _delay_ms(50);
@@ -444,8 +441,10 @@ void couloirNord()
                 PontH::arreter();
                 _delay_ms(1000);
                 del.allumerCouleur(Del::Couleur::ETEINT);
-                while (!capteur.estAllumeCapteurQuelconque())
-                    PontH::avancer(128);
+                PontH::configurer(0,100, 0, 120);
+                while (!capteur.estTropAGauche());
+                while (!capteur.estTropADroite())
+                    suivreCouloir();
                 PontH::arreter();
                 _delay_ms(1000);
                 return;
