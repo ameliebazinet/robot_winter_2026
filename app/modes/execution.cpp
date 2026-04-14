@@ -33,6 +33,8 @@ void tournerCouloirGauche()
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresGauche();
+    recalibrerHoraire();
+
 }
 
 void tournerBoutCouloir(Lecture& l)
@@ -177,78 +179,76 @@ void sortirStationnementAntihoraire()
 
 }
 
-void gererPoteau(Del& del, CapteurInfra& ci)
+void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
 {
-    while(true)
-    {
-        // A remplacer par son
-        del.allumerCouleur(Del::Couleur::ROUGE);
-        _delay_ms(500);
-        del.allumerCouleur(Del::Couleur::ETEINT);
-        _delay_ms(500);
-
+    while (true) {
+        for (uint8_t i = 0; i < 3; i++) {
+            Son::jouer(l.getNote()[i]);
+            _delay_ms(250);
+            Son::arreter();
+            _delay_ms(125);
+        }
         _delay_ms(2000);
 
-        ci.lireDistance();
-        if(!ci.estObjetDetecte()){
-            del.clignoterVert();
+        ci.lireVoltage();
+        if (!ci.estObjetDetecte()) {
+            for (uint8_t i = 0; i < 8; i++) {
+                del.allumerCouleur(Del::Couleur::VERT);
+                _delay_ms(125);
+                del.allumerCouleur(Del::Couleur::ETEINT);
+                _delay_ms(125);
+            }
             return;
         }
     }
 }
 
-void executerSallesAD() {
+
+void executerSallesAD() 
+{
     CapteurInfra ci;
+    CapteurLigne cl;
+    Lecture l;
     Del del(PORTC, PC6, PC7);
+    Son::initialiserPiezo();
     PontH::initialiserRegistre();
     
-    const uint16_t DUREE_TOTALE_MS = 2340;
-    const uint8_t  INTERVALLE_MS   = 5;
-    const uint8_t  VITESSE_CRUISE  = 80;
-    const uint8_t  VITESSE_BOOST   = 180;
-    uint16_t tempsEcoule = 0;
-        
+    const uint8_t VITESSE_BOOST = 150;
+    const uint8_t VITESSE_SCAN = 95;
+
+    Communication com;
+    com.initialisationUART();
+
+    PontH::tourner90DegresDroite();
+    _delay_ms(500);
+
     PontH::tournerDroite(VITESSE_BOOST);
-    _delay_ms(80);
-    PontH::tournerDroite(VITESSE_CRUISE);
-    
-    bool enMouvement = true;
+    _delay_ms(50);
 
-    while (tempsEcoule < DUREE_TOTALE_MS)
-    {
-        ci.lireDistance();
+    while (!cl.estTropADroite()) {
+        ci.lireVoltage();
 
-        if(ci.estObjetDetecte()){
-            if(enMouvement){
-                PontH::arreter();
-                enMouvement = false;
-            }
-            ci.incrementerPersonne(); 
-            gererPoteau(del, ci);
-            ci.resetEstUnePersonne();
-            
+        if (ci.estObjetDetecte()) {
+            PontH::arreter();
+            ci.nPersonnes_++;
+            attendreRetraitPoteau(del, ci, l);
             PontH::tournerDroite(VITESSE_BOOST);
-            _delay_ms(80);
-            PontH::tournerDroite(VITESSE_CRUISE);
-            enMouvement = true;
-
+            _delay_ms(50);
         }
-        else{
-            if(!enMouvement){
-                PontH::tournerDroite(VITESSE_BOOST);
-                _delay_ms(80);
-                PontH::tournerDroite(VITESSE_CRUISE);
-                enMouvement = true;
-            }
-            del.allumerCouleur(Del::Couleur::VERT);
-            tempsEcoule += INTERVALLE_MS;
-            ci.incrementerPersonne();
-
+        else {
+            PontH::tournerDroite(VITESSE_SCAN);
         }
-        _delay_ms(INTERVALLE_MS);
+
+        _delay_ms(5);
     }
 
     PontH::arreter();
+
+    while (!cl.estTropAGauche())
+        PontH::tournerGauche(VITESSE_SCAN);
+        
+    PontH::arreter();
+
 } 
 
 

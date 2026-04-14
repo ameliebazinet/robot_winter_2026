@@ -7,7 +7,7 @@ public:
     CapteurInfra();
     void lireVoltage();
     bool estObjetDetecte();
-    can can;
+    can convertisseur;
     uint8_t nPersonnes_;
 
 private:
