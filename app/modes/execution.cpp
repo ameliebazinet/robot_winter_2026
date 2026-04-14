@@ -7,9 +7,9 @@ void recalibrer()
 {
     CapteurLigne capteur;
     while (!capteur.estVide()) {
-        if (capteur.estTropADroiteLarge() || capteur.estTropADroite())
+        if (capteur.estAllumeD4() || capteur.estTropADroite())
             PontH::tournerGauche(100);
-        if (capteur.estTropAGaucheLarge() || capteur.estTropAGauche())
+        if (capteur.estAllumeD5() || capteur.estTropAGauche())
             PontH::tournerDroite(100);
 
     }

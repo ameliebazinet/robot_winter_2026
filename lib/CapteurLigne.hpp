@@ -10,6 +10,7 @@ public:
 
     bool estTropAGaucheLarge() const;
     bool estAllumeD4() const;
+    bool estAllumeD5() const;
     bool estTropAGauche() const;
     bool estTropADroite() const;
     bool estTropADroiteLarge() const;

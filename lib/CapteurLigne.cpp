@@ -20,6 +20,11 @@ bool CapteurLigne::estAllumeD4() const
     return (CAPTEUR_D4 & PINA);
 }
 
+bool CapteurLigne::estAllumeD5() const
+{
+    return (CAPTEUR_D5 & PINA);
+}
+
 bool CapteurLigne::estTropADroiteLarge() const
 {
     return (CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA);
