@@ -3,14 +3,14 @@
 
 uint8_t compteurPiecesNord = 0; 
  
-void recalibrerHoraire()
+void recalibrer()
 {
     CapteurLigne capteur;
     while (!(capteur.estVide())) {
         if (capteur.estTropADroite())
-            PontH::tournerGauche(100);
-        else if (capteur.estAllumeCapteurQuelconque()) 
-            PontH::tournerDroite(100);
+            PontH::tournerGauche(120);
+        else if (capteur.estTropAGauche()) 
+            PontH::tournerDroite(120);
         else
             PontH::arreter();
     }
@@ -23,7 +23,7 @@ void tournerCouloirDroite()
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresDroite();
-    recalibrerHoraire();
+    recalibrer();
 }
 
 void tournerCouloirGauche()
@@ -33,7 +33,7 @@ void tournerCouloirGauche()
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner90DegresGauche();
-    recalibrerHoraire();
+    recalibrer();
 
 }
 
@@ -49,50 +49,37 @@ void tournerBoutCouloir(Lecture& l)
 void suivreCouloir()
 {
     CapteurLigne capteur;
-    Lecture l;
     Del del(PORTC, PC6, PC7);
-    PontH::initialiserRegistre();
 
     uint8_t nObstacles = 0;
-    bool estSurObstacleAvant = false;    
-    if (capteur.estSurLignePleine()) {
+    bool estSurObstacleAvant = false;
+
+    if (capteur.estSurLignePleine())
         return;
-    }
+
     PontH::avancer(255);
     _delay_ms(100);
 
-
     while (!capteur.estSurLignePleine()) {
         bool estSurObstacleMaintenant = capteur.estObstacleAuCentre();
-        
+
         if (estSurObstacleMaintenant && !estSurObstacleAvant)
             nObstacles++;
         estSurObstacleAvant = estSurObstacleMaintenant;
 
-        if (estSurObstacleMaintenant) {
+        if (estSurObstacleMaintenant)
             del.allumerCouleur(Del::Couleur::ROUGE);
-            PontH::avancer(100); 
-        }
-
         else
-        {
             del.allumerCouleur(Del::Couleur::ETEINT);
 
-
-            if (capteur.estTropADroite()) {
-                PontH::configurer(0, 70, 0, 100);
-            }
-            else if (capteur.estTropAGauche()) {
-                PontH::configurer(0, 100, 0, 70);
-            }
-            else {
-                PontH::avancer(90);
-            }
-
-
-        }
-
+        if (capteur.estTropADroite())
+            PontH::configurer(0, 70, 0, 100);
+        else if (capteur.estTropAGauche())
+            PontH::configurer(0, 100, 0, 70);
+        else
+            PontH::avancer(90);
     }
+
     PontH::arreter();
     _delay_ms(250);
 }
@@ -494,6 +481,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case PREMIER_COULOIR_SUD :
             {
+                recalibrer();
                 suivreCouloir();
                 tournerBoutCouloir(l);
                 etat = COULOIR_COTE;

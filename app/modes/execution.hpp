@@ -30,7 +30,7 @@ enum EtatCouloir {
     ENTREE_TROUVEE
 };
 
-void recalibrerHoraire(); 
+void recalibrer(); 
 void suivreCouloir();
 void tournerCouloirGauche();
 void tournerCouloirDroite();
