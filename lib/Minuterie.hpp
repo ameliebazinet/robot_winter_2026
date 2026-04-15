@@ -119,6 +119,8 @@ namespace Minuterie
         static void activerInteruptionComparateurB();
         static void desactiverInteruptionComparateurB();
 
+        static void arreterMinuterie1();
+
         // Initialise tous les registres necessaire pour partir une minuterie.
         // Dans le fichier main, doit configurer ISR(TIMER1_COMPA_vect)
         // pour appelé timer.miseAJourCompteur(estMinuterieExpiree).
@@ -147,6 +149,7 @@ namespace Minuterie
         // Active l'interuption TIMER2_COMPA_vect lorsque le comparateur (OCR2A) s'active.
         static void activerInteruptionComparateurA();
         static void desactiverInteruptionComparateurA();
+        
         // Active l'interuption TIMER2_COMPB_vect lorsque le comparateur (OCR2B) s'active.
         static void activerInteruptionComparateurB();
         static void desactiverInteruptionComparateurB();

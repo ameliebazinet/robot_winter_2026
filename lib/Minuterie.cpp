@@ -130,6 +130,13 @@ void Minuterie1::desactiverInteruptionComparateurA()
     TIMSK1 &= ~(1 << OCIE1A);
 }
 
+void Minuterie1::arreterMinuterie1()
+{
+    Minuterie1::desactiverInteruptionComparateurA();
+    TCCR1B = 0;
+    TCNT1 = 0;
+}
+
 void Minuterie1::activerInteruptionComparateurB()
 {
     TIMSK1 |= (1 << OCIE1B);

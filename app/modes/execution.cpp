@@ -298,7 +298,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru. 
-    uint32_t tempsMsParcoursBC = 2200;
+    uint32_t tempsMsParcoursBC = 2000;
 
     PontH::avancer(120);
     
@@ -340,6 +340,8 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
         PontH::tournerDroite(120);
     PontH::arreter();
     _delay_ms(500);    
+
+    Minuterie::Minuterie1::arreterMinuterie1();
 } 
 
 void entrerStationnementHoraire(Lecture& l) 
@@ -347,7 +349,7 @@ void entrerStationnementHoraire(Lecture& l)
     uint8_t placeStationnement = l.getNumStationnement(); 
     CapteurLigne capteur; 
     bool temp = true;
-    int8_t compteurStationnement = -1; 
+    int8_t compteurStationnement = -1;
 
     recalibrer();
     PontH::accelererMax();
@@ -541,8 +543,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nZonesEndommageesCouloirOuest,
                     volatile bool& tempsEcoule)
 {
-    uint8_t compteurPiecesNord = 0; 
-    Etat etat = SORTIR_STATIONNEMENT; 
+    uint8_t compteurPiecesNord = 1; 
+    Etat etat = COULOIR_NORD; 
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();
@@ -573,16 +575,16 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 compteurPiecesNord++; 
                 
                 if (compteurPiecesNord == 1 || compteurPiecesNord == 4)
-                    etat = PIECE_A_D;
+                    etat = SALLE_A_D;
 
                 else if (compteurPiecesNord == 2 || compteurPiecesNord == 3)
-                    etat = PIECE_B_C;
+                    etat = SALLE_B_C;
                 
 
                 break;
             }
 
-            case PIECE_A_D:
+            case SALLE_A_D:
             {
                 executerSallesAD();
                 if (compteurPiecesNord < 4)
@@ -593,7 +595,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 break;
             }
 
-            case PIECE_B_C:
+            case SALLE_B_C:
             {
                 executerSallesBC(nObjetsLocalB, tempsEcoule, l);
                 if (compteurPiecesNord < 4)

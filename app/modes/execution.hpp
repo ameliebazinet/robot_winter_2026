@@ -15,8 +15,8 @@ enum Etat
     COULOIR_COTE,
 
     COULOIR_NORD,
-    PIECE_A_D,
-    PIECE_B_C,
+    SALLE_A_D,
+    SALLE_B_C,
 
     DERNIER_COULOIR_COTE,
     DERNIER_COULOIR_SUD,
