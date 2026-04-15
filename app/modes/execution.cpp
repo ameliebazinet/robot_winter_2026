@@ -121,9 +121,9 @@ void suivreCouloir()
             del.allumerCouleur(Del::Couleur::ETEINT);
 
         if (capteur.estTropADroite())
-            PontH::configurer(0, 80, 0, 110);
+            PontH::configurer(0, 80, 0, 120);
         else if (capteur.estTropAGauche())
-            PontH::configurer(0, 110, 0, 80);
+            PontH::configurer(0, 120, 0, 80);
         else
             PontH::avancer(100);
     }
@@ -318,9 +318,6 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner180();
-    // PontH::tournerGauche(255);
-    // _delay_ms(50);
-    // PontH::tournerGauche(140);
     PontH::arreter();
     _delay_ms(1000);
 
@@ -543,8 +540,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nZonesEndommageesCouloirOuest,
                     volatile bool& tempsEcoule)
 {
-    uint8_t compteurPiecesNord = 1; 
-    Etat etat = COULOIR_NORD; 
+    uint8_t compteurPiecesNord = 0; 
+    Etat etat = SORTIR_STATIONNEMENT; 
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();

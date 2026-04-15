@@ -50,7 +50,7 @@ bool CapteurLigne::estObstacleAuCentre() const
     if (estSurLignePleine())
         return false;
     else
-        return estTropAGaucheLarge() || estTropADroiteLarge() || (lireTousCapteurs() & CAPTEUR_D3);
+        return (estAllumeMilieu() || (estAllumeD4() && estTropAGauche()) || (estAllumeD2() && estTropADroite()));
 }
 
 bool CapteurLigne::estSurLignePleine() const
