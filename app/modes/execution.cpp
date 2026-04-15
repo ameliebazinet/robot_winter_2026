@@ -190,7 +190,19 @@ void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
 {
     while (true) {
         ci.lireVoltage();
-        if (!ci.estObjetDetecte()) {
+        
+        if (ci.estObjetDetecte()){
+
+            for (uint8_t i = 69; i < 72; i++) {
+                Son::jouer(i);
+                _delay_ms(250);
+                Son::arreter();
+                _delay_ms(125);
+            }
+            _delay_ms(2000);
+            
+        }
+        else{
             for (uint8_t i = 0; i < 8; i++) {
                 del.allumerCouleur(Del::Couleur::VERT);
                 _delay_ms(125);
@@ -200,13 +212,7 @@ void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
             return;
         }
 
-        for (uint8_t i = 69; i < 72; i++) {
-            Son::jouer(i);
-            _delay_ms(250);
-            Son::arreter();
-            _delay_ms(125);
-        }
-        _delay_ms(2000);
+        
     }
 }
 
@@ -220,13 +226,16 @@ void executerSallesAD()
     PontH::initialiserRegistre();
     
     const uint8_t VITESSE_BOOST = 140;
-    const uint8_t VITESSE_SCAN = 85;
+    const uint8_t VITESSE_SCAN = 90;
 
     Communication com;
     com.initialisationUART();
 
     PontH::tournerDroite(VITESSE_BOOST);
-    _delay_ms(250);
+    _delay_ms(500);
+    PontH::arreter();
+    _delay_ms(2000);
+    PontH::accelererMax();
 
     while (!cl.estTropADroite()) {
         ci.lireVoltage();
@@ -248,22 +257,27 @@ void executerSallesAD()
 
     PontH::arreter();
 
-    PontH::configurer(1, 255, 0, 255);
-    _delay_ms(100);
+    PontH::reculer(140);
+    _delay_ms(250);
+    PontH::arreter();
+    _delay_ms(250);
 
-
-    PontH::tournerGauche(VITESSE_BOOST);
-    _delay_ms(50);
+    PontH::tournerGauche(255);
+    _delay_ms(150);
 
     while (!cl.estAllumeMilieu())
         PontH::tournerGauche(100);
 
-    PontH::arreter();
-    _delay_ms(250);
+    // PontH::arreter();
+    // _delay_ms(250);
     
     while (!cl.estTropAGauche())
-         PontH::tournerGauche(90);
+        PontH::tournerGauche(90);
       
+    
+    while (!cl.estVide())
+        PontH::configurer(0, 140, 0, 80); // MODIFIE ICI
+
     PontH::arreter();
     _delay_ms(1000);
 } 
@@ -284,7 +298,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru. 
-    uint32_t tempsMsParcoursBC = 2000;
+    uint32_t tempsMsParcoursBC = 2200;
 
     PontH::avancer(120);
     
@@ -303,10 +317,10 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     while(!cl.estAllumeCapteurQuelconque()) {}
     PontH::arreter();
     _delay_ms(500);
-    PontH::tournerGauche(255);
-    _delay_ms(50);
-    PontH::tournerGauche(140);
-    _delay_ms(1300);
+    PontH::tourner180();
+    // PontH::tournerGauche(255);
+    // _delay_ms(50);
+    // PontH::tournerGauche(140);
     PontH::arreter();
     _delay_ms(1000);
 
@@ -320,7 +334,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
 
     // tourne de 90 vers la gauche/droite
     while (!cl.estTropAGauche())
-        PontH::tournerDroite(130);            // MODIFIÉ ICI
+        PontH::tournerDroite(120);            // MODIFIÉ ICI
     
     while (!cl.estTropAGauche())
         PontH::tournerDroite(120);
@@ -334,44 +348,61 @@ void entrerStationnementHoraire(Lecture& l)
     CapteurLigne capteur; 
     bool temp = true;
     int8_t compteurStationnement = -1; 
-    PontH::accelererMax();
+
+    recalibrer();
     PontH::accelererMax();
 
-    while(compteurStationnement != placeStationnement){
+    // Phase 1 : se border / s'aligner avec estTropAGauche
+    while (!capteur.estTropAGaucheLarge()) {
+        if (capteur.estTropAGauche()) {
+            PontH::configurer(0, 128, 0, 80);
+        }
+        else {
+            PontH::configurer(0, 80, 0, 120);
+        }
+    }
 
-        // Incrementation place
-        if(capteur.estTropAGaucheLarge() ) {
-            if(temp){
+    // Phase 2 : logique de comptage des places
+    while (compteurStationnement != (int8_t)placeStationnement) {
+
+        // Incrémentation place
+        if (capteur.estTropAGaucheLarge()) {
+            if (temp) {
                 compteurStationnement++;
                 temp = false;
             }
         }
         // correction
-        else if(capteur.estTropAGauche()){
-            PontH::configurer(0,120,0,90);
+        else if (capteur.estTropAGauche()) {
+            PontH::configurer(0, 120, 0, 90);
             temp = true;
         }
         // normal
-        else{
+        else {
             temp = true;
-            PontH::configurer(0,90,0,120);
+            PontH::configurer(0, 90, 0, 120);
         } 
     }
 
     PontH::arreter();
     _delay_ms(500);
+    PontH::tournerDroite(255);
+    _delay_ms(25);
     PontH::tourner90DegresDroite();
     _delay_ms(700);
     PontH::avancer(250);
     _delay_ms(200);
     PontH::avancer(110);
-    while(!capteur.estSurLignePleine()){}
+
+    while (!capteur.estSurLignePleine()) {}
+
     PontH::arreter();
     _delay_ms(500);
     PontH::reculer(150);
     _delay_ms(500);
     PontH::arreter();
 }
+
 void entrerStationnementAntihoraire(Lecture& l) 
 {
     uint8_t placeStationnement = l.getNumStationnement(); 
@@ -514,7 +545,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
     Etat etat = SORTIR_STATIONNEMENT; 
     Lecture l;
     l.initialiserLecture();
-    l.lireMemoire(); 
+    l.lireMemoire();
     while (true) {
         switch (etat)
         {
@@ -557,7 +588,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 if (compteurPiecesNord < 4)
                     etat = COULOIR_NORD;
                 else 
-                    etat = DERNIER_COULOIR_SUD;
+                    etat = DERNIER_COULOIR_COTE;
 
                 break;
             }
@@ -568,25 +599,31 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 if (compteurPiecesNord < 4)
                     etat = COULOIR_NORD;
                 else 
-                    etat = DERNIER_COULOIR_SUD;
+                    etat = DERNIER_COULOIR_COTE;
 
                 break;
 
             }
 
-            case DERNIER_COULOIR_SUD :
-            {
+            case DERNIER_COULOIR_COTE :
                 suivreCouloir();
-            }
+                tournerBoutCouloir(l);
+                suivreCouloir();
+                tournerBoutCouloir(l);
                 // for (uint8_t i = 69; i < 72; i++) {
                 // Son::jouer(i);
                 // _delay_ms(250);
                 // Son::arreter();
                 // _delay_ms(125);
                 // }
-
+                etat = ENTRER_STATIONNEMENT;
                 break;
 
+            case DERNIER_COULOIR_SUD : // a enlever
+                suivreCouloir();
+                etat = ENTRER_STATIONNEMENT;
+                break;
+            
             case ENTRER_STATIONNEMENT:
                 if (l.getDirectionHoraire()) {
                     entrerStationnementHoraire(l);

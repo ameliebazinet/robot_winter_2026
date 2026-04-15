@@ -76,7 +76,7 @@ void PontH::tourner90DegresGauche()
 
 void PontH::tourner180()
 {
-    uint16_t delai180 = 1400;
+    uint16_t delai180 = 1500;
     initialiserRegistre();
     tournerGauche(140);
     _delay_ms(delai180); 

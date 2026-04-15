@@ -26,9 +26,9 @@ int main()
     //    c.transmissionFormatee(" v = %d \r\n", ci.getVoltage());
     //}
 
-    Lecture l;
-    l.initialiserLecture();
-    l.lireMemoire();
+    // Lecture l;
+    // l.initialiserLecture();
+    // l.lireMemoire();
     sei();
     Son::initialiserPiezo();
     uint8_t nPersonnesLocalA = 0, 
