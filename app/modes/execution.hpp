@@ -39,7 +39,7 @@ void tournerBoutCouloir(Lecture& l);
 void sortirStationnement(Lecture& l);
 void parcourirCouloir();
 void executerSallesAD();
-void executerSallesBC();
+void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lecture& l);
 void couloirNordHoraire(); 
 //void entrerStationnementHoraire(Lecture& l);
 //void entrerStationnementAntihoraire(Lecture& l);
