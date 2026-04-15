@@ -179,6 +179,7 @@ void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
         _delay_ms(2000);
     }
 }
+
 void executerSallesAD() 
 {
     CapteurInfra ci;
