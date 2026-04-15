@@ -9,6 +9,7 @@ public:
     bool estObjetDetecte();
     can convertisseur;
     uint8_t nPersonnes_;
+    uint16_t getVoltage() {return voltage_;}
 
 private:
     uint16_t voltage_;
