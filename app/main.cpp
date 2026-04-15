@@ -18,17 +18,17 @@ ISR(TIMER1_COMPA_vect) {
 
 int main()
 { 
-    // CapteurInfra ci;
-    // Communication c;
-    // c.initialisationUART();
-    // while(1){
-    //     ci.lireVoltage();
-    //     c.transmissionFormatee(" v = %d \r\n", ci.getVoltage());
-    // }
+    CapteurInfra ci;
+    Communication c;
+    c.initialisationUART();
+    //while(1){
+    //    ci.lireVoltage();
+    //    c.transmissionFormatee(" v = %d \r\n", ci.getVoltage());
+    //}
 
-    // Lecture l;
-    // l.initialiserLecture();
-    // l.lireMemoire();
+    Lecture l;
+    l.initialiserLecture();
+    l.lireMemoire();
     sei();
     Son::initialiserPiezo();
     uint8_t nPersonnesLocalA = 0, 

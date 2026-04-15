@@ -84,8 +84,8 @@ void suivreCouloir()
     Del del(PORTC, PC6, PC7);
 
     uint8_t nObstacles = 0;
-    bool estSurObstacleAvant = false;
-    uint8_t compteurSansObstacle = 0; 
+    bool obstacleDejaCompte = false;
+    uint8_t compteurSansObstacle = 0;
 
     recalibrer();
 
@@ -94,10 +94,26 @@ void suivreCouloir()
     while (!capteur.estSurLignePleine()) {
         bool estSurObstacleMaintenant = capteur.estObstacleAuCentre();
 
-        if (estSurObstacleMaintenant && !estSurObstacleAvant)
-            nObstacles++;
+        // Si on voit un obstacle
+        if (estSurObstacleMaintenant) {
+            compteurSansObstacle = 0;
 
-        estSurObstacleAvant = estSurObstacleMaintenant;
+            // On compte seulement si cet obstacle n'a pas déjà été compté
+            if (!obstacleDejaCompte) {
+                nObstacles++;
+                obstacleDejaCompte = true;
+            }
+        }
+        // Si on ne voit pas d'obstacle
+        else {
+            compteurSansObstacle++;
+
+            // Il faut plusieurs lectures sans obstacle avant de considérer
+            // que le robot est réellement sorti de l'obstacle
+            if (compteurSansObstacle >= 3) {
+                obstacleDejaCompte = false;
+            }
+        }
 
         if (estSurObstacleMaintenant && !capteur.estSurLignePleine())
             del.allumerCouleur(Del::Couleur::ROUGE);
@@ -111,8 +127,9 @@ void suivreCouloir()
         else
             PontH::avancer(100);
     }
+
     del.allumerCouleur(Del::Couleur::ETEINT);
-    _delay_ms(750); 
+    _delay_ms(750);
     PontH::arreter();
     _delay_ms(500);
 }
@@ -203,7 +220,7 @@ void executerSallesAD()
     PontH::initialiserRegistre();
     
     const uint8_t VITESSE_BOOST = 140;
-    const uint8_t VITESSE_SCAN = 90;
+    const uint8_t VITESSE_SCAN = 85;
 
     Communication com;
     com.initialisationUART();
@@ -267,7 +284,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru. 
-    uint32_t tempsMsParcoursBC = 2500;
+    uint32_t tempsMsParcoursBC = 2000;
 
     PontH::avancer(120);
     
@@ -420,6 +437,8 @@ void couloirNordHoraire()
     _delay_ms(250);
 
     PontH::accelererMax();
+    PontH::accelererMax();
+
     
     while (true) {
         switch (etat)
@@ -471,14 +490,9 @@ void couloirNordHoraire()
                 _delay_ms(1000);
                 del.allumerCouleur(Del::Couleur::ETEINT);
                 recalibrer();
-                // PontH::accelererMax();
-                // PontH::tournerDroite(140);
-                // _delay_ms(300);
-                // PontH::arreter();
-                // _delay_ms(500);
                 PontH::accelererMax();
                 while (!capteur.estAllumeCapteurQuelconque()) {
-                    PontH::configurer(0,100, 0, 110);//PontH::avancer(100);
+                    PontH::configurer(0,100, 0, 115);//PontH::avancer(100);
                 }
                 _delay_ms(300);
                 PontH::arreter();
@@ -561,12 +575,15 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             }
 
             case DERNIER_COULOIR_SUD :
-                for (uint8_t i = 69; i < 72; i++) {
-                Son::jouer(i);
-                _delay_ms(250);
-                Son::arreter();
-                _delay_ms(125);
-                }
+            {
+                suivreCouloir();
+            }
+                // for (uint8_t i = 69; i < 72; i++) {
+                // Son::jouer(i);
+                // _delay_ms(250);
+                // Son::arreter();
+                // _delay_ms(125);
+                // }
 
                 break;
 
