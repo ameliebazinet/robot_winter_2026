@@ -287,8 +287,6 @@ void executerSallesAD(Lecture& l)
             }
             else {
                 compteurObstacle = 0;
-                PontH::tournerGauche(VITESSE_BOOST);
-                _delay_ms(50);
                 PontH::tournerGauche(VITESSE_SCAN);
             }
             _delay_ms(5);
@@ -341,6 +339,10 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     PontH::initialiserRegistre();
     bool horaire = l.getDirectionHoraire();
 
+    // S'assurer que le minuterie est proprement arrêté avant de le réutiliser
+    Minuterie::Minuterie1::arreterMinuterie1();
+    tempsEcoule = false;
+
     // tourne a droite/gauche de 90
     if (horaire) {
         PontH::tournerDroite(255);
@@ -357,9 +359,10 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
-    uint32_t tempsMsParcoursBC = 2250;
+    uint32_t tempsMsParcoursBC = 2000;
 
-    PontH::avancer(120);
+    PontH::accelererMax(); 
+    PontH::avancer(80);
 
     CapteurLigne cl;
     Del del(PORTC, PC6, PC7);
@@ -379,8 +382,8 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     }
     del.allumerCouleur(Del::Couleur::ETEINT);
 
-    // apres (temps requis), quand tu rencontre une ligne. tourne de 180
-    while(!cl.estAllumeCapteurQuelconque()) {}
+    // Continuer jusqu'au fond de la salle (ligne pleine = mur du fond, pas un obstacle)
+    while(!cl.estSurLignePleine()) {}
     PontH::arreter();
     _delay_ms(500);
     PontH::tourner180();
@@ -730,7 +733,7 @@ void couloirNord(Lecture& l)
                     // recalibrer();
                     PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
-                        PontH::configurer(0, 115, 0, 100);
+                        PontH::configurer(0, 100, 0, 115);
                     }
                 }
                 _delay_ms(300);
@@ -749,8 +752,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nZonesEndommageesCouloirOuest,
                     volatile bool& tempsEcoule)
 {
-    uint8_t compteurPiecesNord = 0; 
-    Etat etat = SORTIR_STATIONNEMENT;
+    uint8_t compteurPiecesNord = 1; 
+    Etat etat = COULOIR_NORD;
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();
