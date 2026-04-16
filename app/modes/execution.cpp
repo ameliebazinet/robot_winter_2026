@@ -41,12 +41,16 @@ void tournerBoutCouloir(Lecture& l)
 {
     CapteurLigne cl;
     if (l.getDirectionHoraire()) {
+        PontH::tournerDroite(255);
+        _delay_ms(50);
         while (!cl.estTropAGauche())
             PontH::tournerDroite(120);
         while (!cl.estTropAGauche())
             PontH::tournerDroite(120);
     }
     else {
+        PontH::tournerGauche(255);
+        _delay_ms(50);
         while (!cl.estTropADroite())
             PontH::tournerGauche(120);
         while (!cl.estTropADroite())
@@ -64,6 +68,7 @@ void suivreCouloir()
     uint8_t nObstacles = 0;
     bool obstacleDejaCompte = false;
     uint8_t compteurSansObstacle = 0;
+    uint8_t compteurAvecObstacle = 0;
 
     recalibrer();
 
@@ -75,15 +80,18 @@ void suivreCouloir()
         // Si on voit un obstacle
         if (estSurObstacleMaintenant) {
             compteurSansObstacle = 0;
+            compteurAvecObstacle++;
 
-            // On compte seulement si cet obstacle n'a pas déjà été compté
-            if (!obstacleDejaCompte) {
+            // Il faut plusieurs lectures avec obstacle pour confirmer
+            // qu'un obstacle est véritablement là
+            if (compteurAvecObstacle >= 3 && !obstacleDejaCompte) {
                 nObstacles++;
                 obstacleDejaCompte = true;
             }
         }
         // Si on ne voit pas d'obstacle
         else {
+            compteurAvecObstacle = 0;
             compteurSansObstacle++;
 
             // Il faut plusieurs lectures sans obstacle avant de considérer
@@ -178,8 +186,8 @@ void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
         }
 
         if (lecturesObstacle >= 3) {
-            for (uint8_t i = 69; i < 72; i++) {
-                Son::jouer(i);
+            for (uint8_t i = 0; i < TAILLE_TABLEAU_NOTE; i++) {
+                Son::jouer(l.getNote()[i]);
                 _delay_ms(250);
                 Son::arreter();
                 _delay_ms(125);
@@ -219,10 +227,9 @@ void executerSallesAD(Lecture& l)
     else {
         PontH::tournerGauche(VITESSE_BOOST);
     }
-    _delay_ms(250);
+    _delay_ms(500); // modifie og 250
     PontH::arreter();
     _delay_ms(500);
-    // PontH::accelererMax();
 
     if (horaire) {
         uint8_t compteurObstacle = 0;
@@ -282,7 +289,7 @@ void executerSallesAD(Lecture& l)
     PontH::arreter();
 
     PontH::reculer(130);
-    _delay_ms(250); // modifie og 100
+    _delay_ms(500); // modifie og 100
     PontH::arreter();
     _delay_ms(250);
 
@@ -311,7 +318,7 @@ void executerSallesAD(Lecture& l)
         while (!cl.estTropADroite())
             PontH::tournerDroite(90);
 
-        while (!cl.estVide())
+        while (!cl.estTropAGauche())
             PontH::configurer(0, 60, 0, 120);
     }
 
@@ -320,7 +327,7 @@ void executerSallesAD(Lecture& l)
 } 
 
 
-void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lecture& l)
+void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lecture& l, uint8_t compteurSalle)
 {
     Communication c;
     c.initialisationUART();
@@ -347,17 +354,27 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
-    uint32_t tempsMsParcoursBC = 2600;
+    uint32_t tempsMsParcoursBC;
+    if (compteurSalle = 2) 
+        tempsMsParcoursBC = 2500;
+    else
+        tempsMsParcoursBC = 2100; // devrait etre good
+    
+    Del del(PORTC, PC6, PC7);
+
+    del.allumerCouleur(Del::Couleur::VERT); // ligne test
+    _delay_ms(1000);
+    del.allumerCouleur(Del::Couleur::ETEINT);
 
     PontH::accelererMax(); 
     PontH::avancer(80);
 
     CapteurLigne cl;
-    Del del(PORTC, PC6, PC7);
+    
     bool vuPrecedent = false;
     tempsEcoule = false;
     Minuterie::Minuterie1::partirMinuterie(tempsMsParcoursBC, Minuterie::A);
-    del.allumerCouleur(Del::Couleur::ETEINT); // ligne test
+    
     while(!tempsEcoule)
     {
         bool vuActuel = !cl.estAllumeCapteurQuelconque();
@@ -369,11 +386,14 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
         else
             del.allumerCouleur(Del::Couleur::ETEINT);
     }
+    PontH::arreter();
     del.allumerCouleur(Del::Couleur::VERT); // og eteint MODIFIE ligne test
+    _delay_ms(1000);
+    del.allumerCouleur(Del::Couleur::ETEINT);
 
+    PontH::avancer(80); 
     // Continuer jusqu'au fond de la salle (ligne pleine = mur du fond, pas un obstacle)
     while(!cl.estSurLignePleine()) {}
-    PontH::arreter();
     _delay_ms(500);
     PontH::tourner180();
     PontH::arreter();
@@ -648,8 +668,7 @@ void couloirNord(Lecture& l)
                 if (horaire) {
                     if (capteur.estAllumeD4()) {
                         // D4+D5 : trop près du mur, corriger à gauche
-                        // PontH::configurer(0, 90, 0, 120);
-                        PontH::tournerGauche(110);
+                        PontH::configurer(0, 90, 0, 120);
                     }
                     else if (capteur.estTropADroite()) {
                         // D5 seul : bien borné, avancer normalement
@@ -718,11 +737,12 @@ void couloirNord(Lecture& l)
             case EtatCouloir::ENTREE_TROUVEE:
                 if (horaire) {
                     PontH::tournerGauche(150);
-                    _delay_ms(200);
+                    _delay_ms(150);
                     PontH::arreter();
                     _delay_ms(1000);
+                    PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
-                        PontH::configurer(0, 110, 0, 100); // pt a changer!!! configurer(0, 110, 0, 100);
+                        PontH::configurer(0, 110, 0, 100); // pt a modifier
                     }
                 }
                 else {
@@ -731,9 +751,8 @@ void couloirNord(Lecture& l)
                     PontH::arreter();
                     _delay_ms(1000);
                     PontH::accelererMax();
-                    PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
-                        PontH::configurer(0, 100, 0, 115); // a changer pt!
+                        PontH::configurer(0, 100, 0, 110); // a changer pt!
                     }
                 }
                 _delay_ms(300);
@@ -753,7 +772,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     volatile bool& tempsEcoule)
 {
     uint8_t compteurPiecesNord = 0; 
-    Etat etat = COULOIR_COTE;
+    Etat etat = SORTIR_STATIONNEMENT;
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();
@@ -804,9 +823,9 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             case SALLE_B_C:
             {
                 if (compteurPiecesNord = 2)
-                    executerSallesBC(nObjetsLocalB, tempsEcoule, l);
+                    executerSallesBC(nObjetsLocalB, tempsEcoule, l, compteurPiecesNord);
                 else 
-                    executerSallesBC(nObjetsLocalC, tempsEcoule, l);
+                    executerSallesBC(nObjetsLocalC, tempsEcoule, l, compteurPiecesNord);
                 etat = COULOIR_NORD;
                 break;
             }

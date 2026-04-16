@@ -1,5 +1,8 @@
 #include "rapport.hpp"
+#include "Del.hpp"
 #include "memoire_24.h"
+#define F_CPU 8000000UL
+#include <util/delay.h>
 
 
 // addr memoire a recalibrer!!!
