@@ -208,7 +208,7 @@ void executerSallesAD(Lecture& l)
     bool horaire = l.getDirectionHoraire();
 
     const uint8_t VITESSE_BOOST = 150;
-    const uint8_t VITESSE_SCAN = 120;
+    const uint8_t VITESSE_SCAN = 120; // modifie og 120
 
     Communication com;
     com.initialisationUART();
@@ -221,12 +221,12 @@ void executerSallesAD(Lecture& l)
     }
     _delay_ms(250);
     PontH::arreter();
-    _delay_ms(2000);
+    _delay_ms(500);
     PontH::accelererMax();
 
     if (horaire) {
         uint8_t compteurObstacle = 0;
-        while (!cl.estTropADroite()) {
+        while (!cl.estAllumeCapteurQuelconque()) {
             ci.lireVoltage();
 
             if (ci.estObjetDetecte()) {
@@ -280,10 +280,15 @@ void executerSallesAD(Lecture& l)
         }
     }
 
+    if (horaire)
+    {   PontH::tournerDroite(255); // nouvel ajout 
+        _delay_ms(25); 
+    }
+
     PontH::arreter();
 
     PontH::reculer(130);
-    _delay_ms(100);
+    _delay_ms(200); // modifie og 100
     PontH::arreter();
     _delay_ms(250);
 
@@ -295,7 +300,8 @@ void executerSallesAD(Lecture& l)
             PontH::tournerGauche(100);
 
         while (!cl.estTropAGauche())
-            PontH::tournerGauche(90);
+            // PontH::tournerGauche(90);
+            PontH::configurer(1, 90, 0, 115);
 
         while (!cl.estVide())
             PontH::configurer(0, 120, 0, 60);
@@ -334,7 +340,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     if (horaire) {
         PontH::tournerDroite(255);
         _delay_ms(100);
-        PontH::tournerDroite(120);
+        PontH::tournerDroite(110);
     }
     else {
         PontH::tournerGauche(255);
@@ -346,7 +352,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
-    uint32_t tempsMsParcoursBC = 2500;
+    uint32_t tempsMsParcoursBC = 2600;
 
     PontH::accelererMax(); 
     PontH::avancer(80);
@@ -362,7 +368,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
         if (vuActuel && !vuPrecedent) nObjetsLocal++;
         vuPrecedent = vuActuel;
 
-        if (vuActuel)
+        if (!vuActuel)
             del.allumerCouleur(Del::Couleur::ROUGE);
         else
             del.allumerCouleur(Del::Couleur::ETEINT);
@@ -377,10 +383,11 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     PontH::arreter();
     _delay_ms(1000);
 
-    // avance jusqu'a trouve le mur du fond du couloir (5 capteurs actifs)
+    // avance jusqu'a trouve le mur du fond du couloir
     PontH::accelererMax();
     PontH::avancer(120);
-    while(!cl.estSurLignePleine()) {}
+    // while(!cl.estAllumeCapteurQuelconque()) {}
+    while(!cl.estAllumeMilieu()) {}
     _delay_ms(600);
     PontH::arreter();
     _delay_ms(500);
@@ -414,6 +421,7 @@ void entrerStationnement(Lecture& l)
 
     recalibrer();
     PontH::accelererMax();
+    recalibrer();
 
     if (horaire) {
         int8_t compteur = -1;
@@ -463,6 +471,8 @@ void entrerStationnement(Lecture& l)
         }
     }
 
+    PontH::avancer(128);
+    _delay_ms(250);
     PontH::arreter();
     _delay_ms(500);
 
@@ -538,7 +548,14 @@ void entrerStationnementHoraire(Lecture& l)
     _delay_ms(500);
     PontH::tournerDroite(255);
     _delay_ms(25);
-    PontH::tourner90DegresDroite();
+
+    // ajustement 90. 
+     uint16_t delaiTournerDroite = 950;
+    PontH::tournerDroite(135); 
+    _delay_ms(delaiTournerDroite); 
+    PontH::arreter();
+    _delay_ms(700); 
+    
     _delay_ms(700);
     PontH::avancer(250);
     _delay_ms(200);
@@ -707,8 +724,9 @@ void couloirNord(Lecture& l)
                     PontH::arreter();
                     _delay_ms(1000);
                     PontH::accelererMax();
+                    PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
-                        PontH::configurer(0, 110, 0, 100); // pt a changer!!! configurer(0, 110, 0, 100);
+                        PontH::configurer(0, 105, 0, 100); // pt a changer!!! configurer(0, 110, 0, 100);
                     }
                 }
                 else {
@@ -716,6 +734,7 @@ void couloirNord(Lecture& l)
                     _delay_ms(250);
                     PontH::arreter();
                     _delay_ms(1000);
+                    PontH::accelererMax();
                     PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
                         PontH::configurer(0, 100, 0, 115); // a changer pt!
@@ -801,6 +820,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             case DERNIER_COULOIR_COTE :
                 suivreCouloir();
                 tournerBoutCouloir(l);
+                PontH::accelererMax(); 
                 suivreCouloir();
                 tournerBoutCouloir(l);
                 etat = ENTRER_STATIONNEMENT;
