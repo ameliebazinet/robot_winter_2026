@@ -37,45 +37,23 @@ void recalibrerVirage(Lecture& l)
     }
 }
 
-void tournerCouloirDroite(Lecture& l)
-{
-    // PontH::accelererMax();
-    // PontH::avancer(120);
-    // _delay_ms(750);
-    // PontH::arreter();
-    // _delay_ms(500);
-    // PontH::tourner90DegresDroite();
-    // recalibrerVirage(l);
-    
-    CapteurLigne cl;
-    while (!cl.estTropAGauche())
-        PontH::tournerDroite(130);
-    while (!cl.estTropAGauche())
-        PontH::tournerDroite(120);
-    PontH::arreter();
-    _delay_ms(500);    
-} 
-
-
-
-void tournerCouloirGauche(Lecture& l)
-{
-    CapteurLigne cl;
-    while (!cl.estTropADroite())
-        PontH::tournerGauche(130);
-    while (!cl.estTropADroite())
-        PontH::tournerGauche(120);
-    PontH::arreter();
-    _delay_ms(500);
-}
-
 void tournerBoutCouloir(Lecture& l)
 {
+    CapteurLigne cl;
     if (l.getDirectionHoraire()) {
-    tournerCouloirDroite(l);
+        while (!cl.estTropAGauche())
+            PontH::tournerDroite(120);
+        while (!cl.estTropAGauche())
+            PontH::tournerDroite(120);
     }
-    else
-        tournerCouloirGauche(l);
+    else {
+        while (!cl.estTropADroite())
+            PontH::tournerGauche(120);
+        while (!cl.estTropADroite())
+            PontH::tournerGauche(120);
+    }
+    PontH::arreter();
+    _delay_ms(500);
 }
 
 void suivreCouloir()
@@ -229,8 +207,8 @@ void executerSallesAD(Lecture& l)
     PontH::initialiserRegistre();
     bool horaire = l.getDirectionHoraire();
 
-    const uint8_t VITESSE_BOOST = 140;
-    const uint8_t VITESSE_SCAN = 100;
+    const uint8_t VITESSE_BOOST = 150;
+    const uint8_t VITESSE_SCAN = 120;
 
     Communication com;
     com.initialisationUART();
@@ -241,7 +219,7 @@ void executerSallesAD(Lecture& l)
     else {
         PontH::tournerGauche(VITESSE_BOOST);
     }
-    _delay_ms(500);
+    _delay_ms(250);
     PontH::arreter();
     _delay_ms(2000);
     PontH::accelererMax();
@@ -258,20 +236,24 @@ void executerSallesAD(Lecture& l)
                     PontH::arreter();
                     ci.nPersonnes_++;
                     attendreRetraitPoteau(del, ci, l);
-                    PontH::tournerDroite(VITESSE_BOOST);
-                    _delay_ms(50);
                 }
             }
             else {
                 compteurObstacle = 0;
+                PontH::tournerDroite(VITESSE_BOOST);
+                _delay_ms(50);
                 PontH::tournerDroite(VITESSE_SCAN);
+                _delay_ms(200);
+                PontH::arreter();
+                _delay_ms(500);
+
             }
             _delay_ms(5);
         }
     }
     else {
         uint8_t compteurObstacle = 0;
-        while (!cl.estTropAGauche()) {
+        while (!cl.estAllumeCapteurQuelconque()) {
             ci.lireVoltage();
 
             if (ci.estObjetDetecte()) {
@@ -287,7 +269,12 @@ void executerSallesAD(Lecture& l)
             }
             else {
                 compteurObstacle = 0;
+                PontH::tournerDroite(VITESSE_BOOST);
+                _delay_ms(50);
                 PontH::tournerGauche(VITESSE_SCAN);
+                _delay_ms(250);
+                PontH::arreter();
+                _delay_ms(500);
             }
             _delay_ms(5);
         }
@@ -302,7 +289,7 @@ void executerSallesAD(Lecture& l)
 
     if (horaire) {
         PontH::tournerGauche(255);
-        _delay_ms(150);
+        _delay_ms(50);
 
         while (!cl.estAllumeMilieu())
             PontH::tournerGauche(100);
@@ -311,11 +298,11 @@ void executerSallesAD(Lecture& l)
             PontH::tournerGauche(90);
 
         while (!cl.estVide())
-            PontH::configurer(0, 140, 0, 80);
+            PontH::configurer(0, 120, 0, 60);
     }
     else {
         PontH::tournerDroite(255);
-        _delay_ms(150);
+        _delay_ms(50);
 
         while (!cl.estAllumeMilieu())
             PontH::tournerDroite(100);
@@ -324,7 +311,7 @@ void executerSallesAD(Lecture& l)
             PontH::tournerDroite(90);
 
         while (!cl.estVide())
-            PontH::configurer(0, 80, 0, 140);
+            PontH::configurer(0, 60, 0, 120);
     }
 
     PontH::arreter();
@@ -359,7 +346,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
-    uint32_t tempsMsParcoursBC = 2000;
+    uint32_t tempsMsParcoursBC = 2500;
 
     PontH::accelererMax(); 
     PontH::avancer(80);
@@ -716,24 +703,22 @@ void couloirNord(Lecture& l)
             case EtatCouloir::ENTREE_TROUVEE:
                 if (horaire) {
                     PontH::tournerGauche(150);
-                    _delay_ms(150);
+                    _delay_ms(250);
                     PontH::arreter();
                     _delay_ms(1000);
-                    // recalibrer();
                     PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
-                        PontH::configurer(0, 100, 0, 115);
+                        PontH::configurer(0, 110, 0, 100); // pt a changer!!! configurer(0, 110, 0, 100);
                     }
                 }
                 else {
                     PontH::tournerDroite(150);
-                    _delay_ms(150);
+                    _delay_ms(250);
                     PontH::arreter();
                     _delay_ms(1000);
-                    // recalibrer();
                     PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
-                        PontH::configurer(0, 100, 0, 115);
+                        PontH::configurer(0, 100, 0, 115); // a changer pt!
                     }
                 }
                 _delay_ms(300);
@@ -752,8 +737,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nZonesEndommageesCouloirOuest,
                     volatile bool& tempsEcoule)
 {
-    uint8_t compteurPiecesNord = 1; 
-    Etat etat = COULOIR_NORD;
+    uint8_t compteurPiecesNord = 0; 
+    Etat etat = SORTIR_STATIONNEMENT;
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();

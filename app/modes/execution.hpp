@@ -34,8 +34,6 @@ enum EtatCouloir {
 void recalibrer(); 
 void recalibrerVirage(Lecture& l);
 void suivreCouloir(Lecture& l);
-void tournerCouloirGauche(Lecture& l);
-void tournerCouloirDroite(Lecture& l);
 void tournerBoutCouloir(Lecture& l);
 void sortirStationnement(Lecture& l);
 void parcourirCouloir();
