@@ -156,17 +156,15 @@ void sortirStationnement(Lecture& l)
     while (!capteur.estSurLignePleine()) {
         if (horaire) {
             if (capteur.estTropAGauche() || capteur.estAllumeD2()) 
-                PontH::configurer(0, 120, 0, 80);
+                PontH::configurer(0, 130, 0, 90);
             else
-                PontH::configurer(0, 80, 0, 120);
+                PontH::configurer(0, 90, 0, 120);
         }
         else {
-            if (capteur.estTropADroite() || capteur.estAllumeD4()) {
-                PontH::configurer(0, 80, 0, 120);
-                _delay_ms(100);
-            }
+            if (capteur.estTropADroite() || capteur.estAllumeD4())
+                PontH::configurer(0, 90, 0, 130);
             else
-                PontH::configurer(0, 120, 0, 80);
+                PontH::configurer(0, 120, 0, 90);
         }
     } 
     _delay_ms(750); 
@@ -312,11 +310,10 @@ void executerSallesAD(Lecture& l)
         _delay_ms(100);
 
         while (!cl.estAllumeMilieu())
-            // PontH::tournerDroite(100);
-            PontH::configurer(0, 115, 1, 90);
+            PontH::tournerDroite(100);
 
         while (!cl.estTropADroite())
-            PontH::tournerDroite(90);
+            PontH::configurer(1, 90, 0, 115);
 
         while (!cl.estTropAGauche())
             PontH::configurer(0, 60, 0, 120);
@@ -387,11 +384,10 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
             del.allumerCouleur(Del::Couleur::ETEINT);
     }
     PontH::arreter();
-    del.allumerCouleur(Del::Couleur::VERT); // og eteint MODIFIE ligne test
+    del.allumerCouleur(Del::Couleur::VERT); // ligne test
     _delay_ms(1000);
     del.allumerCouleur(Del::Couleur::ETEINT);
 
-    PontH::avancer(80); 
     // Continuer jusqu'au fond de la salle (ligne pleine = mur du fond, pas un obstacle)
     while(!cl.estSurLignePleine()) {}
     _delay_ms(500);
@@ -403,7 +399,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     PontH::accelererMax();
     PontH::avancer(120);
     // while(!cl.estAllumeCapteurQuelconque()) {}
-    while(!cl.estAllumeMilieu()) {}
+    while(!cl.estTroisCapteursActifs()) {}
     _delay_ms(600);
     PontH::arreter();
     _delay_ms(500);
@@ -747,7 +743,7 @@ void couloirNord(Lecture& l)
                 }
                 else {
                     PontH::tournerDroite(150);
-                    _delay_ms(250);
+                    _delay_ms(150);
                     PontH::arreter();
                     _delay_ms(1000);
                     PontH::accelererMax();

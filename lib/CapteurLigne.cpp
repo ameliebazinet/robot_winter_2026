@@ -88,3 +88,13 @@ bool CapteurLigne::estAllumeCapteurQuelconque() const
 {
     return (lireTousCapteurs());
 }
+
+bool CapteurLigne::estTroisCapteursActifs() const
+{
+    uint8_t count = ((CAPTEUR_D1 & PINA) ? 1 : 0)
+                  + ((CAPTEUR_D2 & PINA) ? 1 : 0)
+                  + ((CAPTEUR_D3 & PINA) ? 1 : 0)
+                  + ((CAPTEUR_D4 & PINA) ? 1 : 0)
+                  + ((CAPTEUR_D5 & PINA) ? 1 : 0);
+    return count >= 3;
+}

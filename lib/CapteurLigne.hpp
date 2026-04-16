@@ -19,7 +19,8 @@ public:
     bool estSurLignePleine() const;
     bool estVide() const;
     bool estAllumeCapteurQuelconque() const;
-    bool estAllumeMilieu() const; 
+    bool estAllumeMilieu() const;
+    bool estTroisCapteursActifs() const;
 
 private:
     static const uint8_t CAPTEUR_D1 = (1 << PA0);
