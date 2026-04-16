@@ -45,12 +45,24 @@ bool CapteurLigne::estTropPresMur() const
     return ( (PINA & CAPTEUR_D4) && (PINA & CAPTEUR_D5) );
 }
 
+// bool CapteurLigne::estObstacleAuCentre() const
+// {
+//     if (estSurLignePleine())
+//         return false;
+//     else
+//         return (estAllumeMilieu() || (estAllumeD4() && estTropAGauche()) || 
+//         (estAllumeD2() && estTropADroite()) || (estTropADroite() && estTropAGauche()));
+// }
+
 bool CapteurLigne::estObstacleAuCentre() const
 {
     if (estSurLignePleine())
         return false;
-    else
-        return (estAllumeMilieu() || (estAllumeD4() && estTropAGauche()) || (estAllumeD2() && estTropADroite()));
+
+    return estAllumeMilieu() 
+        || (estAllumeD4() && !estTropADroite()) 
+        || (estAllumeD2() && !estTropAGauche()) 
+        || (estTropAGauche() && estTropADroite());
 }
 
 bool CapteurLigne::estSurLignePleine() const

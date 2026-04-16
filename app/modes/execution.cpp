@@ -8,9 +8,9 @@ void recalibrer()
     CapteurLigne capteur;
     while (!capteur.estVide()) {
         if (capteur.estAllumeD4() || capteur.estTropADroite())
-            PontH::tournerGauche(100);
+            PontH::tournerGauche(110); // modifie
         if (capteur.estAllumeD2() || capteur.estTropAGauche())
-            PontH::tournerDroite(100);
+            PontH::tournerDroite(110); // modifie
 
     }
     PontH::arreter();
@@ -222,7 +222,7 @@ void executerSallesAD(Lecture& l)
     _delay_ms(250);
     PontH::arreter();
     _delay_ms(500);
-    PontH::accelererMax();
+    // PontH::accelererMax();
 
     if (horaire) {
         uint8_t compteurObstacle = 0;
@@ -241,12 +241,11 @@ void executerSallesAD(Lecture& l)
             else {
                 compteurObstacle = 0;
                 PontH::tournerDroite(VITESSE_BOOST);
-                _delay_ms(50);
+                _delay_ms(100);
                 PontH::tournerDroite(VITESSE_SCAN);
-                _delay_ms(200);
+                _delay_ms(150);
                 PontH::arreter();
                 _delay_ms(500);
-
             }
             _delay_ms(5);
         }
@@ -280,21 +279,16 @@ void executerSallesAD(Lecture& l)
         }
     }
 
-    if (horaire)
-    {   PontH::tournerDroite(255); // nouvel ajout 
-        _delay_ms(25); 
-    }
-
     PontH::arreter();
 
     PontH::reculer(130);
-    _delay_ms(200); // modifie og 100
+    _delay_ms(250); // modifie og 100
     PontH::arreter();
     _delay_ms(250);
 
     if (horaire) {
         PontH::tournerGauche(255);
-        _delay_ms(50);
+        _delay_ms(100);
 
         while (!cl.estAllumeMilieu())
             PontH::tournerGauche(100);
@@ -308,10 +302,11 @@ void executerSallesAD(Lecture& l)
     }
     else {
         PontH::tournerDroite(255);
-        _delay_ms(50);
+        _delay_ms(100);
 
         while (!cl.estAllumeMilieu())
-            PontH::tournerDroite(100);
+            // PontH::tournerDroite(100);
+            PontH::configurer(0, 115, 1, 90);
 
         while (!cl.estTropADroite())
             PontH::tournerDroite(90);
@@ -362,6 +357,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     bool vuPrecedent = false;
     tempsEcoule = false;
     Minuterie::Minuterie1::partirMinuterie(tempsMsParcoursBC, Minuterie::A);
+    del.allumerCouleur(Del::Couleur::ETEINT); // ligne test
     while(!tempsEcoule)
     {
         bool vuActuel = !cl.estAllumeCapteurQuelconque();
@@ -373,7 +369,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
         else
             del.allumerCouleur(Del::Couleur::ETEINT);
     }
-    del.allumerCouleur(Del::Couleur::ETEINT);
+    del.allumerCouleur(Del::Couleur::VERT); // og eteint MODIFIE ligne test
 
     // Continuer jusqu'au fond de la salle (ligne pleine = mur du fond, pas un obstacle)
     while(!cl.estSurLignePleine()) {}
@@ -409,6 +405,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     _delay_ms(500);
 
     Minuterie::Minuterie1::arreterMinuterie1();
+    del.allumerCouleur(Del::Couleur::ETEINT); // ligne test
 } 
 
 
@@ -495,7 +492,7 @@ void entrerStationnement(Lecture& l)
 
     PontH::arreter();
     _delay_ms(500);
-    PontH::reculer(150);
+    PontH::reculer(250);
     _delay_ms(500);
     PontH::arreter();
 
@@ -622,6 +619,8 @@ void couloirNord(Lecture& l)
     recalibrer();
     _delay_ms(500);
 
+    PontH::accelererMax();
+
     if (horaire) {
         // Tourner doucement à droite jusqu'à trouver D5
         while (!capteur.estTropADroite())
@@ -651,7 +650,8 @@ void couloirNord(Lecture& l)
                 if (horaire) {
                     if (capteur.estAllumeD4()) {
                         // D4+D5 : trop près du mur, corriger à gauche
-                        PontH::configurer(0, 90, 0, 120);
+                        // PontH::configurer(0, 90, 0, 120);
+                        PontH::tournerGauche(110);
                     }
                     else if (capteur.estTropADroite()) {
                         // D5 seul : bien borné, avancer normalement
@@ -795,7 +795,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 break;
             }
 
-            case SALLE_A_D:
+            case SALLE_A_D: // modifie if statement : pas dernier couloir dans bc et nobjets local b different de nobjets local a
             {
                 executerSallesAD(l);
                 if (compteurPiecesNord < 4)
