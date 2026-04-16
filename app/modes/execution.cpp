@@ -8,9 +8,9 @@ void recalibrer()
     CapteurLigne capteur;
     while (!capteur.estVide()) {
         if (capteur.estAllumeD4() || capteur.estTropADroite())
-            PontH::tournerGauche(110); // modifie
+            PontH::tournerGauche(100); 
         if (capteur.estAllumeD2() || capteur.estTropAGauche())
-            PontH::tournerDroite(110); // modifie
+            PontH::tournerDroite(100); 
 
     }
     PontH::arreter();
@@ -619,7 +619,6 @@ void couloirNord(Lecture& l)
     recalibrer();
     _delay_ms(500);
 
-    PontH::accelererMax();
 
     if (horaire) {
         // Tourner doucement à droite jusqu'à trouver D5
@@ -639,7 +638,6 @@ void couloirNord(Lecture& l)
     }
     PontH::arreter();
     _delay_ms(250);
-
     PontH::accelererMax();
     PontH::accelererMax();
 
@@ -720,13 +718,11 @@ void couloirNord(Lecture& l)
             case EtatCouloir::ENTREE_TROUVEE:
                 if (horaire) {
                     PontH::tournerGauche(150);
-                    _delay_ms(250);
+                    _delay_ms(200);
                     PontH::arreter();
                     _delay_ms(1000);
-                    PontH::accelererMax();
-                    PontH::accelererMax();
                     while (!capteur.estAllumeCapteurQuelconque()) {
-                        PontH::configurer(0, 105, 0, 100); // pt a changer!!! configurer(0, 110, 0, 100);
+                        PontH::configurer(0, 110, 0, 100); // pt a changer!!! configurer(0, 110, 0, 100);
                     }
                 }
                 else {
@@ -757,7 +753,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     volatile bool& tempsEcoule)
 {
     uint8_t compteurPiecesNord = 0; 
-    Etat etat = SORTIR_STATIONNEMENT;
+    Etat etat = COULOIR_COTE;
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();
@@ -807,14 +803,12 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case SALLE_B_C:
             {
-                executerSallesBC(nObjetsLocalB, tempsEcoule, l);
-                if (compteurPiecesNord < 4)
-                    etat = COULOIR_NORD;
+                if (compteurPiecesNord = 2)
+                    executerSallesBC(nObjetsLocalB, tempsEcoule, l);
                 else 
-                    etat = DERNIER_COULOIR_COTE;
-
+                    executerSallesBC(nObjetsLocalC, tempsEcoule, l);
+                etat = COULOIR_NORD;
                 break;
-
             }
 
             case DERNIER_COULOIR_COTE :

@@ -56,13 +56,17 @@ bool CapteurLigne::estTropPresMur() const
 
 bool CapteurLigne::estObstacleAuCentre() const
 {
-    if (estSurLignePleine())
-        return false;
-
-    return estAllumeMilieu() 
-        || (estAllumeD4() && !estTropADroite()) 
-        || (estAllumeD2() && !estTropAGauche()) 
-        || (estTropAGauche() && estTropADroite());
+    // tous les cas possible pour l'obstacle au centre
+    return ((CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
+       ((CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
+       ((CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
+       (!(CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
+       (!(CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
+       (!(CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && (CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
+       (!(CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && (CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
+       (!(CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && (CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
+       (!(CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
+       ((CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA));
 }
 
 bool CapteurLigne::estSurLignePleine() const
@@ -78,7 +82,6 @@ bool CapteurLigne::estVide() const
 bool CapteurLigne::estAllumeMilieu() const
 {
     return(PINA & CAPTEUR_D3 ); 
-
 }
 
 bool CapteurLigne::estAllumeCapteurQuelconque() const
