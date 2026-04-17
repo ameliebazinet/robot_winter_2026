@@ -326,8 +326,6 @@ void executerSallesAD(Lecture& l)
 
 void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lecture& l, uint8_t compteurSalle)
 {
-    Communication c;
-    c.initialisationUART();
     PontH::initialiserRegistre();
     bool horaire = l.getDirectionHoraire();
 
@@ -367,9 +365,9 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     
     Del del(PORTC, PC6, PC7);
 
-    // del.allumerCouleur(Del::Couleur::VERT); // ligne test
-    // _delay_ms(1000);
-    // del.allumerCouleur(Del::Couleur::ETEINT);
+    del.allumerCouleur(Del::Couleur::VERT); // ligne test
+    _delay_ms(1000);
+    del.allumerCouleur(Del::Couleur::ETEINT);
 
     PontH::accelererMax(); 
     PontH::configurer(0, 90, 0, 95);
@@ -377,7 +375,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     CapteurLigne cl;
     
     bool vuPrecedent = false;
-    tempsEcoule = false;
+    
     Minuterie::Minuterie1::partirMinuterie(tempsMsParcoursBC, Minuterie::A);
     
     while(!tempsEcoule)
@@ -391,12 +389,11 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
         else
             del.allumerCouleur(Del::Couleur::ETEINT);
     }
-    // PontH::arreter();
-    // del.allumerCouleur(Del::Couleur::VERT); // ligne test
-    // _delay_ms(1000);
+    PontH::arreter();
+    del.allumerCouleur(Del::Couleur::VERT); // ligne test
+    _delay_ms(1000);
     del.allumerCouleur(Del::Couleur::ETEINT);
-    // PontH::accelererMax(); 
-    // PontH::avancer(80);
+    //_delay_ms(1000);
 
     // Continuer jusqu'au fond de la salle (ligne pleine = mur du fond, pas un obstacle)
     PontH::arreter();
@@ -473,8 +470,7 @@ void entrerStationnement(Lecture& l)
         }
     }
     else {
-        uint8_t compteur = 5;
-
+        uint8_t compteur = 6;
         while (compteur != placeStationnement) {
             if (capteur.estTropADroiteLarge()) {
                 if (temp) {
@@ -776,8 +772,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nZonesEndommageesCouloirOuest,
                     volatile bool& tempsEcoule)
 {
-    uint8_t compteurPiecesNord = 1; 
-    Etat etat = COULOIR_NORD;
+    uint8_t compteurPiecesNord = 0; 
+    Etat etat = SORTIR_STATIONNEMENT;
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();
