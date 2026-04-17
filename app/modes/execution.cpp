@@ -229,7 +229,7 @@ void executerSallesAD(Lecture& l)
     else {
         PontH::tournerGauche(VITESSE_BOOST);
     }
-    _delay_ms(500); // modifie og 250
+    _delay_ms(250); // modifie og 250
     PontH::arreter();
     _delay_ms(500);
 
@@ -326,9 +326,9 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     }
     else {
         PontH::tournerGaucheAccelere();
-        PontH::tournerGauche(120);
+        PontH::tournerGauche(110);
     }
-    _delay_ms(800);
+    _delay_ms(700);
     PontH::arreter();
     _delay_ms(500);
     PontH::reculerMax();
@@ -383,10 +383,10 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
 
     // avance jusqu'a trouve le mur du fond du couloir
     PontH::accelererMax(); 
-    PontH::configurer(0, 90, 0, 95);
+    PontH::avancer(100);
     // while(!cl.estAllumeCapteurQuelconque()) {}
     while(!cl.estTroisCapteursActifs()) {}
-    _delay_ms(600);
+    _delay_ms(750);
     PontH::arreter();
     _delay_ms(500);
 
@@ -394,14 +394,14 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     if (horaire) {
         PontH::tournerDroiteAccelere();   // <-- boost ajouté
         while (!cl.estTropAGauche())
-            PontH::tournerDroite(100);
+            PontH::tournerDroite(90);
         while (!cl.estTropADroite())
             PontH::tournerDroite(80);
     }
     else {
         PontH::tournerGaucheAccelere();   // <-- boost ajouté
         while (!cl.estTropADroite())
-            PontH::tournerGauche(100);
+            PontH::tournerGauche(90);
         while (!cl.estTropAGauche())
             PontH::tournerGauche(80);
     }
@@ -551,10 +551,13 @@ void couloirNord(Lecture& l)
                     }
                     else if (capteur.estTropADroite()) {
                         // D5 seul : bien borné, avancer normalement
-                        PontH::configurer(0, 120, 0, 90);
+                        PontH::configurer(0, 110, 0, 90);
                     }
                     else if (capteur.estAllumeCapteurQuelconque()) {
-                        PontH::tournerGauche(120);
+                        while (!capteur.estVide()) {
+                            PontH::tournerGauche(120);
+                            recalibrer();
+                        }
                     }
                     else {
                         // Aucun capteur latéral : possible entrée
