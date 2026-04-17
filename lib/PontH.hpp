@@ -41,4 +41,5 @@ public:
     static void tourner180();
     static void arreter();
     static void accelererMax();
+    static void reculerMax();
 };

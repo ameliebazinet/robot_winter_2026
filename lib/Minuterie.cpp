@@ -133,8 +133,11 @@ void Minuterie1::desactiverInteruptionComparateurA()
 void Minuterie1::arreterMinuterie1()
 {
     Minuterie1::desactiverInteruptionComparateurA();
+    TCCR1A = 0;
     TCCR1B = 0;
     TCNT1 = 0;
+    TIFR1 |= (1 << OCF1A);
+
 }
 
 void Minuterie1::activerInteruptionComparateurB()
@@ -153,8 +156,15 @@ void Minuterie1::partirMinuterie(uint32_t tempsMs, Comparateur c)
 
     nbIterationsCompletesRestantes_ = tempsMs / TEMPS_MAX_MS;
     tempsRestantMs_ = tempsMs - (TEMPS_MAX_MS * nbIterationsCompletesRestantes_);
-    
+
     cli();
+
+    // Réinitialiser le timer et vider tout flag OCF1A en attente (ex: laissé par Son::jouer)
+    TCCR1A = 0;
+    TCCR1B = 0;
+    TCNT1 = 0;
+    TIFR1 |= (1 << OCF1A);
+
     if (nbIterationsCompletesRestantes_ > 0) {
         activerComparateurA(TEMPS_MAX_MS);
         activerInteruptionComparateurA();
@@ -182,6 +192,7 @@ void Minuterie1::miseAJourCompteur(volatile bool &estMinuterieExpiree)
     }
     else {
         estMinuterieExpiree = true;
+        arreterMinuterie1();
     }
 }
 

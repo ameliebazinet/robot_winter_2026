@@ -56,17 +56,20 @@ bool CapteurLigne::estTropPresMur() const
 
 bool CapteurLigne::estObstacleAuCentre() const
 {
-    // tous les cas possible pour l'obstacle au centre
-    return ((CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
-       ((CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
-       ((CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
-       (!(CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && (CAPTEUR_D1 & PINA)) ||
-       (!(CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
-       (!(CAPTEUR_D5 & PINA) && (CAPTEUR_D4 & PINA) && (CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
-       (!(CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && (CAPTEUR_D3 & PINA) && !(CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
-       (!(CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && (CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
-       (!(CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA)) ||
-       ((CAPTEUR_D5 & PINA) && !(CAPTEUR_D4 & PINA) && !(CAPTEUR_D3 & PINA) && (CAPTEUR_D2 & PINA) && !(CAPTEUR_D1 & PINA));
+    if (estSurLignePleine()) return false;
+
+    bool d1 = (CAPTEUR_D1 & PINA);
+    bool d2 = (CAPTEUR_D2 & PINA);
+    bool d3 = (CAPTEUR_D3 & PINA);
+    bool d4 = (CAPTEUR_D4 & PINA);
+    bool d5 = (CAPTEUR_D5 & PINA);
+
+    if (d3) return true;                        // D3 allumé = obstacle au centre
+    if (d4 && (!d5 || d1)) return true;         // D4 actif, sauf D4+D5 seuls (trop près mur droit)
+    if (d2 && !d4 && (!d1 || d5)) return true;  // D2 actif, sauf D1+D2 seuls (trop près mur gauche)
+    if (d5 && d1 && !d4 && !d2) return true;    // D5+D1 seuls (obstacle aux extrémités)
+
+    return false;
 }
 
 bool CapteurLigne::estSurLignePleine() const
