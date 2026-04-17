@@ -426,43 +426,55 @@ void entrerStationnement(Lecture& l)
     if (horaire) {
         int8_t compteur = -1;
 
-        while (!capteur.estTropAGaucheLarge()) {
+        while (!capteur.estAllumeD2()) {
             if (capteur.estTropAGauche())
-                PontH::configurer(0, 128, 0, 80);
+                PontH::configurer(0, 110, 0, 80);
             else
                 PontH::configurer(0, 80, 0, 120);
         }
 
         while (compteur != (int8_t)placeStationnement) {
-            if (capteur.estTropAGaucheLarge()) {
+            if (capteur.estAllumeD2()) {
                 if (temp) {
                     compteur++;
                     temp = false;
+                    // PontH::avancer(110);
+                    PontH::configurer(0, 90, 0, 110);
                 }
             }
             else if (capteur.estTropAGauche()) {
-                PontH::configurer(0, 120, 0, 90);
+                PontH::configurer(0, 110, 0, 90);
                 temp = true;
             }
             else {
                 temp = true;
-                PontH::configurer(0, 90, 0, 120);
+                PontH::configurer(0, 90, 0, 110);
             }
         }
     }
     else {
         uint8_t compteur = 6;
+    
+        while (!capteur.estAllumeD4()) {
+            if (capteur.estTropADroite())
+                PontH::configurer(0, 90, 0, 120);
+            else
+                PontH::configurer(0, 120, 0, 90);
+        }
+
         while (compteur != placeStationnement) {
-            if (capteur.estTropADroiteLarge()) {
+            if (capteur.estAllumeD4()) {
                 if (temp) {
                     compteur--;
                     temp = false;
+                    PontH::configurer(0, 110, 0, 90);
                 }
             }
             else if (capteur.estTropADroite()) {
-                PontH::configurer(0, 90, 0, 120);
+                PontH::configurer(0, 90, 0, 110);
                 temp = true;
             }
+            
             else {
                 temp = true;
                 PontH::configurer(0, 110, 0, 90);
@@ -481,17 +493,17 @@ void entrerStationnement(Lecture& l)
     else {
         PontH::tourner90DegresGauche();
     }
+    _delay_ms(1000);
 
-    _delay_ms(500);
-    PontH::avancer(250);
-    _delay_ms(200);
-    PontH::avancer(110);
+    PontH::accelererMax();
+    PontH::configurer(0, 110, 0, 120);
 
-    while (!capteur.estSurLignePleine()) {}
+    while (!capteur.estAllumeCapteurQuelconque()) {}
 
     PontH::arreter();
     _delay_ms(500);
-    PontH::reculer(250);
+    PontH::reculerMax();
+    PontH::reculer(100);
     _delay_ms(500);
     PontH::arreter();
 
@@ -698,11 +710,6 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 PontH::accelererMax(); 
                 suivreCouloir();
                 tournerBoutCouloir(l);
-                etat = ENTRER_STATIONNEMENT;
-                break;
-
-            case DERNIER_COULOIR_SUD :
-                suivreCouloir();
                 etat = ENTRER_STATIONNEMENT;
                 break;
             
