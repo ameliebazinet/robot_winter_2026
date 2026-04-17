@@ -313,9 +313,9 @@ void executerSallesAD(Lecture& l)
             PontH::tournerDroite(100);
 
         while (!cl.estTropADroite())
-            PontH::configurer(1, 90, 0, 115);
+            PontH::configurer(0, 115, 1, 90);
 
-        while (!cl.estTropAGauche())
+        while (!cl.estVide())
             PontH::configurer(0, 60, 0, 120);
     }
 
@@ -344,27 +344,35 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     else {
         PontH::tournerGauche(255);
         _delay_ms(100);
-        PontH::tournerGauche(120);
+        PontH::tournerGauche(110);
     }
     _delay_ms(800);
     PontH::arreter();
     _delay_ms(500);
+    PontH::configurer(1,255,1,255);
+    _delay_ms(50);
+
+    PontH::reculer(110);
+    _delay_ms(300);
+    PontH::arreter();
+    _delay_ms(500);
+
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
     uint32_t tempsMsParcoursBC;
-    if (compteurSalle = 2) 
-        tempsMsParcoursBC = 2500;
+    if (compteurSalle == 2) 
+        tempsMsParcoursBC = 1800; //(2500)
     else
-        tempsMsParcoursBC = 2100; // devrait etre good
+        tempsMsParcoursBC = 1500; // devrait etre good (2100)
     
     Del del(PORTC, PC6, PC7);
 
-    del.allumerCouleur(Del::Couleur::VERT); // ligne test
-    _delay_ms(1000);
-    del.allumerCouleur(Del::Couleur::ETEINT);
+    // del.allumerCouleur(Del::Couleur::VERT); // ligne test
+    // _delay_ms(1000);
+    // del.allumerCouleur(Del::Couleur::ETEINT);
 
     PontH::accelererMax(); 
-    PontH::avancer(80);
+    PontH::configurer(0, 90, 0, 95);
 
     CapteurLigne cl;
     
@@ -383,21 +391,22 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
         else
             del.allumerCouleur(Del::Couleur::ETEINT);
     }
-    PontH::arreter();
-    del.allumerCouleur(Del::Couleur::VERT); // ligne test
-    _delay_ms(1000);
+    // PontH::arreter();
+    // del.allumerCouleur(Del::Couleur::VERT); // ligne test
+    // _delay_ms(1000);
     del.allumerCouleur(Del::Couleur::ETEINT);
+    // PontH::accelererMax(); 
+    // PontH::avancer(80);
 
     // Continuer jusqu'au fond de la salle (ligne pleine = mur du fond, pas un obstacle)
-    while(!cl.estSurLignePleine()) {}
+    PontH::arreter();
     _delay_ms(500);
     PontH::tourner180();
-    PontH::arreter();
     _delay_ms(1000);
 
     // avance jusqu'a trouve le mur du fond du couloir
-    PontH::accelererMax();
-    PontH::avancer(120);
+    PontH::accelererMax(); 
+    PontH::configurer(0, 90, 0, 95);
     // while(!cl.estAllumeCapteurQuelconque()) {}
     while(!cl.estTroisCapteursActifs()) {}
     _delay_ms(600);
@@ -407,15 +416,15 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     // tourne de 90 vers la gauche/droite
     if (horaire) {
         while (!cl.estTropAGauche())
-            PontH::tournerDroite(120);
+            PontH::tournerDroite(110);
         while (!cl.estTropAGauche())
-            PontH::tournerDroite(120);
+            PontH::tournerDroite(110);
     }
     else {
         while (!cl.estTropADroite())
-            PontH::tournerGauche(120);
+            PontH::tournerGauche(110);
         while (!cl.estTropADroite())
-            PontH::tournerGauche(120);
+            PontH::tournerGauche(110);
     }
     PontH::arreter();
     _delay_ms(500);
@@ -619,7 +628,7 @@ void entrerStationnementAntihoraire(Lecture& l)
     while(!capteur.estSurLignePleine()){}
     PontH::arreter();
     _delay_ms(500);
-    PontH::reculer(150);
+    PontH::reculer(100);
     _delay_ms(500);
     PontH::arreter();
 }
@@ -767,8 +776,8 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nZonesEndommageesCouloirOuest,
                     volatile bool& tempsEcoule)
 {
-    uint8_t compteurPiecesNord = 0; 
-    Etat etat = SORTIR_STATIONNEMENT;
+    uint8_t compteurPiecesNord = 1; 
+    Etat etat = COULOIR_NORD;
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();
@@ -818,7 +827,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case SALLE_B_C:
             {
-                if (compteurPiecesNord = 2)
+                if (compteurPiecesNord == 2)
                     executerSallesBC(nObjetsLocalB, tempsEcoule, l, compteurPiecesNord);
                 else 
                     executerSallesBC(nObjetsLocalC, tempsEcoule, l, compteurPiecesNord);
