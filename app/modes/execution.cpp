@@ -507,38 +507,20 @@ void couloirNord(Lecture& l)
 
     recalibrer();
 
-    if (capteur.estAllumeCapteurQuelconque()) {
-        if (horaire)
-            PontH::tournerGauche(120);
-        else
-            PontH::tournerDroite(120);
-    }
-
     if (horaire) { // modifie ici
         // Tourner doucement à droite jusqu'à trouver D5
         while (!capteur.estTropADroite())
-            // PontH::tournerDroite(120);
             PontH::configurer(0, 130, 0, 90);
-        // Si D4 aussi allumé, corriger un peu à gauche
-        while (capteur.estAllumeD4())
-            // PontH::tournerGauche(110);
-            PontH::configurer(0, 90, 0, 110);
     }
     else {
         // Tourner doucement à gauche jusqu'à trouver D1
         while (!capteur.estTropAGauche())
-            // PontH::tournerGauche(120);
             PontH::configurer(0, 90, 0, 130);
-        // Si D2 aussi allumé, corriger un peu à droite
-        while (capteur.estAllumeD2())
-            // PontH::tournerDroite(110);
-            PontH::configurer(0, 110, 0, 90);
     }
 
     PontH::arreter();
     _delay_ms(250);
     PontH::accelererMax();
-    // PontH::accelererMax();
 
     while (true) {
         switch (etat)
@@ -554,10 +536,7 @@ void couloirNord(Lecture& l)
                         PontH::configurer(0, 110, 0, 90);
                     }
                     else if (capteur.estAllumeCapteurQuelconque()) {
-                        while (!capteur.estVide()) {
                             PontH::tournerGauche(120);
-                            recalibrer();
-                        }
                     }
                     else {
                         // Aucun capteur latéral : possible entrée
