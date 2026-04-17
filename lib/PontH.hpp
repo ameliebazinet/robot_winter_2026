@@ -34,6 +34,10 @@ public:
 
     static void tourner90DegresDroite();
     static void tourner90DegresGauche();
+
+    static void tournerDroiteAccelere();
+    static void tournerGaucheAccelere();
+
     static void tourner180();
     static void arreter();
     static void accelererMax();
