@@ -78,7 +78,7 @@ void suivreCouloir()
         if (estSurObstacleMaintenant) {
             compteurSansObstacle = 0;
             compteurAvecObstacle++;
-            _delay_ms(250);
+            _delay_ms(50);
 
             // Il faut plusieurs lectures avec obstacle pour confirmer
             // qu'un obstacle est véritablement là
@@ -105,9 +105,9 @@ void suivreCouloir()
             del.allumerCouleur(Del::Couleur::ETEINT);
 
         if (capteur.estTropADroite())
-            PontH::configurer(0, 90, 0, 130);
+            PontH::configurer(0, 90, 0, 140);
         else if (capteur.estTropAGauche())
-            PontH::configurer(0, 130, 0, 90);
+            PontH::configurer(0, 140, 0, 90);
         else
             PontH::avancer(100);
     }
@@ -346,7 +346,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     if (horaire)
         tempsMsParcourirBC = 2000; // og 2200 apres 2100 modifie
     else
-        tempsMsParcourirBC = 2200;
+        tempsMsParcourirBC = 2300;
     
     Del del(PORTC, PC6, PC7);
 
@@ -444,7 +444,6 @@ void entrerStationnement(Lecture& l)
                 if (temp) {
                     compteur--;
                     temp = false;
-                    // PontH::avancer(110);
                     PontH::configurer(0, 90, 0, 120);
                 }
             }
@@ -463,9 +462,9 @@ void entrerStationnement(Lecture& l)
     
         while (!capteur.estAllumeD4()) {
             if (capteur.estTropADroite())
-                PontH::configurer(0, 90, 0, 120);
+                PontH::configurer(0, 80, 0, 150);
             else
-                PontH::configurer(0, 120, 0, 90);
+                PontH::configurer(0, 110, 0, 80);
         }
 
         while (compteur != (int8_t)placeStationnement) {
@@ -473,11 +472,11 @@ void entrerStationnement(Lecture& l)
                 if (temp) {
                     compteur++;
                     temp = false;
-                    PontH::configurer(0, 110, 0, 90);
+                    PontH::configurer(0, 90, 0, 120);
                 }
             }
             else if (capteur.estTropADroite()) {
-                PontH::configurer(0, 90, 0, 110);
+                PontH::configurer(0, 80, 0, 150);
                 temp = true;
             }
             
@@ -607,7 +606,7 @@ void couloirNord(Lecture& l)
                 }
                 else {
                     PontH::tournerGauche(150);
-                    _delay_ms(100);
+                    _delay_ms(150);
                     PontH::arreter();
                     _delay_ms(300);
 
