@@ -1,7 +1,7 @@
 dbt ;
-trd ;
+trg ;
 sgo 69 ;
 sgo 71 ;
 sgo 72 ;
-att 3 ;
+att 1 ;
 fin ;

@@ -133,7 +133,7 @@ void sortirStationnement(Lecture& l)
 
     PontH::accelererMax();
     while (!capteur.estAllumeCapteurQuelconque()) {
-        PontH::avancer(120);
+        PontH::avancer(130);
     }
 
     _delay_ms(500);
@@ -218,7 +218,7 @@ void executerSallesAD(Lecture& l)
     bool horaire = l.getDirectionHoraire();
 
     const uint8_t VITESSE_BOOST = 150;
-    const uint8_t VITESSE_SCAN = 120; // modifie og 120
+    const uint8_t VITESSE_SCAN = 130; // modifie og 120
 
     Communication com;
     com.initialisationUART();
@@ -250,7 +250,7 @@ void executerSallesAD(Lecture& l)
                 PontH::tournerDroite(VITESSE_SCAN);
                 _delay_ms(75); // modifie
                 PontH::arreter();
-                _delay_ms(500);
+                _delay_ms(250);
             }
             _delay_ms(5);
         }
@@ -279,9 +279,12 @@ void executerSallesAD(Lecture& l)
     }
 
     PontH::arreter();
-
-    PontH::reculer(140);
-    _delay_ms(500); // modifie og 100
+    PontH::tournerGaucheAccelere();
+    PontH::tournerGauche(120);
+    _delay_ms(250);
+    PontH::reculerMax();
+    PontH::reculer(120);
+    _delay_ms(1000); // modifie og 100
     PontH::arreter();
     _delay_ms(250);
 
@@ -296,7 +299,8 @@ void executerSallesAD(Lecture& l)
         //     PontH::configurer(1, 90, 0, 115);
 
         while (!cl.estVide())
-            PontH::configurer(0, 110, 0, 80);
+            // PontH::configurer(0, 110, 0, 80);
+            PontH::tournerGauche(100);
     }
     else {
         PontH::tournerDroiteAccelere();
@@ -308,7 +312,8 @@ void executerSallesAD(Lecture& l)
         //     PontH::configurer(0, 115, 1, 90);
 
         while (!cl.estVide())
-            PontH::configurer(0, 80, 0, 110);
+            // PontH::configurer(0, 80, 0, 110);
+            PontH::tournerDroite(100);
     }
 
     PontH::arreter();
@@ -426,7 +431,7 @@ void entrerStationnement(Lecture& l)
     recalibrer();
 
     if (horaire) {
-        int8_t compteur = -1;
+        uint8_t compteur = 6;
 
         while (!capteur.estAllumeD2()) {
             if (capteur.estTropAGauche())
@@ -435,10 +440,10 @@ void entrerStationnement(Lecture& l)
                 PontH::configurer(0, 80, 0, 120);
         }
 
-        while (compteur != (int8_t)placeStationnement) {
+        while (compteur != placeStationnement) {
             if (capteur.estAllumeD2()) {
                 if (temp) {
-                    compteur++;
+                    compteur--;
                     temp = false;
                     // PontH::avancer(110);
                     PontH::configurer(0, 90, 0, 110);
@@ -455,7 +460,7 @@ void entrerStationnement(Lecture& l)
         }
     }
     else {
-        uint8_t compteur = 6;
+        int8_t compteur = -1;
     
         while (!capteur.estAllumeD4()) {
             if (capteur.estTropADroite())
@@ -464,10 +469,10 @@ void entrerStationnement(Lecture& l)
                 PontH::configurer(0, 120, 0, 90);
         }
 
-        while (compteur != placeStationnement) {
+        while (compteur != (int8_t)placeStationnement) {
             if (capteur.estAllumeD4()) {
                 if (temp) {
-                    compteur--;
+                    compteur++;
                     temp = false;
                     PontH::configurer(0, 110, 0, 90);
                 }
@@ -509,6 +514,11 @@ void entrerStationnement(Lecture& l)
     _delay_ms(500);
     PontH::arreter();
 
+    // Son grave d'une seconde
+    Minuterie::Minuterie1::arreterMinuterie1();
+    Son::jouer(45); // note MIDI 45 = A2, la plus grave disponible
+    _delay_ms(1000);
+    Son::arreter();
 }
 
 void couloirNord(Lecture& l)
@@ -648,10 +658,11 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                     volatile bool& tempsEcoule)
 {
     uint8_t compteurPiecesNord = 0; 
-    Etat etat = SORTIR_STATIONNEMENT;
+    Etat etat = ENTRER_STATIONNEMENT;
     Lecture l;
     l.initialiserLecture();
     l.lireMemoire();
+    bool horaire = l.getDirectionHoraire();
     while (true) {
         switch (etat)
         {
@@ -676,6 +687,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 couloirNord(l);
                 compteurPiecesNord++; 
                 
+                if(horaire)
                 if (compteurPiecesNord == 1 || compteurPiecesNord == 4)
                     etat = SALLE_A_D;
 
@@ -699,9 +711,9 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             case SALLE_B_C:
             {
                 if (compteurPiecesNord == 2)
-                    executerSallesBC(nObjetsLocalB, tempsEcoule, l, compteurPiecesNord);
+                    executerSallesBC(horaire ? nObjetsLocalB : nObjetsLocalC, tempsEcoule, l, compteurPiecesNord);
                 else 
-                    executerSallesBC(nObjetsLocalC, tempsEcoule, l, compteurPiecesNord);
+                    executerSallesBC(horaire ? nObjetsLocalC : nObjetsLocalB, tempsEcoule, l, compteurPiecesNord);
                 etat = COULOIR_NORD;
                 break;
             }
