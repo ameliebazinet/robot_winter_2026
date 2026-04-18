@@ -57,7 +57,7 @@ void tournerBoutCouloir(Lecture& l)
     _delay_ms(500);
 }
 
-void suivreCouloir()
+void suivreCouloir(uint8_t& nZones)
 {
     CapteurLigne capteur;
     Del del(PORTC, PC6, PC7);
@@ -83,7 +83,7 @@ void suivreCouloir()
             // Il faut plusieurs lectures avec obstacle pour confirmer
             // qu'un obstacle est véritablement là
             if (compteurAvecObstacle >= 3 && !obstacleDejaCompte) {
-                nObstacles++;
+                nZones++;
                 obstacleDejaCompte = true;
             }
         }
@@ -208,7 +208,7 @@ void attendreRetraitPoteau(Del& del, CapteurInfra& ci, Lecture& l)
     }
 }
 
-void executerSallesAD(Lecture& l)
+void executerSallesAD(uint8_t& nPersonnesLocal, Lecture& l)
 {
     CapteurInfra ci;
     CapteurLigne cl;
@@ -241,7 +241,7 @@ void executerSallesAD(Lecture& l)
 
             if (ci.estObjetDetecte()) {
                 PontH::arreter();
-                ci.nPersonnes_++;
+                nPersonnesLocal++;
                 attendreRetraitPoteau(del, ci, l);
             }
             else {
@@ -278,7 +278,7 @@ void executerSallesAD(Lecture& l)
 
             if (ci.estObjetDetecte()) {
                 PontH::arreter();
-                ci.nPersonnes_++;
+                nPersonnesLocal++;
                 attendreRetraitPoteau(del, ci, l);
             }
             else {
@@ -344,7 +344,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
     uint32_t tempsMsParcourirBC;
     if (horaire)
-        tempsMsParcourirBC = 2000; // og 2200 apres 2100 modifie
+        tempsMsParcourirBC = 2100; // og 2200 apres 2100 modifie
     else
         tempsMsParcourirBC = 2300;
     
@@ -359,7 +359,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
 
     CapteurLigne cl;
     
-    bool vuPrecedent = false;
+    bool vuPrecedent = true;
     
     Minuterie::Minuterie1::partirMinuterie(tempsMsParcourirBC, Minuterie::A);
     tempsEcoule = false;  // reset APRES avoir arme le timer, pour eviter race condition avec ancienne minuterie
@@ -447,7 +447,7 @@ void entrerStationnement(Lecture& l)
                 }
             }
             else if (capteur.estTropAGauche()) {
-                PontH::configurer(0, 105, 0, 90);
+                PontH::configurer(0, 115, 0, 90);
                 temp = true;
             }
             else {
@@ -669,14 +669,28 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 sortirStationnement(l);
                 tournerBoutCouloir(l);
                 etat = COULOIR_COTE;
+                sauvegarderRapport( nPersonnesLocalA ,
+                                    nObjetsLocalB,
+                                    nObjetsLocalC,
+                                    nPersonnesLocalD,
+                                    nZonesEndommageesCouloirEst,
+                                    nZonesEndommageesCouloirOuest);
+                _delay_ms(1000);
                 break;
             }
 
             case COULOIR_COTE:
             {
-                suivreCouloir();
+                suivreCouloir(nZonesEndommageesCouloirEst);
                 tournerBoutCouloir(l);
                 etat = COULOIR_NORD;
+                sauvegarderRapport( nPersonnesLocalA ,
+                                    nObjetsLocalB,
+                                    nObjetsLocalC,
+                                    nPersonnesLocalD,
+                                    nZonesEndommageesCouloirEst,
+                                    nZonesEndommageesCouloirOuest);
+                _delay_ms(1000);
                 break;
             }
 
@@ -690,17 +704,34 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 else if (compteurPiecesNord == 2 || compteurPiecesNord == 3)
                     etat = SALLE_B_C;
                 
-
+                sauvegarderRapport( nPersonnesLocalA ,
+                                    nObjetsLocalB,
+                                    nObjetsLocalC,
+                                    nPersonnesLocalD,
+                                    nZonesEndommageesCouloirEst,
+                                    nZonesEndommageesCouloirOuest);
+                _delay_ms(1000);
                 break;
             }
 
-            case SALLE_A_D: // modifie if statement : pas dernier couloir dans bc et nobjets local b different de nobjets local a
+            case SALLE_A_D:
             {
-                executerSallesAD(l);
+                if (compteurPiecesNord == 1)
+                    executerSallesAD(horaire ? nPersonnesLocalA : nPersonnesLocalD, l);
+                else
+                    executerSallesAD(horaire ? nPersonnesLocalD : nPersonnesLocalA, l);
                 if (compteurPiecesNord < 4)
                     etat = COULOIR_NORD;
                 else 
                     etat = DERNIER_COULOIR_COTE;
+
+                sauvegarderRapport( nPersonnesLocalA ,
+                                    nObjetsLocalB,
+                                    nObjetsLocalC,
+                                    nPersonnesLocalD,
+                                    nZonesEndommageesCouloirEst,
+                                    nZonesEndommageesCouloirOuest);
+                _delay_ms(1000);
                 break;
             }
 
@@ -711,16 +742,30 @@ void faireExecution(uint8_t& nPersonnesLocalA,
                 else 
                     executerSallesBC(horaire ? nObjetsLocalC : nObjetsLocalB, tempsEcoule, l, compteurPiecesNord);
                 etat = COULOIR_NORD;
+                sauvegarderRapport( nPersonnesLocalA ,
+                                    nObjetsLocalB,
+                                    nObjetsLocalC,
+                                    nPersonnesLocalD,
+                                    nZonesEndommageesCouloirEst,
+                                    nZonesEndommageesCouloirOuest);
+                _delay_ms(1000);
                 break;
             }
 
             case DERNIER_COULOIR_COTE :
-                suivreCouloir();
+                suivreCouloir(nZonesEndommageesCouloirOuest);
                 tournerBoutCouloir(l);
-                PontH::accelererMax(); 
-                suivreCouloir();
+                PontH::accelererMax();
+                suivreCouloir(nZonesEndommageesCouloirEst);
                 tournerBoutCouloir(l);
                 etat = ENTRER_STATIONNEMENT;
+                sauvegarderRapport( nPersonnesLocalA ,
+                                    nObjetsLocalB,
+                                    nObjetsLocalC,
+                                    nPersonnesLocalD,
+                                    nZonesEndommageesCouloirEst,
+                                    nZonesEndommageesCouloirOuest);
+                _delay_ms(1000);
                 break;
             
             case ENTRER_STATIONNEMENT:

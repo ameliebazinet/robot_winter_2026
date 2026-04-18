@@ -33,11 +33,11 @@ enum EtatCouloir {
 
 void recalibrer(); 
 void recalibrerVirage(Lecture& l);
-void suivreCouloir(Lecture& l);
+void suivreCouloir(uint8_t& nZones);
 void tournerBoutCouloir(Lecture& l);
 void sortirStationnement(Lecture& l);
 void parcourirCouloir();
-void executerSallesAD(Lecture& l);
+void executerSallesAD(uint8_t& nPersonnesLocal, Lecture& l);
 void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lecture& l);
 void couloirNord(Lecture& l);
 void entrerStationnement(Lecture& l);
