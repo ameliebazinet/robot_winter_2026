@@ -105,7 +105,7 @@ void suivreCouloir()
             del.allumerCouleur(Del::Couleur::ETEINT);
 
         if (capteur.estTropADroite())
-            PontH::configurer(0, 90, 0, 140);
+            PontH::configurer(0, 80, 0, 145);
         else if (capteur.estTropAGauche())
             PontH::configurer(0, 140, 0, 90);
         else
@@ -113,7 +113,7 @@ void suivreCouloir()
     }
 
     del.allumerCouleur(Del::Couleur::ETEINT);
-    _delay_ms(750);
+    _delay_ms(850);
     PontH::arreter();
     _delay_ms(500);
 }
@@ -417,7 +417,6 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     del.allumerCouleur(Del::Couleur::ETEINT); // ligne test
 } 
 
-
 void entrerStationnement(Lecture& l)
 {
     uint8_t placeStationnement = l.getNumStationnement();
@@ -464,7 +463,7 @@ void entrerStationnement(Lecture& l)
             if (capteur.estTropADroite())
                 PontH::configurer(0, 80, 0, 150);
             else
-                PontH::configurer(0, 110, 0, 80);
+                PontH::configurer(0, 100, 0, 80);
         }
 
         while (compteur != (int8_t)placeStationnement) {
