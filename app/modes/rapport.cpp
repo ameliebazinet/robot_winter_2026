@@ -65,9 +65,9 @@ bool lireRapport(uint8_t& nPersonnesLocalA,
 void ecrireLigne(Communication& com, bool conformite, const char* nom, uint8_t nombre, const char* detail)
 {
     if (conformite)
-        com.transmissionFormatee("%s :\t\t oui \r\n", nom);
+        com.transmissionFormatee("%-20s oui\r\n", nom);
     else
-        com.transmissionFormatee("%s :\t\t non \t\t %d %s\r\n", nom, nombre, detail);
+        com.transmissionFormatee("%-20s non             %d %s\r\n", nom, nombre, detail);
 }
 
 void genererRapport(uint8_t nPersonnesLocalA, uint8_t nObjetsLocalB, uint8_t nObjetsLocalC, uint8_t nPersonnesLocalD,
@@ -84,20 +84,17 @@ void genererRapport(uint8_t nPersonnesLocalA, uint8_t nObjetsLocalB, uint8_t nOb
 
     _delay_ms(1000);
 
-    com.transmissionChaine("Test\n");
-    com.transmissionChaine("Test\n");
-
-    com.transmissionFormatee("Rapport de conformite \r\n");
-    com.transmissionFormatee("Emplacement \t\t Conformite \t\t detail \r\n");
-    com.transmissionOccurence('-', 15);
+    com.transmissionFormatee("Rapport de conformite\r\n\n");
+    com.transmissionFormatee("%-20s %-15s %s\r\n", "Emplacement", "conformite", "detail");
+    com.transmissionOccurence('-', 55);
     com.transmissionFormatee("\r\n");
 
-    ecrireLigne(com, conformiteA, "Local A", nPersonnesLocalA, "personnes");
-    ecrireLigne(com, conformiteB, "Local B", nObjetsLocalB, "objets");
-    ecrireLigne(com, conformiteC, "Local C", nObjetsLocalC, "objets");
-    ecrireLigne(com, conformiteD, "Local D", nPersonnesLocalD, "personnes");
-    ecrireLigne(com, conformiteOuest, "Couloir OUEST", nZonesEndommageesCouloirOuest, "zones endommagees");
-    ecrireLigne(com, conformiteEst, "Couloir EST", nZonesEndommageesCouloirEst, "zones endommagees");
+    ecrireLigne(com, conformiteA,    "Local A",       nPersonnesLocalA,          "personnes");
+    ecrireLigne(com, conformiteB,    "Local B",       nObjetsLocalB,             "objet");
+    ecrireLigne(com, conformiteC,    "Local C",       nObjetsLocalC,             "objets");
+    ecrireLigne(com, conformiteD,    "Local D",       nPersonnesLocalD,          "personnes");
+    ecrireLigne(com, conformiteOuest,"Couloir OUEST", nZonesEndommageesCouloirOuest, "zones endommagees");
+    ecrireLigne(com, conformiteEst,  "Couloir EST",   nZonesEndommageesCouloirEst,   "zones endommagees");
 }
 
 void genererRapportDepuisMemoire()
