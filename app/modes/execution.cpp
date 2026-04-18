@@ -681,7 +681,7 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case COULOIR_COTE:
             {
-                suivreCouloir(nZonesEndommageesCouloirEst);
+                suivreCouloir(nZonesEndommageesCouloirOuest);
                 tournerBoutCouloir(l);
                 etat = COULOIR_NORD;
                 sauvegarderRapport( nPersonnesLocalA ,
@@ -753,10 +753,10 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             }
 
             case DERNIER_COULOIR_COTE :
-                suivreCouloir(nZonesEndommageesCouloirOuest);
+                suivreCouloir(nZonesEndommageesCouloirEst);
                 tournerBoutCouloir(l);
                 PontH::accelererMax();
-                suivreCouloir(nZonesEndommageesCouloirEst);
+                suivreCouloir(nZonesEndommageesCouloirOuest);
                 tournerBoutCouloir(l);
                 etat = ENTRER_STATIONNEMENT;
                 sauvegarderRapport( nPersonnesLocalA ,
