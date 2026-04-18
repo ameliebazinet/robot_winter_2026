@@ -224,9 +224,11 @@ void executerSallesAD(Lecture& l)
     com.initialisationUART();
 
     if (horaire) {
+        PontH::tournerDroiteAccelere();
         PontH::tournerDroite(VITESSE_BOOST);
     }
     else {
+        PontH::tournerGaucheAccelere();
         PontH::tournerGauche(VITESSE_BOOST);
     }
     _delay_ms(250); // modifie og 250
@@ -328,7 +330,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
         PontH::tournerGaucheAccelere();
         PontH::tournerGauche(110);
     }
-    _delay_ms(700);
+    _delay_ms(900); // pt changer ca
     PontH::arreter();
     _delay_ms(500);
     PontH::reculerMax();

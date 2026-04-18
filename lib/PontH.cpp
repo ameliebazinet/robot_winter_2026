@@ -91,9 +91,8 @@ void PontH::tournerGaucheAccelere()
 
 void PontH::tourner180()
 {
-    uint16_t delai180 = 1400; // og 1550
-    tournerGauche(255);
-    _delay_ms(50);
+    uint16_t delai180 = 1500; // og 1550
+    tournerGaucheAccelere();
     tournerGauche(140);
     _delay_ms(delai180); 
     arreter();
