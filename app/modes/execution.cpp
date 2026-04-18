@@ -149,7 +149,7 @@ void sortirStationnement(Lecture& l)
     else {
         PontH::tournerGaucheAccelere();
         while (!capteur.estTropADroite())
-            PontH::tournerGauche(110);
+            PontH::tournerGauche(120);
     }
     
     PontH::arreter();
@@ -168,7 +168,7 @@ void sortirStationnement(Lecture& l)
             if (capteur.estTropADroite())
                 PontH::configurer(0, 80, 0, 140);
             else
-                PontH::configurer(0, 120, 0, 100);
+                PontH::configurer(0, 110, 0, 100);
         }
     } 
     _delay_ms(750); 
@@ -342,7 +342,12 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
 
 
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
-    uint32_t tempsMsParcoursBC = 2000; // og 2200 apres 2100 modifie
+    uint32_t tempsMsParcourirBC;
+    if (horaire)
+        tempsMsParcourirBC = 2000; // og 2200 apres 2100 modifie
+    else
+        tempsMsParcourirBC = 2200;
+    
     Del del(PORTC, PC6, PC7);
 
     del.allumerCouleur(Del::Couleur::VERT); // ligne test
@@ -356,7 +361,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     
     bool vuPrecedent = false;
     
-    Minuterie::Minuterie1::partirMinuterie(tempsMsParcoursBC, Minuterie::A);
+    Minuterie::Minuterie1::partirMinuterie(tempsMsParcourirBC, Minuterie::A);
     tempsEcoule = false;  // reset APRES avoir arme le timer, pour eviter race condition avec ancienne minuterie
 
     while(!tempsEcoule)
@@ -402,9 +407,9 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     else {
         PontH::tournerGaucheAccelere();   // <-- boost ajouté
         while (!cl.estTropADroite())
-            PontH::tournerGauche(120);
-        while (!cl.estTropAGauche())
             PontH::tournerGauche(100);
+        while (!cl.estTropAGauche())
+            PontH::tournerGauche(90);
     }
     PontH::arreter();
     _delay_ms(500);

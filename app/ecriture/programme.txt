@@ -1,5 +1,5 @@
 dbt ;
-trd ;
+trg ;
 sgo 69 ;
 sgo 71 ;
 sgo 72 ;
