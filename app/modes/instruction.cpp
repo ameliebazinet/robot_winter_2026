@@ -1,8 +1,10 @@
 #include "instruction.hpp"
 
+
 void faireInstruction(Lecture& lecture)
 {
-    // signalement du début
+    Son::initialiserPiezo();
+   
     for (uint8_t i = 0; i < 8; i++)
     {
         lecture.getDel().allumerCouleur(Del::Couleur::VERT);
@@ -10,6 +12,10 @@ void faireInstruction(Lecture& lecture)
         lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
         _delay_ms(125);
     }
+    
+    ecrireDepuisUART();
+    _delay_ms(10); 
+    lecture.lireMemoire();
 
     for (uint8_t i = 0; i < 3; i++)
     {
@@ -20,6 +26,7 @@ void faireInstruction(Lecture& lecture)
     }
 
     _delay_ms(DELAI_2_SECONDES);
+
     if (lecture.getDirectionHoraire())
     {
         // allumer vert
@@ -34,7 +41,7 @@ void faireInstruction(Lecture& lecture)
     lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(DELAI_2_SECONDES);
 
-    // allumer la del ambre :
+    //ambre :
     for (uint8_t i = 0; i < lecture.getNumStationnement(); i++)
     {
         lecture.getDel().allumerCouleurAmbre();

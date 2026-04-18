@@ -1,18 +1,17 @@
 #include "rapport.hpp"
-#include "Del.hpp"
 #include "memoire_24.h"
-#define F_CPU 8000000UL
+#include "../lib/Del.hpp"
 #include <util/delay.h>
 
 
 // addr memoire a recalibrer!!!
-#define ADR_LOCAL_A      0x0000
-#define ADR_LOCAL_B      0x0001
-#define ADR_LOCAL_C      0x0002
-#define ADR_LOCAL_D      0x0003
-#define ADR_COU_EST      0x0004
-#define ADR_COU_OUEST    0x0005
-#define ADR_SIGNATURE    0x0006
+#define ADR_LOCAL_A      0x1000
+#define ADR_LOCAL_B      0x1001
+#define ADR_LOCAL_C      0x1002
+#define ADR_LOCAL_D      0x1003
+#define ADR_COU_EST      0x1004
+#define ADR_COU_OUEST    0x1005
+#define ADR_SIGNATURE    0x1006
 
 void sauvegarderRapport(uint8_t nPersonnesLocalA,
                         uint8_t nObjetsLocalB,
@@ -24,12 +23,19 @@ void sauvegarderRapport(uint8_t nPersonnesLocalA,
     Memoire24CXXX memoire;
 
     memoire.ecriture(ADR_LOCAL_A, nPersonnesLocalA);
+    _delay_ms(10);
     memoire.ecriture(ADR_LOCAL_B, nObjetsLocalB);
+    _delay_ms(10);
     memoire.ecriture(ADR_LOCAL_C, nObjetsLocalC);
+    _delay_ms(10);
     memoire.ecriture(ADR_LOCAL_D, nPersonnesLocalD);
+    _delay_ms(10);
     memoire.ecriture(ADR_COU_EST, nZonesEndommageesCouloirEst);
+    _delay_ms(10);
     memoire.ecriture(ADR_COU_OUEST, nZonesEndommageesCouloirOuest);
+    _delay_ms(10);
     memoire.ecriture(ADR_SIGNATURE, 0xA5);
+    _delay_ms(10);
 }
 
 bool lireRapport(uint8_t& nPersonnesLocalA,
@@ -59,15 +65,16 @@ bool lireRapport(uint8_t& nPersonnesLocalA,
 void ecrireLigne(Communication& com, bool conformite, const char* nom, uint8_t nombre, const char* detail)
 {
     if (conformite)
-        com.transmissionFormatee("%s :\t oui \r\n", nom);
+        com.transmissionFormatee("%s :\t\t oui \r\n", nom);
     else
-        com.transmissionFormatee("%s :\t\t non\t\t %d %s\r\n", nom, nombre, detail);
+        com.transmissionFormatee("%s :\t\t non \t\t %d %s\r\n", nom, nombre, detail);
 }
 
 void genererRapport(uint8_t nPersonnesLocalA, uint8_t nObjetsLocalB, uint8_t nObjetsLocalC, uint8_t nPersonnesLocalD,
                     uint8_t nZonesEndommageesCouloirEst, uint8_t nZonesEndommageesCouloirOuest)
 {
     Communication com;
+    com.initialisationUART();
     bool conformiteA = (nPersonnesLocalA == 0);
     bool conformiteB = (nObjetsLocalB == 0);
     bool conformiteC = (nObjetsLocalC == 0);
@@ -75,6 +82,12 @@ void genererRapport(uint8_t nPersonnesLocalA, uint8_t nObjetsLocalB, uint8_t nOb
     bool conformiteEst = (nZonesEndommageesCouloirEst == 0);
     bool conformiteOuest = (nZonesEndommageesCouloirOuest == 0);
 
+    _delay_ms(1000);
+
+    com.transmissionChaine("Test\n");
+    com.transmissionChaine("Test\n");
+
+    com.transmissionFormatee("Rapport de conformite \r\n");
     com.transmissionFormatee("Emplacement \t\t Conformite \t\t detail \r\n");
     com.transmissionOccurence('-', 15);
     com.transmissionFormatee("\r\n");
@@ -89,6 +102,16 @@ void genererRapport(uint8_t nPersonnesLocalA, uint8_t nObjetsLocalB, uint8_t nOb
 
 void genererRapportDepuisMemoire()
 {
+    Del del(PORTC, PC6, PC7);
+
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        del.allumerCouleur(Del::Couleur::ROUGE);
+        _delay_ms(125);
+        del.allumerCouleur(Del::Couleur::ETEINT);
+        _delay_ms(125);
+    }
+
     uint8_t localA = 0;
     uint8_t localB = 0;
     uint8_t localC = 0;
@@ -96,13 +119,7 @@ void genererRapportDepuisMemoire()
     uint8_t couloirEst = 0;
     uint8_t couloirOuest = 0;
 
-    if (!lireRapport(localA, localB, localC, localD, couloirEst, couloirOuest))
-        return;
-
+    lireRapport(localA, localB, localC, localD, couloirEst, couloirOuest);
     genererRapport(localA, localB, localC, localD, couloirEst, couloirOuest);
+    
 }
-
-
-
-
-

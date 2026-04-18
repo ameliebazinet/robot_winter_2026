@@ -20,11 +20,19 @@ void Lecture::demarrerPhase(Del::Couleur couleur, uint16_t delai)
 
 void Lecture::attendreEntrePhases(volatile bool &boutonClique, volatile bool &tempsEcoule)
 {
-    boutonClique = false;
-    tempsEcoule = false;
     del_.allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(DELAI_1_SECONDE);
+    // Ignorer tout clic pendant la pause
+    boutonClique = false;
+    tempsEcoule = false;
 }
+// void Lecture::attendreEntrePhases(volatile bool &boutonClique, volatile bool &tempsEcoule)
+// {
+//     boutonClique = false;
+//     tempsEcoule = false;
+//     del_.allumerCouleur(Del::Couleur::ETEINT);
+//     _delay_ms(DELAI_1_SECONDE);
+// }
 
 void Lecture::confirmerMode(InterruptionExterne &boutonMateriel)
 {
@@ -37,10 +45,11 @@ Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &temps
 {
     _delay_ms(2000);
     InterruptionExterne boutonMateriel;
-    // INT0 sur any logical change
     boutonMateriel.initialisation(0, 1);
 
-    // Phase verte.
+    // Phase verte
+    boutonClique = false;
+    tempsEcoule = false;
     demarrerPhase(Del::Couleur::VERT, DELAI_2_SECONDES);
     while (!boutonClique && !tempsEcoule) {}
     if (boutonClique) {
@@ -48,10 +57,10 @@ Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &temps
         return Mode::INSTRUCTION;
     }
 
-    // pause
+    // pause (remet déjà boutonClique et tempsEcoule à false)
     attendreEntrePhases(boutonClique, tempsEcoule);
 
-    // Phase rouge.
+    // Phase rouge
     demarrerPhase(Del::Couleur::ROUGE, DELAI_2_SECONDES);
     while (!boutonClique && !tempsEcoule) {}
     if (boutonClique) {
@@ -61,8 +70,39 @@ Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &temps
 
     // pause
     attendreEntrePhases(boutonClique, tempsEcoule);
+    confirmerMode(boutonMateriel);  // ← désactiver le bouton avant de retourner
     return Mode::EXECUTION;
 }
+// Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &tempsEcoule)
+// {
+//     _delay_ms(2000);
+//     InterruptionExterne boutonMateriel;
+//     // INT0 sur any logical change
+//     boutonMateriel.initialisation(0, 1);
+
+//     // Phase verte.
+//     demarrerPhase(Del::Couleur::VERT, DELAI_2_SECONDES);
+//     while (!boutonClique && !tempsEcoule) {}
+//     if (boutonClique) {
+//         confirmerMode(boutonMateriel);
+//         return Mode::INSTRUCTION;
+//     }
+
+//     // pause
+//     attendreEntrePhases(boutonClique, tempsEcoule);
+
+//     // Phase rouge.
+//     demarrerPhase(Del::Couleur::ROUGE, DELAI_2_SECONDES);
+//     while (!boutonClique && !tempsEcoule) {}
+//     if (boutonClique) {
+//         confirmerMode(boutonMateriel);
+//         return Mode::RAPPORT;
+//     }
+
+//     // pause
+//     attendreEntrePhases(boutonClique, tempsEcoule);
+//     return Mode::EXECUTION;
+// }
 
 void Lecture::initialiserLecture()
 {

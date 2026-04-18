@@ -557,7 +557,7 @@ void couloirNord(Lecture& l)
                         PontH::configurer(0, 110, 0, 90);
                     }
                     else if (capteur.estAllumeCapteurQuelconque()) {
-                            PontH::tournerGauche(120);
+                            PontH::tournerGauche(100);
                     }
                     else {
                         // Aucun capteur latéral : possible entrée
@@ -725,6 +725,13 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             
             case ENTRER_STATIONNEMENT:
                 entrerStationnement(l);
+                sauvegarderRapport( nPersonnesLocalA ,
+                                    nObjetsLocalB,
+                                    nObjetsLocalC,
+                                    nPersonnesLocalD,
+                                    nZonesEndommageesCouloirEst,
+                                    nZonesEndommageesCouloirOuest);
+                _delay_ms(1000);
                 return;
         }
     }

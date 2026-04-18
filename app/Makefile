@@ -7,8 +7,8 @@ MCU=atmega324pa
 PROJECTNAME=main
 
 # Fichier source exec
-PRJSRC=main.cpp modes/execution.cpp lecture/lecture.cpp
-
+# PRJSRC=main.cpp modes/execution.cpp lecture/lecture.cpp
+PRJSRC=main.cpp modes/execution.cpp modes/instruction.cpp modes/rapport.cpp lecture/lecture.cpp ecriture/ecriture.cpp
 # Librairie
 LIBDIR=../lib
 LIBS=$(LIBDIR)/libstatique.a
