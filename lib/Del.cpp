@@ -42,11 +42,14 @@ void Del::allumerCouleur(Couleur couleur)
 
 void Del::allumerCouleurAmbre()
 {
-    const uint8_t DELAI_AMBRE = 5;
-    allumerCouleur(Couleur::ROUGE);
-    _delay_ms(DELAI_AMBRE);
-    allumerCouleur(Couleur::VERT);
-    _delay_ms(DELAI_AMBRE);
+    for(int i =0;i<50;i++){
+        const uint8_t DELAI_AMBRE = 5;
+        allumerCouleur(Couleur::ROUGE);
+        _delay_ms(DELAI_AMBRE);
+        allumerCouleur(Couleur::VERT);
+        _delay_ms(DELAI_AMBRE);
+        allumerCouleur(Couleur::ETEINT);
+    }
 }
 
 void Del::clignoterVert()

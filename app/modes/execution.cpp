@@ -42,16 +42,12 @@ void tournerBoutCouloir(Lecture& l)
     CapteurLigne cl;
     if (l.getDirectionHoraire()) {
         PontH::tournerDroiteAccelere();
-        while (!cl.estTropADroite())
-            PontH::tournerDroite(100);
-        while (!cl.estTropADroite())
-            PontH::tournerDroite(100);
+        while (!cl.estTropAGauche())
+            PontH::tournerDroite(110);
     }
     else {
         PontH::tournerGaucheAccelere();
-        while (!cl.estTropAGauche())
-            PontH::tournerGauche(110);
-        while (!cl.estTropAGauche())
+        while (!cl.estTropADroite())
             PontH::tournerGauche(110);
     }
     PontH::arreter();
@@ -105,10 +101,10 @@ void suivreCouloir(uint8_t& nZones)
         else
             del.allumerCouleur(Del::Couleur::ETEINT);
 
-        if (!estSurObstacleMaintenant && capteur.estTropADroite() && !capteur.estTropAGauche())
-            PontH::configurer(0, 80, 0, 145);
-        else if (!estSurObstacleMaintenant && capteur.estTropAGauche() && !capteur.estTropADroite())
-            PontH::configurer(0, 140, 0, 90);
+        if (capteur.estTropADroite())
+            PontH::configurer(0, 90, 0, 130);
+        else if (capteur.estTropAGauche())
+            PontH::configurer(0, 130, 0, 90);
         else
             PontH::avancer(100);
     }
@@ -146,7 +142,6 @@ void sortirStationnement(Lecture& l)
         while (!capteur.estTropAGauche())
             PontH::tournerDroite(90);
     }
-
     else {
         PontH::tournerGaucheAccelere();
         while (!capteur.estTropADroite())
@@ -345,7 +340,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
     uint32_t tempsMsParcourirBC;
     if (horaire)
-        tempsMsParcourirBC = 2650; // og 2200 apres 2100 modifie
+        tempsMsParcourirBC = 2300; // og 2200 apres 2100 modifie
     else
         tempsMsParcourirBC = 2300;
     
@@ -420,6 +415,11 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
 
 void entrerStationnement(Lecture& l)
 {
+    Communication c;
+    c.initialisationUART();
+    _delay_ms(1000);
+    
+
     uint8_t placeStationnement = l.getNumStationnement();
     CapteurLigne capteur;
     bool horaire = l.getDirectionHoraire();
@@ -429,8 +429,13 @@ void entrerStationnement(Lecture& l)
     PontH::accelererMax();
     recalibrer();
 
+    
+
     if (horaire) {
         uint8_t compteur = 6;
+        //c.transmissionFormatee("ps: %d \r\n", placeStationnement);
+        c.transmissionFormatee("%d \r\n", compteur);
+        
 
         while (!capteur.estAllumeD2()) {
             if (capteur.estTropAGauche())
@@ -439,10 +444,11 @@ void entrerStationnement(Lecture& l)
                 PontH::configurer(0, 80, 0, 130);
         }
 
-        while (compteur != placeStationnement) {
+        while (compteur != (int8_t)placeStationnement) {
             if (capteur.estAllumeD2()) {
                 if (temp) {
                     compteur--;
+                    c.transmissionFormatee("%d \r\n", compteur);
                     temp = false;
                     PontH::configurer(0, 90, 0, 120);
                 }
@@ -682,7 +688,9 @@ void faireExecution(uint8_t& nPersonnesLocalA,
 
             case COULOIR_COTE:
             {
-                suivreCouloir(nZonesEndommageesCouloirOuest);
+                // suivreCouloir(nZonesEndommageesCouloirOuest);
+                suivreCouloir(horaire ? nZonesEndommageesCouloirOuest : nZonesEndommageesCouloirEst);
+
                 tournerBoutCouloir(l);
                 etat = COULOIR_NORD;
                 sauvegarderRapport( nPersonnesLocalA ,
@@ -754,10 +762,14 @@ void faireExecution(uint8_t& nPersonnesLocalA,
             }
 
             case DERNIER_COULOIR_COTE :
-                suivreCouloir(nZonesEndommageesCouloirEst);
+                // suivreCouloir(nZonesEndommageesCouloirEst);
+                suivreCouloir(horaire ? nZonesEndommageesCouloirOuest : nZonesEndommageesCouloirEst);
+
                 tournerBoutCouloir(l);
                 PontH::accelererMax();
-                suivreCouloir(nZonesEndommageesCouloirOuest);
+                //suivreCouloir(nZonesEndommageesCouloirOuest);
+                suivreCouloir(horaire ? nZonesEndommageesCouloirEst : nZonesEndommageesCouloirOuest);
+                
                 tournerBoutCouloir(l);
                 etat = ENTRER_STATIONNEMENT;
                 sauvegarderRapport( nPersonnesLocalA ,

@@ -7,6 +7,7 @@
 #include "Del.hpp"
 #include "../lecture/lecture.hpp"
 #include "rapport.hpp"
+#include "Communication.hpp"
 #include <util/delay.h>
 
 enum Etat 

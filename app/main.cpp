@@ -155,7 +155,8 @@ int main()
 //     //             Son::arreter();
 //     //             // genererRapport(nPersonnesLocalA, 
 //     //             //                nObjetsLocalB, 
-//     //             //                nObjetsLocalC, 
+//     //             //                nObjet                // suivreCouloir(nZonesEndommageesCouloirOuest);
+ 
 //     //             //                nPersonnesLocalD, 
 //     //             //                nZonesEndommageesCouloirEst,
 //     //             //                nZonesEndommageesCouloirOuest);

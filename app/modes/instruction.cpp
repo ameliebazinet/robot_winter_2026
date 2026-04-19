@@ -41,9 +41,10 @@ void faireInstruction(Lecture& lecture)
     lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(DELAI_2_SECONDES);
 
-    //ambre :
+    //ambre :getDel
     for (uint8_t i = 0; i < lecture.getNumStationnement(); i++)
     {
+       
         lecture.getDel().allumerCouleurAmbre();
         _delay_ms(DELAI_CLIGNOTEMENT_AMBRE);
         lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
