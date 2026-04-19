@@ -1,17 +1,27 @@
-on utilise la commande  
-    % make clean && make
-dans notre librairie dans le dossier /lib, on utilise la commande 
-    % make install 
-notre programme main dans le dossier /app vers la mémoire interne 
-puis on convertit le programme bytecode (.txt) en bianaire  avec la commande 
-    % progmem -o programme.bin programme.txt
-puis en utilisant
-    % serieviausb -e -f 
-on transfère ce binaire dans la mémoire EEPROM externe du robot.
+========== LIBRAIRIE =============
+    Pour compiler la librairie, on utilise la commande 
+        % make clean && make
+        dans le dossier /lib.
+
+========== INSTALLATION DU PROGRAMME =============
+    Pour installer le programme dans la mémoire interne du robot, on utilise la commande 
+        % make install 
+        dans le dossier /app.
+
+========== BYTECODE =============
+    Pour convertir le bytecode (programme.txt) en binaire, on utilise la commande
+        % progmem -o programme.bin programme.txt
+        dans le dossier /app/ecriture.
+
+    On utilise ensuite la commande
+        % serieViaUSB -e -f programme.bin
+        dans le dossier /app/ecriture pour envoyer ce fichier binaire dans la mémoire EEPROM externe du robot.
+
+
+========== ARBORESCENCE DU PROJET =============
 
 inf1900-2728/
 ├── LISEZMOI.txt
-├── programme.bin
 │
 ├── app/                          ← projet principal
 │   ├── main.cpp
@@ -54,56 +64,56 @@ et rapport.cpp/.hpp) sont contenus dans le dossier /inf1900-2728/app/modes et ch
 fichier qui permet de manoeuvrer le robot de la librairie est dans le dossier
 /inf1900-2728/lib
 
-/*
-* ========== I/O IDENTIFICATION (CONNEXIONS SUR LE ROBOT) =============
-*
-*
-* ┌───────────────────────────────────────────────────────────────────┐
-* │                    ATmega324PA - Pinout                           │
-* ├───────────────────────────────────────────────────────────────────┤
-* │                                                                   │
-* │   PORTA            PORTB           PORTC          PORTD           │
-* │  ┌───────┐        ┌──────┐         ┌──────┐       ┌──────┐        │
-* │  │ PA0 ●─│→D1     │PB0 ○ │         │PC0 ○ │       │PD0 ○ │        │
-* │  │ PA1 ●─│→D2     │PB1 ○ │         │PC1 ○ │       │PD1 ○ │        │
-* │  │ PA2 ●─│→IR     │PB2 ●─│→DIR G   │PC2 ○ │       │PD2 ○ │        │
-* │  │ PA3 ●─│→D3     │PB3 ●─│→PWM G   │PC3 ○ │       │PD3 ○ │        │
-* │  │ PA4 ●─│→D4     │PB4 ●─│→PWM D   │PC4 ○ │       │PD4 ●─│→P.GND  │
-* │  │ PA5 ●─│→D5     │PB5 ●─│→DIR D   │PC5 ○ │       │PD5 ●─│→P.SIG  │
-* │  │ PA6 ○ │        │PB6 ○ │         │PC6 ●─│→DEL - │PD6 ○ │        │
-* │  │ PA7 ○ │        │PB7 ○ │         │PC7 ●─│→DEL + │PD7 ○ │        │
-* │  └───────┘        └──────┘         └──────┘       └──────┘        │
-* │                                                                   │
-* │  ● = Utilisé          ○ = Non utilisé                             │
-* └───────────────────────────────────────────────────────────────────┘
-* LEGENDE :
-* D1..D5  : capteurs de ligne
-* IR      : capteur infrarouge 
-* DIR G/D : direction moteur gauche/droite
-* PWM G/D : vitesse moteur gauche/droite OC0A/OC0B 
-* DEL +/- : DEL RGB anodes 
-* P.GND  : masse cellule piézoélectrique 
-* P.SIG  : signal piézo OC1A 
-*
-* ┌─────────────────────────────────────────────────────┐
-* │                 Configuration Moteurs               │
-* ├─────────────────────────────────────────────────────┤
-* │                                                     │
-* │  ATmega324PA      Carte Pont H         Moteurs      │
-* │                                                     │
-* │  ROUE GAUCHE:                                       │
-* │  ┌──────┐                                           │
-* │  │ PB3  ├─── orange ──→ Pin1 (haut) ─→ Enable G     │
-* │  │ PB2  ├─── jaune  ──→ Pin2 (bas)  ─→ Dir G        │
-* │  └──────┘                                           │
-* │                                                     │
-* │  ROUE DROITE:                                       │
-* │  ┌──────┐                                           │
-* │  │ PB4  ├─── orange ──→ Pin1 (haut) ─→ Enable D     │
-* │  │ PB5  ├─── jaune  ──→ Pin2 (bas)  ─→ Dir D        │
-* │  └──────┘            Connecteur 2 pins              │
-* │                                                     │
-* └─────────────────────────────────────────────────────┘
-*
-* =====================================================================
-*/
+
+============== I/O IDENTIFICATION (CONNEXIONS SUR LE ROBOT) ================
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    ATmega324PA - Pinout                                  │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   PORTA            PORTB                 PORTC          PORTD            │
+│  ┌───────┐        ┌──────┐              ┌──────┐       ┌──────┐          │
+│  │ PA0 ●─│→D1     │PB0 ○ │              │PC0 ●─│→SCL   │PD0 ●─│→RXD      │
+│  │ PA1 ●─│→D2     │PB1 ○ │              │PC1 ●─│→SDA   │PD1 ●─│→TXD      │
+│  │ PA2 ●─│→IR     │PB2 ●─│→DIR G        │PC2 ○ │       │PD2 ●─│→B-INT0   │
+│  │ PA3 ●─│→D3     │PB3 ●─│→PWM G        │PC3 ○ │       │PD3 ○ │          │
+│  │ PA4 ●─│→D4     │PB4 ●─│→PWM D, PG+   │PC4 ○ │       │PD4 ●─│→P.GND    │
+│  │ PA5 ●─│→D5     │PB5 ●─│→DIR D, PG+   │PC5 ○ │       │PD5 ●─│→P.SIG, T │
+│  │ PA6 ○ │        │PB6 ●─│→PG+          │PC6 ●─│→DEL - │PD6 ○ │          │
+│  │ PA7 ○ │        │PB7 ●─│→PG+          │PC7 ●─│→DEL + │PD7 ○ │          │
+│  └───────┘        └──────┘              └──────┘       └──────┘          │
+│                                                                          │
+│  ● = Utilisé          ○ = Non utilisé                                    │
+└──────────────────────────────────────────────────────────────────────────┘
+LEGENDE :
+D1..D5    : Capteurs de ligne
+IR        : Capteur infrarouge 
+DIR G/D   : Direction du moteur (gauche/droite)
+PWM G/D   : Vitesse du moteur (gauche/droite, OC0A/OC0B) 
+DEL +/-   : DEL (Cathode / Anode) 
+P.GND     : GND de la cellule piézoélectrique 
+P.SIG     : Signal pour la cellule piézoélectrique (OC1A) 
+T         : Minuterie CTC (interruption interne)
+PG        : SPI (Programmeur)
+SCL/SDA   : EEPROM externe
+RXD/TXD   : UART (debug)
+B-INT0    : Bouton (interruption externe)
+┌─────────────────────────────────────────────────────┐
+│                 Configuration Moteurs               │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  ATmega324PA      Carte Pont H         Moteurs      │
+│                                                     │
+│  ROUE GAUCHE:                                       │
+│  ┌──────┐                                           │
+│  │ PB3  ├─── violet ──→ Pin1 (haut) ─→ Enable G     │
+│  │ PB2  ├─── blanc  ──→ Pin2 (bas)  ─→ Dir G        │
+│  └──────┘                                           │
+│                                                     │
+│  ROUE DROITE:                                       │
+│  ┌──────┐                                           │
+│  │ PB4  ├─── violet ──→ Pin1 (haut) ─→ Enable D     │
+│  │ PB5  ├─── blanc  ──→ Pin2 (bas)  ─→ Dir D        │
+│  └──────┘            Connecteur 2 pins              │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+=====================================================================

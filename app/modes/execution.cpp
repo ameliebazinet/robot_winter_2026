@@ -242,7 +242,7 @@ void executerSallesAD(uint8_t& nPersonnesLocal, Lecture& l)
             }
             else {
                 PontH::tournerDroite(VITESSE_BOOST);
-                _delay_ms(50);
+                _delay_ms(100);
                 PontH::tournerDroite(VITESSE_SCAN);
                 _delay_ms(75);
                 PontH::arreter();
@@ -279,8 +279,8 @@ void executerSallesAD(uint8_t& nPersonnesLocal, Lecture& l)
             }
             else {
                 PontH::tournerGauche(VITESSE_BOOST);
-                _delay_ms(50);
-                PontH::tournerGauche(VITESSE_SCAN + 10);
+                _delay_ms(110);
+                PontH::tournerGauche(VITESSE_SCAN);
                 _delay_ms(75);
                 PontH::arreter();
                 _delay_ms(250);
@@ -324,7 +324,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     else {
         PontH::tournerGaucheAccelere();
         PontH::tournerGauche(110);
-        _delay_ms(1000);
+        _delay_ms(900);
     }
     PontH::arreter();
     _delay_ms(500);
@@ -342,7 +342,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     if (horaire)
         tempsMsParcourirBC = 2300; // og 2200 apres 2100 modifie
     else
-        tempsMsParcourirBC = 2300;
+        tempsMsParcourirBC = 2200;
     
     Del del(PORTC, PC6, PC7);
 
@@ -433,9 +433,6 @@ void entrerStationnement(Lecture& l)
 
     if (horaire) {
         uint8_t compteur = 6;
-        //c.transmissionFormatee("ps: %d \r\n", placeStationnement);
-        c.transmissionFormatee("%d \r\n", compteur);
-        
 
         while (!capteur.estAllumeD2()) {
             if (capteur.estTropAGauche())
@@ -468,7 +465,7 @@ void entrerStationnement(Lecture& l)
     
         while (!capteur.estAllumeD4()) {
             if (capteur.estTropADroite())
-                PontH::configurer(0, 80, 0, 150);
+                PontH::configurer(0, 80, 0, 130);
             else
                 PontH::configurer(0, 100, 0, 80);
         }
@@ -478,11 +475,11 @@ void entrerStationnement(Lecture& l)
                 if (temp) {
                     compteur++;
                     temp = false;
-                    PontH::configurer(0, 90, 0, 120);
+                    PontH::configurer(0, 100, 0, 90);
                 }
             }
             else if (capteur.estTropADroite()) {
-                PontH::configurer(0, 80, 0, 150);
+                PontH::configurer(0, 80, 0, 130);
                 temp = true;
             }
             
@@ -634,8 +631,8 @@ void couloirNord(Lecture& l)
                     _delay_ms(250);
                 }
                 else {
-                    PontH::tournerDroite(150);
-                    _delay_ms(150);
+                    PontH::tournerDroite(140);
+                    _delay_ms(250);
                 }
                 PontH::arreter();
                 _delay_ms(500);

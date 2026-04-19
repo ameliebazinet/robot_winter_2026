@@ -13,7 +13,6 @@
 enum Etat 
 {
     SORTIR_STATIONNEMENT,
-    PREMIER_COULOIR_SUD,
     COULOIR_COTE,
 
     COULOIR_NORD,
@@ -21,7 +20,6 @@ enum Etat
     SALLE_B_C,
 
     DERNIER_COULOIR_COTE,
-
     ENTRER_STATIONNEMENT
 };
 
