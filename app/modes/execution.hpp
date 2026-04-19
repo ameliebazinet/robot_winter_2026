@@ -40,8 +40,6 @@ void executerSallesAD(uint8_t& nPersonnesLocal, Lecture& l);
 void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lecture& l);
 void couloirNord(Lecture& l);
 void entrerStationnement(Lecture& l);
-//void entrerStationnementHoraire(Lecture& l);
-//void entrerStationnementAntihoraire(Lecture& l);
 void tournerDroite();
 void faireExecution(uint8_t& nPersonnesLocalA,
                     uint8_t& nObjetsLocalB,

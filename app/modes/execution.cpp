@@ -92,14 +92,11 @@ void sortirStationnement(Lecture& l)
     _delay_ms(500);
 }
 
-
-
 void suivreCouloir(uint8_t& nZones)
 {
     CapteurLigne capteur;
     Del del(PORTC, PC6, PC7);
 
-    uint8_t nObstacles = 0;
     bool obstacleDejaCompte = false;
     uint8_t compteurSansObstacle = 0;
     uint8_t compteurAvecObstacle = 0;
@@ -352,7 +349,7 @@ void executerSallesAD(uint8_t& nPersonnesLocal, Lecture& l)
     _delay_ms(500);
 
     if (horaire) {
-        while (!cl.estAllumeCapteurQuelconque()) {
+        while (!cl.estTropADroite() || !cl.estAllumeD4()) {
             ci.lireVoltage();
 
             if (ci.estObjetDetecte()) {
@@ -389,7 +386,7 @@ void executerSallesAD(uint8_t& nPersonnesLocal, Lecture& l)
     }
 
     else {
-        while (!cl.estAllumeCapteurQuelconque()) {
+        while (!cl.estTropAGauche() || !cl.estAllumeD2()) {
             ci.lireVoltage();
 
             if (ci.estObjetDetecte()) {
@@ -437,7 +434,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     if (horaire) {
         PontH::tournerDroiteAccelere();
         PontH::tournerDroite(110);
-        _delay_ms(800);
+        _delay_ms(1000);
 
     }
     else {
@@ -486,8 +483,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
             del.allumerCouleur(Del::Couleur::ETEINT);
     }
     PontH::arreter();
-
-    PontH::arreter();
+    del.allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(500);
     PontH::tourner180();
     _delay_ms(1000);
@@ -609,7 +605,7 @@ void entrerStationnement(Lecture& l)
     _delay_ms(1000);
 
     PontH::accelererMax();
-    PontH::configurer(0, 110, 0, 125);
+    PontH::configurer(0, 120, 0, 125);
 
     while (!capteur.estAllumeCapteurQuelconque()) {}
 

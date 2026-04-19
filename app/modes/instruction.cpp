@@ -29,7 +29,6 @@ void faireInstruction(Lecture& lecture)
 
     if (lecture.getDirectionHoraire())
     {
-        // allumer vert
         lecture.getDel().allumerCouleur(Del::Couleur::VERT);
         _delay_ms(DELAI_2_SECONDES);
     }
@@ -40,8 +39,6 @@ void faireInstruction(Lecture& lecture)
     }
     lecture.getDel().allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(DELAI_2_SECONDES);
-
-    //ambre :getDel
     for (uint8_t i = 0; i < lecture.getNumStationnement(); i++)
     {
        

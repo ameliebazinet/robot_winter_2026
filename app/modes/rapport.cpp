@@ -4,7 +4,6 @@
 #include <util/delay.h>
 
 
-// addr memoire a recalibrer!!!
 #define ADR_LOCAL_A      0x1000
 #define ADR_LOCAL_B      0x1001
 #define ADR_LOCAL_C      0x1002

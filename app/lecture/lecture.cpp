@@ -22,22 +22,14 @@ void Lecture::attendreEntrePhases(volatile bool &boutonClique, volatile bool &te
 {
     del_.allumerCouleur(Del::Couleur::ETEINT);
     _delay_ms(DELAI_1_SECONDE);
-    // Ignorer tout clic pendant la pause
     boutonClique = false;
     tempsEcoule = false;
 }
-// void Lecture::attendreEntrePhases(volatile bool &boutonClique, volatile bool &tempsEcoule)
-// {
-//     boutonClique = false;
-//     tempsEcoule = false;
-//     del_.allumerCouleur(Del::Couleur::ETEINT);
-//     _delay_ms(DELAI_1_SECONDE);
-// }
 
 void Lecture::confirmerMode(InterruptionExterne &boutonMateriel)
 {
     Minuterie::Minuterie1::desactiverInteruptionComparateurA();
-    boutonMateriel.desactiverInterruption(0); // selection de mode est fait, on ne veux plus qui aille des intéruptions sur le bouton
+    boutonMateriel.desactiverInterruption(0);
     del_.allumerCouleur(Del::Couleur::ETEINT);
 }
 
@@ -47,7 +39,6 @@ Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &temps
     InterruptionExterne boutonMateriel;
     boutonMateriel.initialisation(0, 1);
 
-    // Phase verte
     boutonClique = false;
     tempsEcoule = false;
     demarrerPhase(Del::Couleur::VERT, DELAI_2_SECONDES);
@@ -57,10 +48,8 @@ Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &temps
         return Mode::INSTRUCTION;
     }
 
-    // pause (remet déjà boutonClique et tempsEcoule à false)
     attendreEntrePhases(boutonClique, tempsEcoule);
 
-    // Phase rouge
     demarrerPhase(Del::Couleur::ROUGE, DELAI_2_SECONDES);
     while (!boutonClique && !tempsEcoule) {}
     if (boutonClique) {
@@ -68,41 +57,10 @@ Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &temps
         return Mode::RAPPORT;
     }
 
-    // pause
     attendreEntrePhases(boutonClique, tempsEcoule);
-    confirmerMode(boutonMateriel);  // ← désactiver le bouton avant de retourner
+    confirmerMode(boutonMateriel); 
     return Mode::EXECUTION;
 }
-// Mode Lecture::selectionnerMode(volatile bool &boutonClique, volatile bool &tempsEcoule)
-// {
-//     _delay_ms(2000);
-//     InterruptionExterne boutonMateriel;
-//     // INT0 sur any logical change
-//     boutonMateriel.initialisation(0, 1);
-
-//     // Phase verte.
-//     demarrerPhase(Del::Couleur::VERT, DELAI_2_SECONDES);
-//     while (!boutonClique && !tempsEcoule) {}
-//     if (boutonClique) {
-//         confirmerMode(boutonMateriel);
-//         return Mode::INSTRUCTION;
-//     }
-
-//     // pause
-//     attendreEntrePhases(boutonClique, tempsEcoule);
-
-//     // Phase rouge.
-//     demarrerPhase(Del::Couleur::ROUGE, DELAI_2_SECONDES);
-//     while (!boutonClique && !tempsEcoule) {}
-//     if (boutonClique) {
-//         confirmerMode(boutonMateriel);
-//         return Mode::RAPPORT;
-//     }
-
-//     // pause
-//     attendreEntrePhases(boutonClique, tempsEcoule);
-//     return Mode::EXECUTION;
-// }
 
 void Lecture::initialiserLecture()
 {
@@ -137,7 +95,7 @@ void Lecture::faireInstruction(uint8_t instruction, uint8_t operande)
 }
 
 void Lecture::lireMemoire()
-{ // faudrait enlever la section trouver début ?
+{ 
     mem_.lecture(adresse_++, &donnee_);
     uint16_t taille = donnee_;
     mem_.lecture(adresse_++, &donnee_);
