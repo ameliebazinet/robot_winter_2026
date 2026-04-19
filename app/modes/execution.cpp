@@ -38,19 +38,20 @@ void recalibrerVirage(Lecture& l)
 
 void tournerBoutCouloir(Lecture& l)
 {
+    _delay_ms(500);
     CapteurLigne cl;
     if (l.getDirectionHoraire()) {
         PontH::tournerDroiteAccelere();
-        while (!cl.estTropAGauche())
-            PontH::tournerDroite(110);
-        while (!cl.estTropAGauche())
-            PontH::tournerDroite(110);
+        while (!cl.estTropADroite())
+            PontH::tournerDroite(100);
+        while (!cl.estTropADroite())
+            PontH::tournerDroite(100);
     }
     else {
         PontH::tournerGaucheAccelere();
-        while (!cl.estTropADroite())
+        while (!cl.estTropAGauche())
             PontH::tournerGauche(110);
-        while (!cl.estTropADroite())
+        while (!cl.estTropAGauche())
             PontH::tournerGauche(110);
     }
     PontH::arreter();
@@ -104,9 +105,9 @@ void suivreCouloir(uint8_t& nZones)
         else
             del.allumerCouleur(Del::Couleur::ETEINT);
 
-        if (capteur.estTropADroite())
+        if (!estSurObstacleMaintenant && capteur.estTropADroite() && !capteur.estTropAGauche())
             PontH::configurer(0, 80, 0, 145);
-        else if (capteur.estTropAGauche())
+        else if (!estSurObstacleMaintenant && capteur.estTropAGauche() && !capteur.estTropADroite())
             PontH::configurer(0, 140, 0, 90);
         else
             PontH::avancer(100);
@@ -344,7 +345,7 @@ void executerSallesBC(uint8_t& nObjetsLocal, volatile bool & tempsEcoule, Lectur
     // avance de (temps requis) seconde en comptant le nombre de ligne parcouru.
     uint32_t tempsMsParcourirBC;
     if (horaire)
-        tempsMsParcourirBC = 2100; // og 2200 apres 2100 modifie
+        tempsMsParcourirBC = 2650; // og 2200 apres 2100 modifie
     else
         tempsMsParcourirBC = 2300;
     
@@ -623,7 +624,7 @@ void couloirNord(Lecture& l)
 
             case EtatCouloir::ENTREE_TROUVEE:
                 if (horaire) {
-                    PontH::tournerGauche(150);
+                    PontH::tournerGauche(130);
                     _delay_ms(250);
                 }
                 else {
