@@ -1,8 +1,12 @@
+// Fichier : rapport.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation du mode rapport.
+// Transmet via UART les données collectées lors de l'exécution du parcours.
+
 #include "rapport.hpp"
 #include "memoire_24.h"
 #include "../lib/Del.hpp"
 #include <util/delay.h>
-
 
 #define ADR_LOCAL_A      0x1000
 #define ADR_LOCAL_B      0x1001

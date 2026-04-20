@@ -1,3 +1,8 @@
+// Fichier : CapteurInfra.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation du capteur infrarouge pour la détection d'obstacles.
+// Gère la lecture des capteurs IR et l'interprétation des distances mesurées.
+
 #include "CapteurInfra.hpp"
 
 const uint8_t NUM_PORTA_ENTREE_ANALOGIQUE = 2;

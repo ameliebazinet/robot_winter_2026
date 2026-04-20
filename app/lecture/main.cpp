@@ -1,3 +1,10 @@
+// Fichier : main.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Programme principal du mode lecture.
+// Initialise les interruptions et gère la sélection du mode d'opération du robot.
+// Ce main et ce Makefile ne sont pas utilisés durant l'execution du programme final
+// et servent à tester la lecture de l'EEPROM.
+
 #include "lecture.hpp"
 
 volatile bool tempsEcoule = false;

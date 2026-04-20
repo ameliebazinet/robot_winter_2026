@@ -1,3 +1,10 @@
+// Fichier : lecture.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation des méthodes pour la lecture de l'EEPROM et la sélection du mode d'opération.
+// Gère l'initialisation, la lecture des paramètres et la sélection du mode via bouton et minuterie.
+// Ce main et ce Makefile ne sont pas utilisés durant l'execution du programme final
+// et servent à tester la lecture de l'EEPROM.
+
 #define DEBUG
 #include "lecture.hpp"
 #include "debug.h"

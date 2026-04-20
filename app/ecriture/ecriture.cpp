@@ -1,3 +1,8 @@
+// Fichier : ecriture.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation des méthodes pour l'écriture de données en EEPROM.
+// Permet de stocker les paramètres de configuration du robot reçus via UART.
+
 #include "ecriture.hpp"
 #include <util/delay.h>
 

@@ -1,3 +1,8 @@
+// Fichier : CapteurLigne.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation du capteur de ligne pour le suivi de trajectoire.
+// Gère la lecture des 5 capteurs de ligne et la détection de la position du robot.
+
 #include "CapteurLigne.hpp"
 
 CapteurLigne::CapteurLigne()

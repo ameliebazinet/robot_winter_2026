@@ -1,3 +1,8 @@
+// Fichier : instruction.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation du mode instruction.
+// Lit les paramètres depuis l'EEPROM et affiche les informations de configuration du robot.
+
 #include "instruction.hpp"
 
 

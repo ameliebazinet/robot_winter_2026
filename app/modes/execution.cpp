@@ -1,5 +1,9 @@
-#include "execution.hpp"
+// Fichier : execution.cpp
+// Auteurs : Amélie Bazinet (2447346), Ayhem Cheikh (2440359), Vincent Dufresne (2455479) et Félix Tétreault (2464852)
+// Description : Implémentation du mode exécution du robot.
+// Gère le suivi de couloir, la traversée des salles et le stationnement.
 
+#include "execution.hpp"
 
 uint8_t compteurPiecesNord = 0; 
  
